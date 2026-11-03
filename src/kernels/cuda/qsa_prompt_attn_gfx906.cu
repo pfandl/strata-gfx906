@@ -15,6 +15,10 @@
 // of each chunk's own maximum, with the merge's rescale folded in), which moves the last bits. The parity harness bounds
 // it and the prompt quality gate (KL, top-1, MTP acceptance) is the gate, as for every other non-bit-identical prompt
 // change on this box.
+//
+// The query-LDS swizzle is applied unconditionally here, unlike the decode kernel's STRATA_GFX906_ATTN_QUERY_SWIZZLE
+// switch: it is a bit-identical permutation of the tile (proved by bench/gfx906_qsa_query_swizzle_probe), and the
+// kernel as a whole is already the opt-in.
 #include "strata/kernels/qsa_prompt_attn.hpp"
 #include "strata/core/geometry.hpp"
 #include "strata/kernels/kv_q8.hpp"
@@ -137,6 +141,12 @@ __global__ void __launch_bounds__(THREADS) prompt_attn_kernel(const float* __res
 #pragma unroll
     for (int h = 0; h < G; ++h) acc[h] = 0.0f;
     __syncthreads();
+    if (n_ids <= 0) {   // no selected cells (never in the engine, which always selects at least the current cell)
+        float* out = attn + (size_t) blockIdx.x * row_stride + (size_t) kvh * G * HD + t;
+#pragma unroll
+        for (int h = 0; h < G; ++h) out[(size_t) h * HD] = 0.0f;
+        return;
+    }
     for (int c0 = 0; c0 < n_ids; c0 += CHUNK) {
         const int n_here = min(CHUNK, n_ids - c0);
         if (t < CHUNK) {
@@ -206,10 +216,8 @@ __global__ void __launch_bounds__(THREADS) prompt_attn_kernel(const float* __res
     }
     float* out = attn + (size_t) blockIdx.x * row_stride + (size_t) kvh * G * HD + t;
 #pragma unroll
-    for (int h = 0; h < G; ++h) out[(size_t) h * HD] = acc[h] / sl[h];
+    for (int h = 0; h < G; ++h) out[(size_t) h * HD] = sl[h] > 0.0f ? acc[h] / sl[h] : 0.0f;   // as attn_merge_kernel
 }
-
-
 
 // int8 (1) / fp16 (0) pools this kernel serves; -1 = another path (Q4_0 KV must stay on the decode kernel, which
 // dequantizes it with the caller's rotate-back).

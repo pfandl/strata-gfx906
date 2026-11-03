@@ -73,11 +73,14 @@ back to it as well.
 synthetic selection the swizzle probe builds): `max_abs=5.960e-06`, `rms=9.477e-08`, 515,839 of 12,582,912 elements
 bitwise equal (`max_rel=1.389` is one element whose reference is ~0, which the absolute bound covers). The scores and the
 per-dimension value products are the same operands in the same order; the difference is when the exponentials are taken
-(running maximum instead of each chunk's own, with the merge's rescale folded in), i.e. the last bits.
+(running maximum instead of each chunk's own, with the merge's rescale folded in), i.e. the last bits. The same probe
+with `--masked-pages` (683 of 2048 pages left non-resident, `n_q=512`, `ctx=8192`): `max_abs=4.768e-06`, 159,187 of
+3,145,728 bitwise - the page -1 masking path is the decode kernel's as well.
 
-**Speed on the same geometry**: 45.66 ms -> **39.68 ms (1.151x)**, 22.29 -> 19.38 us per query - against the decode path
-*with both switches on*. Without them it is 64.48 -> 39.68 ms (1.62x), which is what the phase would look like had the
-switches not shipped first.
+**Speed on the same geometry**: 45.66 ms -> **39.93 ms (1.144x)**, 22.30 -> 19.50 us per query - against the decode path
+*with both switches on*. Without them the same probe measures 64.48 -> 39.78 ms (1.621x), which is what the phase would
+look like had the switches not shipped first. (Two runs of the 32K probe: prompt 39.68 and 39.93 ms, i.e. 1.151x /
+1.144x.)
 
 **A bug the engine gate caught that the probe did not** (worth recording): the first version read the selection width
 once per *call* (`step + kStepWidth`) instead of once per *query* (`step + query * kStepCount + kStepWidth`). A chunk's
@@ -93,6 +96,10 @@ vocabulary):
 | arm | env | top-1 vs the decode path | KL mean | median | max |
 | --- | --- | ---: | ---: | ---: | ---: |
 | `arm1` (kernel) | default | **100.00 %** (20/20) | 0.01364 | 0.00062 | 0.13760 |
+
+Re-run on the committed binary (the degenerate-input guards added after the first pass - a zero-width selection and the
+`L > 0` divisor, both of which the gated inputs never reach) gave the identical line to the digit, and the probe's
+accuracy figures are bit-identical too (`max_abs` 5.960e-06, 515,839 bitwise), so the shipped binary is the gated one.
 
 For scale, on the same yardstick: `STRATA_HIP_PROMPT_F16=1` is 0.01185 / 0.00035 and shipped; the opt-in K-quant MMQ
 kernels against the FP16 path are 0.095 / 0.0027 and stayed opt-in. This change sits with the first, on a stricter
