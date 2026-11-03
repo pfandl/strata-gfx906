@@ -228,9 +228,11 @@ int gfx906_prompt_attn_mode(const QsaAttnPools& p) {
 }
 
 bool prompt_attn_enabled() {
-    // OPT-IN until its MTP-acceptance half of the gate is run on this box: `=1` turns it on, anything else (unset
-    // included) leaves the decode path. It is not bitwise the decode kernel - see the header comment and
-    // docs/gfx906-results/20261103-qsa-prompt-attn/README.md for the measured KL / top-1.
+    // Opt-in in the engine: `=1` turns it on, anything else (unset included) leaves the decode path. That is what the
+    // gfx906 deployment does (docker-compose.yml), because both halves of the gate have been run: it is not bitwise the
+    // decode kernel, but the prompt gate reads top-1 100 % at KL 0.0136 / 0.00062 and MTP acceptance does not move
+    // (72.2 -> 72.0 % over 1,550 drafts) - see the header comment and
+    // docs/gfx906-results/20261103-qsa-prompt-attn/README.md.
     static const bool on = [] {
         const char* v = std::getenv("STRATA_PROMPT_ATTN_GFX906");
         return v != nullptr && v[0] == '1';

@@ -236,6 +236,10 @@ nothing. The full-vocabulary logits (24 MB) stay on the box at `data/rp-opt/acce
    reduced-shuffle form, so what the structure cost was the split-K scratch and the merge kernel, not the arithmetic -
    and a query-blocked kernel only removes those. Arithmetic (int8 scores) is what is left, at the price this item
    says.
+   Both halves of its gate are now run and it is **on in the deployment**: MTP draft acceptance through
+   `docker compose` reads **72.22 -> 72.02 %** over 1,550 drafts, with the two reference arms reproducing their counts
+   and their generated text exactly, on top of the top-1 100 % / KL 0.01364 above. `docker-compose.yml` sets
+   `STRATA_PROMPT_ATTN_GFX906=1` with `=0` as the opt-out (the engine keeps the code opt-in).
 3. **Expert gather/dequant (4.7 %, 128 ms) and the chunk-to-chunk variance it carries.** All 512 experts of a layer
    are touched every chunk (10 of 512 x 2048 tokens), so a repacked image would hit ~100 % - but the repacked form is
    ~2.5x the GGUF bytes and only ~4 GiB/card is spare. Needs a hot-expert LRU or a repacked-layout decode GEMV.
