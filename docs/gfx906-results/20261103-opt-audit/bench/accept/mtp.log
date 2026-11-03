@@ -1,0 +1,7 @@
+=== MTP arm f16=0 at 2026-11-03T19:14:11+01:00 ===
+health after 18 polls: 200
+http=200 wall=19.289686
+=== MTP arm f16=1 at 2026-11-03T19:16:01+01:00 ===
+health after 19 polls: 200
+http=200 wall=12.601559
+=== done at 2026-11-03T19:17:51+01:00 ===

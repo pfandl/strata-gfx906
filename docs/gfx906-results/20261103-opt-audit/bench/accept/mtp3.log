@@ -1,0 +1,11 @@
+=== arm f16=0 at 2026-11-03T19:26:21+01:00 ===
+health after 18 polls: 200
+req 1: http=200 wall=13.788467
+req 2: http=200 wall=4.272524
+req 3: http=200 wall=19.222473
+=== arm f16=1 at 2026-11-03T19:28:31+01:00 ===
+health after 19 polls: 200
+req 1: http=200 wall=14.077350
+req 2: http=200 wall=3.427677
+req 3: http=200 wall=17.159039
+=== done at 2026-11-03T19:30:43+01:00 ===

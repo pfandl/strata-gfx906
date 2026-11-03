@@ -1,0 +1,12 @@
+=== arm f16=0 at 2026-11-03T19:05:40+01:00 ===
+engine: /opt/strata/build-906/strata --serve --pack /data/packs/iq3_s --native /data/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf --ple-gguf /data/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00002-of-00002.gguf --mtp /data/mtp/rt --expert-profile /opt/strata/data/expert-profile.bin --resident-budget-gib 20 --pool-workers 6 --vram-reserve-mib 0 --layer-split 24 --spec 4 --spec-min-p 0.5 --expert-cache 1 --adapt-every 100000 --pcie-frac 0 --suffix-draft 0 --prompt-cache 0 --kv fp16 --max-context 1512 --prefill auto
+20 prompts
+=== arm f16=0 rc=0 ===
+=== arm f16=1 at 2026-11-03T19:09:34+01:00 ===
+engine: /opt/strata/build-906/strata --serve --pack /data/packs/iq3_s --native /data/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf --ple-gguf /data/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00002-of-00002.gguf --mtp /data/mtp/rt --expert-profile /opt/strata/data/expert-profile.bin --resident-budget-gib 20 --pool-workers 6 --vram-reserve-mib 0 --layer-split 24 --spec 4 --spec-min-p 0.5 --expert-cache 1 --adapt-every 100000 --pcie-frac 0 --suffix-draft 0 --prompt-cache 0 --kv fp16 --max-context 1512 --prefill auto
+20 prompts
+=== arm f16=1 rc=0 ===
+=== pcompare (ref = the default BF16 path) ===
+reference: /data/rp-opt/accept/arm0
+arm1                                     prompts  20  top-1 100.00%  KL mean 0.01185  median 0.00035  max 0.13436
+=== done at 2026-11-03T19:13:25+01:00 ===

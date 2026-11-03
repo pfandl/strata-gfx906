@@ -157,12 +157,12 @@ measured above, converts each weight per call and moves every 16-bit GEMM on the
 narrowed to the three hc matrices with a load-time FP16 image. The narrow one keeps the numerics of every other
 projection intact and lands the same ~283 ms.
 
-**Neither variant is numerically free**, and that is the gate before any of this ships: `STRATA_HIP_PROMPT_F16=1` is
+**Neither variant is numerically free**, and that was the gate before any of this ships: `STRATA_HIP_PROMPT_F16=1` is
 documented as not bit-identical to the default, and on this arm's fixed random-word prompt it changes the generated
 tokens from the third one on (both references produce `259, 76038, 22700` repeating; the FP16 arm produces
 `259, 76038, 49433` repeating). The prompt is gibberish, so that is not evidence of damage - it is evidence that the
-knob has to go through the acceptance harness (MTP acceptance, KL) rather than being flipped on because it is faster.
-This arm measures the speed, not the acceptability.
+knob has to go through the acceptance harness rather than being flipped on because it is faster. That harness has now
+been run: [the section below](#acceptance-the-gate-run-2026-11-03-same-box) passes it on every metric that exists.
 
 With this commit the engine prints that tip on gfx906 too (`prompt_f16()` in `gemm.cu`; verified in a 4096-token
 smoke arm, which prints it once per card). It was gated to gfx103x - which is why the knob was invisible on the one
@@ -170,14 +170,59 @@ card where BF16 costs the most.
 
 The int8 line stays as the second-order item: +1.1 % for repacking one matrix, on top of either variant.
 
+## Acceptance: the gate, run (2026-11-03, same box)
+
+Two measurements, both against the default (`STRATA_HIP_PROMPT_F16=0`) on the same pack, the same engine image and the
+four RP flags in both arms. Artefacts in `bench/accept/`.
+
+**The batched prompt path's own yardstick** - `tools/quant_quality.py prompt` + `pcompare`: the 5 text segments of
+`data/quant_quality/v1` at 256 / 512 / 768 / 1000 tokens (20 prompts), the *full vocabulary's* KL of the next token's
+distribution, one engine start per arm with the harness's fixed configuration (experts on the CPU, `--expert-cache 1`):
+
+| run | prompts | top-1 vs default | KL mean | median | max |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `STRATA_HIP_PROMPT_F16=1` | 20 | **100.00 %** | 0.01185 | 0.00035 | 0.13436 |
+
+Every one of the 20 prompts picks the default path's top token. For scale, on the same yardstick's prompt path in
+`docs/QUANTS.md`: the K-quant MMQ kernels against the FP16 path are 0.095 mean / 0.0027 median (UD-Q4_K_XL) and stayed
+opt-in over it, and the same quant file on a second backend is 94.5 % top-1 at KL 0.038. This change is ~8x smaller
+than the first on both statistics and does not move the top token at all.
+
+**MTP draft acceptance** - through the deployment (`docker compose`, MTP on, `--spec 4`, greedy, three request types),
+reading `timings.draft_n_accepted / draft_n` out of each response:
+
+| request | generated | default drafts | accepted | FP16 drafts | accepted |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| docs, 1911-token prompt | 252 / 382 | 134/213 | 62.9 % | 221/307 | **72.0 %** |
+| factual, 70-token prompt | 128 / 134 | 75/102 | 73.5 % | 79/114 | 69.3 % |
+| code, 1532-token prompt | 600 / 600 | 299/408 | 73.3 % | 311/425 | 73.2 % |
+| **all three** | | **508/723** | **70.3 %** | **611/846** | **72.2 %** |
+
+Aggregate acceptance rises 1.9 points over 1,569 tested drafts. Per request it moves both ways, which is what one
+greedy sample each can resolve - the drafting itself is deterministic (the same arm's counts repeat exactly across
+runs, `mtp2-*`) - so the read is "not reduced", not "+1.9 points of quality". The earlier not-bit-identical
+observation is confirmed as wording: the `docs` answer opens "Strata distributes the model across GPU, RAM, and SSD"
+where the default opens "Strata splits work across...", with the same three points behind it.
+
+**Prompt speed on these requests is not the number to read**: 280 vs 266 tok/s on the 1911-token prompt and 205 vs 323
+on the code prompt, and an earlier pass of the same 1911-token request gave 125 vs 217 tok/s and then 146 vs 113 - the
+first request after a container restart streams the expert tiers and swings by ±40 % on this box. The controlled
+number stays the blocked A/B/A above (`t3`, warm, steady state, references within 0.2 %): **650/670 -> 739.6 tok/s**.
+
+Verdict: the gate passes on the metrics that exist - 100 % top-1, KL an order of magnitude under the opt-in K-quant
+precedent, MTP acceptance not reduced. That is why the deployment's `docker-compose.yml` now sets
+`STRATA_HIP_PROMPT_F16=1` (with `=0` as the opt-out) and the engine prints the gfx906 tip where it used to print
+nothing. The full-vocabulary logits (24 MB) stay on the box at `data/rp-opt/accept/arm{0,1}`; everything else is in
+`bench/accept/`.
+
 ## What is actually left, re-ranked
 
-1. **`STRATA_HIP_PROMPT_F16=1`: +10.4 % pp, measured, already in the tree.** The knob a gfx103x-only tip advertises
-   takes the hc read from 544.5 to 261.4 ms/chunk and the timeline from 2696 to 2441 ms (`t3` pass above). Its gate
-   is numerical, not engineering: it must pass the acceptance harness (MTP acceptance, KL) before it is turned on in
-   the deployment - the knob is documented as not bit-identical, and it is not. If it fails the gate, the same win is
-   available narrower: a load-time FP16 image of `hc_*_down`, `hc_*_up` and `hc_*_inject` with `Gemm::f16`, which
-   leaves every other projection's numerics alone and lands the same ~283 ms.
+1. **`STRATA_HIP_PROMPT_F16=1`: +10.4 % pp, measured, in the tree, and now on in the deployment.** The knob a
+   gfx103x-only tip advertises takes the hc read from 544.5 to 261.4 ms/chunk and the timeline from 2696 to 2441 ms
+   (`t3` pass above). Its gate was numerical, not engineering, and it **passed** (100 % top-1, KL 0.0119 / 0.00035,
+   MTP acceptance 70.3 -> 72.2 %; `bench/accept/` and the acceptance section above). The narrower variant - a load-time
+   FP16 image of `hc_*_down`, `hc_*_up` and `hc_*_inject` with `Gemm::f16` - is now a fallback, not the plan: it lands
+   the same ~283 ms and leaves every other projection's numerics alone, if the wider knob ever has to be narrowed.
 2. **qsa prompt attention (15.6 %, 428 ms/chunk).** The only block still on a structurally wrong kernel: no
    gfx906 prompt kernel exists, so `prefill.cpp` loops `qsa_decode_attn_batch` over 32-query batches and every query
    re-reads its KV window. A query-blocked tiled kernel that stages K/V once per 64 cells is the lever; the int8
