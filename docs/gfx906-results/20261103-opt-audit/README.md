@@ -228,6 +228,14 @@ nothing. The full-vocabulary logits (24 MB) stay on the box at `data/rp-opt/acce
    re-reads its KV window. A query-blocked tiled kernel that stages K/V once per 64 cells is the lever; the int8
    scores question stays separate (the *stored* cache can stay FP16 - the int8 that matters for MTP acceptance is
    storage, not a transient on-the-fly quantization). Estimated 150-250 ms/chunk = **+6-10 %**.
+   → **Worked the same day, and the estimate was 4x too high**:
+   [`20261103-qsa-prompt-attn`](../20261103-qsa-prompt-attn/README.md). Two switches that were already in the tree
+   (bit-identical, never measured here) take the phase 425.0 -> 304.7 ms and the prompt **+5.8 %**; a prompt kernel
+   written for this card lands another **40 ms (-12.9 % of the phase, -2.9 % of the chunk, measured A/B/A)** instead of
+   the 150-250 ms this line predicted. The reason: the decode kernel's inner loops are already the swizzled,
+   reduced-shuffle form, so what the structure cost was the split-K scratch and the merge kernel, not the arithmetic -
+   and a query-blocked kernel only removes those. Arithmetic (int8 scores) is what is left, at the price this item
+   says.
 3. **Expert gather/dequant (4.7 %, 128 ms) and the chunk-to-chunk variance it carries.** All 512 experts of a layer
    are touched every chunk (10 of 512 x 2048 tokens), so a repacked image would hit ~100 % - but the repacked form is
    ~2.5x the GGUF bytes and only ~4 GiB/card is spare. Needs a hot-expert LRU or a repacked-layout decode GEMV.

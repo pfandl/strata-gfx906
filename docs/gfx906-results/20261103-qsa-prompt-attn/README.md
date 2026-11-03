@@ -99,10 +99,34 @@ kernels against the FP16 path are 0.095 / 0.0027 and stayed opt-in. This change 
 input (int8 KV, i.e. the mode the kernel actually acts in).
 
 **Status**: the kernel ships **off by default** (`STRATA_PROMPT_ATTN_GFX906=1` opts in). What is still missing before
-it could become a default is the other half of the gate this box uses - MTP draft acceptance through the deployment -
-and the engine A/B/A (`s1-*` arms, running at the time of writing this line). A 1.15x component win is ~40 ms of a
-2304 ms chunk (1.7 %, ~+1.8 % of prompt), which is worth having but worth *measuring* in the engine rather than
-extrapolating.
+it could become a default is the other half of the gate this box uses - MTP draft acceptance through the deployment:
+three request types, greedy, `timings.draft_n_accepted / draft_n` out of each response, one compose recreate per arm
+(the recipe and its artefacts are `20261103-opt-audit/bench/accept/`, `mtp3-*`). Its speed half is section 3 and clears
+the prediction; the image's engine binary also has to be rebuilt from this commit before the deployment can set the
+variable at all.
+
+## 3. The engine A/B/A: `s1-a1` / `s1-k1` / `s1-a2`
+
+Same box, same prompt (32,700 tokens, context 32768, `--prefill 2048`), the deployment's configuration in every arm
+(four RP flags, `STRATA_HIP_PROMPT_F16=1`, both attention switches), `STRATA_PREFILL_ATTN_GFX906=0` in the two `a` arms.
+One engine start per arm, the decode path bracketing the kernel. Chunks whose GPU timeline is a disk-stall outlier
+(> 2800 ms: first-touch reads of the 62 GB GGUF show up as one or two such chunks per arm, trap 1 of the audit) are
+excluded from the means; the first chunk is always excluded.
+
+| arm | path | chunks kept | GPU ms/chunk | `qsa attn` | wall tok/s |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `s1-a1` | decode | 12 of 14 | 2336 | 310.8 | 784 |
+| `s1-k1` | **kernel** | 14 of 14 | **2268** | **270.6** | **844** |
+| `s1-a2` | decode | 12 of 14 | 2346 | 312.8 | 815 |
+
+The two references agree to 0.4 % on the chunk and 0.6 % on the phase, so the read is: **`qsa attn` 310.8 -> 270.6 ms
+(-40.2 ms, -12.9 %) and the chunk 2336 -> 2268 ms (-68 ms, -2.9 %)** - the phase saving is exactly what the component
+probe predicted (45.66 - 39.68 = 36.0 ms there, 40.2 ms here), and the chunk gains a little more than the phase, which
+is what removing a merge-kernel launch per 32-query batch should look like. Wall tok/s 784/815 -> 844.
+
+The reference arms' own spread (310.8 vs 312.8 on the phase, 2336 vs 2346 on the chunk) is the resolution limit of one
+run per arm, and the kernel arm's 270.6 is 13 % below both - well outside it.
+
 
 ## What this changes for the next step
 
@@ -119,28 +143,36 @@ numerics - a much larger gate than this kernel's - and it is the only remaining 
 
 ## Reproducing
 
-    # the switches, component: one process per arm (the dispatcher caches the environment)
-    for i in a1 b1 c1 c2 b2 a2; do ...; done      # see /tmp/probe-stage0.sh in the session record; simplest form:
+    # the switches, component: ONE PROCESS PER ARM (the dispatcher caches the environment)
+    #   plain, +STRATA_GFX906_ATTN_QUERY_SWIZZLE=1, +both - run each at 4K / 32K / 65K and repeat the series backwards
     docker run --rm --device /dev/kfd --device /dev/dri --group-add video --ipc=host \
       -v "$PWD/strata-gfx906":/repo:ro -e HIP_VISIBLE_DEVICES=0 \
       strata-gfx906:local /repo/build-906/gfx906_qsa_query_swizzle_probe 32 32768 50 /tmp/out.bin
     #   ... plus -e STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 [and -e STRATA_GFX906_ATTN_REDUCE12=1]
 
     # the engine arms (one engine start per arm; the deployment must be stopped: `docker compose stop`)
+    #   s0: plain, then +both switches, then plain again (blocked A/B/A)
+    #   s1: STRATA_PROMPT_ATTN_GFX906=0, then the kernel (unset), then 0 again
     docker run --rm --device /dev/kfd --device /dev/dri --group-add video --ipc=host \
       -v "$PWD/data":/data -v "$PWD/rp-build":/work -v "$PWD/strata-gfx906":/repo:ro \
       -e MODEL=IQ3_S -e PACK=/data/packs/iq3_s -e OUT=/data/rp-opt -e CTX=32768 \
       -e PROMPT_TOKENS=32700 -e PREFILL=2048 -e STRATA_PREFILL_TIMING=1 \
       -e STRATA_HIP_PROMPT_F16=1 strata-gfx906:local /repo/bench/gfx906/rp-ab.sh s0-a1 RP
+    #   ... plus -e STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 -e STRATA_GFX906_ATTN_REDUCE12=1 for the switch arm
 
     # the kernel: accuracy and time against the decode path on one synthetic chunk
+    #   run once WITHOUT the two switch vars to price it against the pre-switch decode path, once WITH them
     docker run --rm --device /dev/kfd --device /dev/dri --group-add video --ipc=host \
       -v "$PWD/rp-build":/repo:ro -e HIP_VISIBLE_DEVICES=0 \
       -e STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 -e STRATA_GFX906_ATTN_REDUCE12=1 \
+      -e STRATA_PROMPT_ATTN_GFX906=1 \
       strata-gfx906:local /repo/build-906/gfx906_qsa_prompt_attn_probe 2048 32768 10 /tmp/cand.bin
+    #   without STRATA_PROMPT_ATTN_GFX906=1 the probe prints DECLINED and exits 3 (it measures the decode path)
 
-    # the gate both of the above answer to (int8 KV, the deployment's flags, one engine start per arm)
-    #   arm0: --env STRATA_PROMPT_ATTN_GFX906=0   arm1: (default)   then pcompare
+    # the gate (int8 KV, the deployment's flags, one engine start per arm; `--gpu-experts` so the arms differ only in
+    # the attention): arm0 `--env STRATA_PROMPT_ATTN_GFX906=0`, arm1 `--env STRATA_PROMPT_ATTN_GFX906=1`, then pcompare.
+    # It needs `--kv int8` on BOTH sides, which tools/quant_quality.py gained in this change (it had no way to pin the
+    # KV format, so an arm could silently run fp16 KV and answer a different question).
 
 The phase tables of the engine arms are parsed with
 `python3 docs/gfx906-results/20261103-opt-audit/bench/parse-phases.py data/rp-opt/<arm>`; the arms keep `summary.txt`,
