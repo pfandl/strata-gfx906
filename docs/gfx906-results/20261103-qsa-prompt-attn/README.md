@@ -9,8 +9,8 @@ measured on this deployment, and a prompt kernel written for this card.
 Everything below is the same two-card box, the same fixed random-word prompt (32,700 tokens, context 32768,
 `--prefill 2048`, `--kv int8`, `--spec 4`, `--layer-split 24`), one engine start per arm through
 [`bench/gfx906/rp-ab.sh`](../../../bench/gfx906/rp-ab.sh), and the shipped configuration in every arm: the four RP flags
-**and** `STRATA_HIP_PROMPT_F16=1` (the +10.4 % knob from the audit). Artefacts: `data/rp-opt/s0-*` (engine arms),
-`data/rp-opt/accept-attn/` (acceptance gate).
+**and** `STRATA_HIP_PROMPT_F16=1` (the +10.4 % knob from the audit). Artefacts: `data/rp-opt/s0-*` (the switch arms),
+`data/rp-opt/s1-*` (the kernel's arms), `data/rp-opt/accept-attn/` (the acceptance gate).
 
 ## 1. The two gfx906 attention switches: +5.8 % of prompt, bit-identical
 
@@ -66,8 +66,8 @@ back, once per 32-query batch. On this box that is ~80 GB of scratch traffic per
 same query-LDS swizzle, the same 12-head butterfly) and changes only the traversal: **one block per (query, KV head)**
 walks all of that query's selected cells with a running softmax, so the partials stay in registers and LDS and there is
 no scratch write, no merge kernel and no batching of queries. `qsa_prompt_attn_batch()` asks it first on this build;
-`STRATA_PROMPT_ATTN_GFX906=0` forces the old loop, and a pool it does not serve (Q4_0, k8v4) or another geometry falls
-back to it as well.
+`STRATA_PROMPT_ATTN_GFX906=1` turns it on (unset = the old loop - it is opt-in, see the status line below), and a pool
+it does not serve (Q4_0, k8v4) or another geometry falls back to the old loop as well.
 
 **Accuracy against the decode kernel** (`bench/gfx906_qsa_prompt_attn_probe`, `n_q=2048`, `ctx=32768`, the same
 synthetic selection the swizzle probe builds): `max_abs=5.960e-06`, `rms=9.477e-08`, 515,839 of 12,582,912 elements
@@ -95,7 +95,7 @@ vocabulary):
 
 | arm | env | top-1 vs the decode path | KL mean | median | max |
 | --- | --- | ---: | ---: | ---: | ---: |
-| `arm1` (kernel) | default | **100.00 %** (20/20) | 0.01364 | 0.00062 | 0.13760 |
+| `arm1` (kernel) | `STRATA_PROMPT_ATTN_GFX906=1` | **100.00 %** (20/20) | 0.01364 | 0.00062 | 0.13760 |
 
 Re-run on the committed binary (the degenerate-input guards added after the first pass - a zero-width selection and the
 `L > 0` divisor, both of which the gated inputs never reach) gave the identical line to the digit, and the probe's
@@ -115,7 +115,7 @@ variable at all.
 ## 3. The engine A/B/A: `s1-a1` / `s1-k1` / `s1-a2`
 
 Same box, same prompt (32,700 tokens, context 32768, `--prefill 2048`), the deployment's configuration in every arm
-(four RP flags, `STRATA_HIP_PROMPT_F16=1`, both attention switches), `STRATA_PREFILL_ATTN_GFX906=0` in the two `a` arms.
+(four RP flags, `STRATA_HIP_PROMPT_F16=1`, both attention switches), `STRATA_PROMPT_ATTN_GFX906=0` in the two `a` arms.
 One engine start per arm, the decode path bracketing the kernel. Chunks whose GPU timeline is a disk-stall outlier
 (> 2800 ms: first-touch reads of the 62 GB GGUF show up as one or two such chunks per arm, trap 1 of the audit) are
 excluded from the means; the first chunk is always excluded.
@@ -159,7 +159,7 @@ numerics - a much larger gate than this kernel's - and it is the only remaining 
 
     # the engine arms (one engine start per arm; the deployment must be stopped: `docker compose stop`)
     #   s0: plain, then +both switches, then plain again (blocked A/B/A)
-    #   s1: STRATA_PROMPT_ATTN_GFX906=0, then the kernel (unset), then 0 again
+    #   s1: STRATA_PROMPT_ATTN_GFX906=0, then =1, then 0 again
     docker run --rm --device /dev/kfd --device /dev/dri --group-add video --ipc=host \
       -v "$PWD/data":/data -v "$PWD/rp-build":/work -v "$PWD/strata-gfx906":/repo:ro \
       -e MODEL=IQ3_S -e PACK=/data/packs/iq3_s -e OUT=/data/rp-opt -e CTX=32768 \
