@@ -1,0 +1,250 @@
+== t1-rp: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 4700 2665 3981 3186 3389 3437 3268 7202 2738 2870 4001 3244 2932 3414 4300
+   steady mean: GPU 3616 ms, wall 3777 ms, 542 tok/s (wall)
+   hc read               607.6 ms   16.8%   16.8% of GPU
+   gemm gate/up          563.9 ms   15.6%   15.6% of GPU
+   qsa attn              502.7 ms   13.9%   13.9% of GPU
+   gdn                   480.8 ms   13.3%   13.3% of GPU
+   dequant               328.9 ms    9.1%    9.1% of GPU
+   qsa proj              261.1 ms    7.2%    7.2% of GPU
+   gemm down             239.0 ms    6.6%    6.6% of GPU
+   gdn out proj          169.6 ms    4.7%    4.7% of GPU
+   gdn recurrence        139.4 ms    3.9%    3.9% of GPU
+   router+shared         124.5 ms    3.4%    3.4% of GPU
+   host grouping          67.9 ms    1.9%    1.9% of GPU
+   qsa select             64.2 ms    1.8%    1.8% of GPU
+   hc write               20.9 ms    0.6%    0.6% of GPU
+   combine                16.2 ms    0.4%    0.4% of GPU
+   embed+steps            12.0 ms    0.3%    0.3% of GPU
+   gdn conv+gates          8.3 ms    0.2%    0.2% of GPU
+   gather                  4.6 ms    0.1%    0.1% of GPU
+   wait copy               3.9 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== t1-hcq8: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 5790 2655 2711 2676 2641 2700 2711 2691 2700 2700 2801 2751 4081 2776 2770
+   steady mean: GPU 2812 ms, wall 2972 ms, 689 tok/s (wall)
+   hc read               550.0 ms   19.6%   19.6% of GPU
+   gemm gate/up          478.4 ms   17.0%   17.0% of GPU
+   qsa attn              451.9 ms   16.1%   16.1% of GPU
+   gdn                   319.3 ms   11.4%   11.4% of GPU
+   gemm down             188.0 ms    6.7%    6.7% of GPU
+   qsa proj              153.9 ms    5.5%    5.5% of GPU
+   gdn recurrence        131.9 ms    4.7%    4.7% of GPU
+   dequant               127.4 ms    4.5%    4.5% of GPU
+   gdn out proj          125.7 ms    4.5%    4.5% of GPU
+   router+shared         115.8 ms    4.1%    4.1% of GPU
+   qsa select             68.7 ms    2.4%    2.4% of GPU
+   host grouping          33.9 ms    1.2%    1.2% of GPU
+   hc write               21.2 ms    0.8%    0.8% of GPU
+   combine                16.1 ms    0.6%    0.6% of GPU
+   embed+steps            12.4 ms    0.4%    0.4% of GPU
+   gdn conv+gates          8.3 ms    0.3%    0.3% of GPU
+   gather                  4.6 ms    0.2%    0.2% of GPU
+   wait copy               3.6 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== t1-w32: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2883 2976 2931 2912 2919 2939 2967 2934 2930 2995 2971 2977 2979 2987 2972
+   steady mean: GPU 2956 ms, wall 3116 ms, 657 tok/s (wall)
+   hc read               556.1 ms   18.8%   18.8% of GPU
+   gdn                   485.1 ms   16.4%   16.4% of GPU
+   qsa attn              423.4 ms   14.3%   14.3% of GPU
+   gemm gate/up          406.5 ms   13.7%   13.8% of GPU
+   qsa proj              193.4 ms    6.5%    6.5% of GPU
+   gemm down             188.9 ms    6.4%    6.4% of GPU
+   gdn out proj          160.8 ms    5.4%    5.4% of GPU
+   gdn recurrence        130.9 ms    4.4%    4.4% of GPU
+   dequant               128.0 ms    4.3%    4.3% of GPU
+   router+shared         125.1 ms    4.2%    4.2% of GPU
+   qsa select             64.9 ms    2.2%    2.2% of GPU
+   host grouping          27.8 ms    0.9%    0.9% of GPU
+   hc write               21.4 ms    0.7%    0.7% of GPU
+   combine                15.6 ms    0.5%    0.5% of GPU
+   embed+steps            12.0 ms    0.4%    0.4% of GPU
+   gdn conv+gates          9.0 ms    0.3%    0.3% of GPU
+   gather                  4.0 ms    0.1%    0.1% of GPU
+   wait copy               3.9 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== t1-sortne: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2588 2621 2686 2696 2619 2650 2665 2685 2682 2695 2715 2727 2740 2760 2771
+   steady mean: GPU 2694 ms, wall 2856 ms, 717 tok/s (wall)
+   hc read               550.4 ms   20.4%   20.4% of GPU
+   qsa attn              421.1 ms   15.6%   15.6% of GPU
+   gemm gate/up          410.4 ms   15.2%   15.2% of GPU
+   gdn                   312.9 ms   11.6%   11.6% of GPU
+   gemm down             188.4 ms    7.0%    7.0% of GPU
+   qsa proj              153.1 ms    5.7%    5.7% of GPU
+   dequant               131.1 ms    4.9%    4.9% of GPU
+   gdn recurrence        130.3 ms    4.8%    4.8% of GPU
+   gdn out proj          124.4 ms    4.6%    4.6% of GPU
+   router+shared         112.3 ms    4.2%    4.2% of GPU
+   qsa select             64.9 ms    2.4%    2.4% of GPU
+   host grouping          28.5 ms    1.1%    1.1% of GPU
+   hc write               21.1 ms    0.8%    0.8% of GPU
+   combine                16.1 ms    0.6%    0.6% of GPU
+   embed+steps            12.0 ms    0.4%    0.4% of GPU
+   gdn conv+gates          8.1 ms    0.3%    0.3% of GPU
+   gather                  4.1 ms    0.2%    0.2% of GPU
+   wait copy               3.8 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== t1-q8sort: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2823 4881 5224 2628 2628 2653 2668 2672 2736 2725 2839 2914 2744 2771 2774
+   steady mean: GPU 3061 ms, wall 3223 ms, 635 tok/s (wall)
+   hc read               544.7 ms   17.8%   17.8% of GPU
+   qsa attn              516.9 ms   16.9%   16.9% of GPU
+   gemm gate/up          423.1 ms   13.8%   13.8% of GPU
+   gdn                   313.1 ms   10.2%   10.2% of GPU
+   gdn recurrence        271.0 ms    8.9%    8.9% of GPU
+   qsa proj              250.1 ms    8.2%    8.2% of GPU
+   gemm down             190.5 ms    6.2%    6.2% of GPU
+   dequant               153.0 ms    5.0%    5.0% of GPU
+   gdn out proj          125.7 ms    4.1%    4.1% of GPU
+   router+shared         112.3 ms    3.7%    3.7% of GPU
+   qsa select             65.1 ms    2.1%    2.1% of GPU
+   host grouping          29.6 ms    1.0%    1.0% of GPU
+   hc write               21.0 ms    0.7%    0.7% of GPU
+   combine                16.0 ms    0.5%    0.5% of GPU
+   embed+steps            12.1 ms    0.4%    0.4% of GPU
+   gdn conv+gates          8.3 ms    0.3%    0.3% of GPU
+   gather                  4.9 ms    0.2%    0.2% of GPU
+   wait copy               3.7 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== t2-rp: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 3062 2658 2751 2904 2908 2907 2747 2763 2690 2697 2727 2730 2757 2776 2771
+   steady mean: GPU 2770 ms, wall 2944 ms, 696 tok/s (wall)
+   hc read               565.9 ms   20.4%   20.4% of GPU
+   gemm gate/up          444.1 ms   16.0%   16.0% of GPU
+   qsa attn              420.2 ms   15.2%   15.2% of GPU
+   gdn                   323.4 ms   11.7%   11.7% of GPU
+   gemm down             186.1 ms    6.7%    6.7% of GPU
+   qsa proj              153.3 ms    5.5%    5.5% of GPU
+   gdn out proj          139.2 ms    5.0%    5.0% of GPU
+   dequant               132.8 ms    4.8%    4.8% of GPU
+   gdn recurrence        130.4 ms    4.7%    4.7% of GPU
+   router+shared         111.9 ms    4.0%    4.0% of GPU
+   qsa select             65.1 ms    2.3%    2.3% of GPU
+   host grouping          32.6 ms    1.2%    1.2% of GPU
+   hc write               20.9 ms    0.8%    0.8% of GPU
+   combine                15.9 ms    0.6%    0.6% of GPU
+   embed+steps            12.0 ms    0.4%    0.4% of GPU
+   gdn conv+gates          8.3 ms    0.3%    0.3% of GPU
+   gather                  4.0 ms    0.1%    0.1% of GPU
+   wait copy               3.7 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== t2-rp2: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2649 2609 2689 2752 2900 2669 2669 2770 2751 2707 2720 2739 2750 2782 2771
+   steady mean: GPU 2734 ms, wall 2895 ms, 707 tok/s (wall)
+   hc read               546.6 ms   20.0%   20.0% of GPU
+   qsa attn              427.6 ms   15.6%   15.6% of GPU
+   gemm gate/up          414.0 ms   15.1%   15.1% of GPU
+   gdn                   332.7 ms   12.2%   12.2% of GPU
+   gemm down             189.7 ms    6.9%    6.9% of GPU
+   qsa proj              153.1 ms    5.6%    5.6% of GPU
+   gdn recurrence        136.0 ms    5.0%    5.0% of GPU
+   gdn out proj          128.1 ms    4.7%    4.7% of GPU
+   dequant               127.9 ms    4.7%    4.7% of GPU
+   router+shared         112.4 ms    4.1%    4.1% of GPU
+   qsa select             65.1 ms    2.4%    2.4% of GPU
+   host grouping          34.4 ms    1.3%    1.3% of GPU
+   hc write               20.9 ms    0.8%    0.8% of GPU
+   combine                16.1 ms    0.6%    0.6% of GPU
+   embed+steps            12.0 ms    0.4%    0.4% of GPU
+   gdn conv+gates          8.3 ms    0.3%    0.3% of GPU
+   gather                  5.4 ms    0.2%    0.2% of GPU
+   wait copy               3.7 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== t2-sortne: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2579 2729 2613 2618 2940 2654 2674 2676 2681 2695 2718 2730 2732 2769 2771
+   steady mean: GPU 2714 ms, wall 2875 ms, 712 tok/s (wall)
+   hc read               552.9 ms   20.4%   20.4% of GPU
+   qsa attn              433.1 ms   16.0%   16.0% of GPU
+   gemm gate/up          409.4 ms   15.1%   15.1% of GPU
+   gdn                   322.1 ms   11.9%   11.9% of GPU
+   gemm down             186.2 ms    6.9%    6.9% of GPU
+   qsa proj              153.0 ms    5.6%    5.6% of GPU
+   gdn recurrence        130.4 ms    4.8%    4.8% of GPU
+   dequant               127.4 ms    4.7%    4.7% of GPU
+   gdn out proj          123.9 ms    4.6%    4.6% of GPU
+   router+shared         112.3 ms    4.1%    4.1% of GPU
+   qsa select             65.2 ms    2.4%    2.4% of GPU
+   host grouping          32.5 ms    1.2%    1.2% of GPU
+   hc write               21.2 ms    0.8%    0.8% of GPU
+   combine                16.1 ms    0.6%    0.6% of GPU
+   embed+steps            12.0 ms    0.4%    0.4% of GPU
+   gdn conv+gates          8.4 ms    0.3%    0.3% of GPU
+   gather                  4.0 ms    0.1%    0.1% of GPU
+   wait copy               3.9 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== t2-w32: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2782 2858 2860 2875 2880 2908 2901 2934 2947 2948 2969 2976 2983 2990 2982
+   steady mean: GPU 2929 ms, wall 3090 ms, 663 tok/s (wall)
+   hc read               553.1 ms   18.9%   18.9% of GPU
+   gdn                   477.4 ms   16.3%   16.3% of GPU
+   qsa attn              420.4 ms   14.4%   14.4% of GPU
+   gemm gate/up          400.9 ms   13.7%   13.7% of GPU
+   qsa proj              193.7 ms    6.6%    6.6% of GPU
+   gemm down             188.9 ms    6.4%    6.4% of GPU
+   gdn out proj          157.5 ms    5.4%    5.4% of GPU
+   gdn recurrence        131.3 ms    4.5%    4.5% of GPU
+   dequant               127.9 ms    4.4%    4.4% of GPU
+   router+shared         116.8 ms    4.0%    4.0% of GPU
+   qsa select             64.9 ms    2.2%    2.2% of GPU
+   host grouping          30.6 ms    1.0%    1.0% of GPU
+   hc write               21.6 ms    0.7%    0.7% of GPU
+   combine                15.6 ms    0.5%    0.5% of GPU
+   embed+steps            12.0 ms    0.4%    0.4% of GPU
+   gdn conv+gates          9.0 ms    0.3%    0.3% of GPU
+   gather                  4.4 ms    0.1%    0.1% of GPU
+   wait copy               3.6 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== t2-hcq8: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 3000 2612 3591 2624 2715 3723 2705 2758 2688 2710 2725 2802 2809 2766 2863
+   steady mean: GPU 2864 ms, wall 3024 ms, 677 tok/s (wall)
+   hc read               560.9 ms   19.6%   19.6% of GPU
+   gemm gate/up          480.3 ms   16.8%   16.8% of GPU
+   qsa attn              423.9 ms   14.8%   14.8% of GPU
+   gdn                   318.9 ms   11.1%   11.1% of GPU
+   gemm down             191.1 ms    6.7%    6.7% of GPU
+   router+shared         185.0 ms    6.5%    6.5% of GPU
+   qsa proj              153.4 ms    5.4%    5.4% of GPU
+   gdn recurrence        130.4 ms    4.6%    4.6% of GPU
+   dequant               127.8 ms    4.5%    4.5% of GPU
+   gdn out proj          124.1 ms    4.3%    4.3% of GPU
+   qsa select             65.2 ms    2.3%    2.3% of GPU
+   host grouping          36.6 ms    1.3%    1.3% of GPU
+   hc write               21.1 ms    0.7%    0.7% of GPU
+   combine                16.0 ms    0.6%    0.6% of GPU
+   embed+steps            12.0 ms    0.4%    0.4% of GPU
+   gdn conv+gates          8.2 ms    0.3%    0.3% of GPU
+   gather                  4.6 ms    0.2%    0.2% of GPU
+   wait copy               3.6 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+

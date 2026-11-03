@@ -1,0 +1,34 @@
+=== tier2 done at 2026-11-03T17:27:21+01:00 ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 50812 ms (643.5 tok/s), 8 generated in 336 ms (23.8 tok/s), drafts accepted 0 of 0, 1 checkpoints
+--- t2-rp: strata serve: prompt 32700 tokens = 0 reused + 32700 read in 50812 ms (643.5 tok/s), 8 generated in 336 ms (23.8 tok/s), drafts accepted 0 of 0, 1 checkpoints ---
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 48867 ms (669.2 tok/s), 8 generated in 331 ms (24.2 tok/s), drafts accepted 0 of 0, 1 checkpoints
+--- t2-sortne: strata serve: prompt 32700 tokens = 0 reused + 32700 read in 48867 ms (669.2 tok/s), 8 generated in 331 ms (24.2 tok/s), drafts accepted 0 of 0, 1 checkpoints ---
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 52680 ms (620.7 tok/s), 8 generated in 364 ms (22.0 tok/s), drafts accepted 0 of 0, 1 checkpoints
+--- t2-w32: strata serve: prompt 32700 tokens = 0 reused + 32700 read in 52680 ms (620.7 tok/s), 8 generated in 364 ms (22.0 tok/s), drafts accepted 0 of 0, 1 checkpoints ---
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 51880 ms (630.3 tok/s), 8 generated in 334 ms (24.0 tok/s), drafts accepted 0 of 0, 1 checkpoints
+--- t2-hcq8: strata serve: prompt 32700 tokens = 0 reused + 32700 read in 51880 ms (630.3 tok/s), 8 generated in 334 ms (24.0 tok/s), drafts accepted 0 of 0, 1 checkpoints ---
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 49227 ms (664.3 tok/s), 8 generated in 332 ms (24.1 tok/s), drafts accepted 0 of 0, 1 checkpoints
+--- t2-rp2: strata serve: prompt 32700 tokens = 0 reused + 32700 read in 49227 ms (664.3 tok/s), 8 generated in 332 ms (24.1 tok/s), drafts accepted 0 of 0, 1 checkpoints ---
+
+=== rebuild dense_mmq_bench (bench TU only) ===
+/src/include/strata/platform/hip_compat/strata_hip.h:151:26: note: expanded from macro 'cudaEventDestroy'
+  151 | #define cudaEventDestroy hipEventDestroy
+      |                          ^
+37 warnings generated when compiling for host.
+[2/2] Linking HIP executable dense_mmq_bench
+
+=== dense_mmq_bench T=2048 (f16 | mmq | rp, hc shapes last) ===
+dense_mmq_bench: T 2048; f16 = dequant + hipBLAS FP16 (today), mmq = llama.cpp int8 MMQ (+ q = its activation quantize), rp = mx repacked; % = speedup over f16 incl. the quantize
+  GDN attn_qkv (IQ3_S file)  q6_K    [ 2560 -> 10240]  f16  17.166 ms (  6.3 TF, err 2.9e-04) | mmq  10.250 + q 0.073 ms ( 10.5 TOPS, err 5.4e-03)  +66% | rp   8.506 + q ms ( 12.6 TOPS, err 5.4e-03) +100%, vs mmq: DIFFERS | weight quant err 1.8e-02
+  GDN attn_gate (IQ3_S file) iq4_xs  [ 2560 ->  6144]  f16   8.960 ms (  7.2 TF, err 3.0e-04) | mmq   4.996 + q 0.073 ms ( 12.9 TOPS, err 5.3e-03)  +77% | rp   3.609 + q ms ( 17.9 TOPS, err 5.3e-03) +143%, vs mmq: bitwise | weight quant err 7.7e-02
+  GDN ssm_out (IQ3_S file)   q6_K    [ 6144 ->  2560]  f16  11.501 ms (  5.6 TF, err 2.9e-04) | mmq   6.208 + q 0.300 ms ( 10.4 TOPS, err 5.4e-03)  +77% | rp   4.947 + q ms ( 13.0 TOPS, err 5.4e-03) +119%, vs mmq: DIFFERS | weight quant err 1.8e-02
+  QSA attn_q (IQ3_S file)    iq4_xs  [ 2560 -> 12288]  f16  18.883 ms (  6.8 TF, err 2.9e-04) | mmq   9.945 + q 0.073 ms ( 13.0 TOPS, err 5.4e-03)  +88% | rp   7.141 + q ms ( 18.0 TOPS, err 5.4e-03) +162%, vs mmq: bitwise | weight quant err 7.7e-02
+  QSA attn_output (IQ3_S file) q4_K    [ 6144 ->  2560]  f16   9.411 ms (  6.8 TF, err 3.0e-04) | mmq   5.100 + q 0.385 ms ( 12.6 TOPS, err 1.4e-02)  +72% | weight quant err 7.1e-02
+  GDN attn_qkv (IQ4_NL file) iq4_nl  [ 2560 -> 10240]  f16  14.713 ms (  7.3 TF, err 2.9e-04) | mmq   8.544 + q 0.071 ms ( 12.6 TOPS, err 5.4e-03)  +71% | rp   5.652 + q ms ( 19.0 TOPS, err 5.4e-03) +157%, vs mmq: bitwise | weight quant err 7.6e-02
+  GDN attn_gate (IQ4_NL file) iq4_nl  [ 2560 ->  6144]  f16   8.372 ms (  7.7 TF, err 2.9e-04) | mmq   5.131 + q 0.072 ms ( 12.6 TOPS, err 5.3e-03)  +61% | rp   3.404 + q ms ( 18.9 TOPS, err 5.3e-03) +141%, vs mmq: bitwise | weight quant err 7.6e-02
+  GDN ssm_out (IQ4_NL file)  q8_0    [ 6144 ->  2560]  f16   9.313 ms (  6.9 TF, err 2.9e-04) | mmq   5.624 + q 0.300 ms ( 11.5 TOPS, err 5.3e-03)  +57% | rp   3.293 + q ms ( 19.6 TOPS, err 5.3e-03) +159%, vs mmq: bitwise | weight quant err 5.4e-03
+  QSA attn_q (IQ4_NL file)   q6_K    [ 2560 -> 12288]  f16  20.394 ms (  6.3 TF, err 2.9e-04) | mmq  12.248 + q 0.072 ms ( 10.5 TOPS, err 5.3e-03)  +66% | rp  10.189 + q ms ( 12.6 TOPS, err 5.3e-03)  +99%, vs mmq: DIFFERS | weight quant err 1.8e-02
+  QSA attn_output (IQ4_NL file) q5_K    [ 6144 ->  2560]  f16   9.364 ms (  6.9 TF, err 2.9e-04) | mmq   5.688 + q 0.298 ms ( 11.3 TOPS, err 1.0e-02)  +56% | rp   5.404 + q ms ( 11.9 TOPS, err 1.0e-02)  +64%, vs mmq: DIFFERS | weight quant err 3.6e-02
+  hc down (Q8_0, 10240 -> 320) q8_0    [10240 ->   320]  f16   2.147 ms (  6.3 TF, err 3.0e-04) | mmq   1.495 + q 0.480 ms (  9.0 TOPS, err 5.4e-03)   +9% | rp   0.928 + q ms ( 14.5 TOPS, err 5.4e-03)  +52%, vs mmq: bitwise | weight quant err 5.3e-03
+  hc up (Q8_0, 320 -> 10240) q8_0    [  320 -> 10240]  f16   1.520 ms (  8.8 TF, err 2.9e-04) | mmq   1.742 + q 0.038 ms (  7.7 TOPS, err 5.4e-03)  -15% | weight quant err 5.4e-03
+
