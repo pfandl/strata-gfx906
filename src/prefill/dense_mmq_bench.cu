@@ -219,6 +219,12 @@ int main(int argc, char** argv) {
         {"GDN ssm_out (IQ4_NL file)", GGML_TYPE_Q8_0, 6144, 2560},
         {"QSA attn_q (IQ4_NL file)", GGML_TYPE_Q6_K, 2560, 12288},
         {"QSA attn_output (IQ4_NL file)", GGML_TYPE_Q5_K, 6144, 2560},
+        // The hyper-connection read (hc_*_down / hc_*_up, [hc_dim = 4 x 2560, hc_lr = 320] both ways; every layer,
+        // both halves).  The engine runs these on Bf16InF32 weights through bf16_proj - a bf16 -> f16 conversion,
+        // then hipBLAS FP16, which is the f16 column here.  STRATA_HC_Q8=1 gives the same matrices as Q8_0 codes, so
+        // the mmq/rp columns are what the read would cost on int8 dot products.
+        {"hc down (Q8_0, 10240 -> 320)", GGML_TYPE_Q8_0, 10240, 320},
+        {"hc up (Q8_0, 320 -> 10240)", GGML_TYPE_Q8_0, 320, 10240},
     };
     std::mt19937 rng(11);
     for (const Case& c : cases) run_case(c, T, rng);
