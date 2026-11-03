@@ -92,7 +92,7 @@ what actually costs there.
 
 | phase | ms/chunk | share | state in the code (checked, not assumed) |
 | --- | ---: | ---: | --- |
-| hc read | 546.6 | 20.0 % | `bf16_proj` -> `Gemm::bf16`: the `Bf16InF32` weight goes straight into `hipblasGemmEx` as **BF16 -> FP32** (no conversion outside the kernel, no hipBLASLt in this build). **Not int8, and not FP16 either.** 2.7 / 4.2 TFLOP/s on the two GEMMs, i.e. 2.2-2.5x *below* the same matrices in FP16. Measured with `STRATA_HIP_PROMPT_F16=1`: **261.4 ms, 10.7 %** |
+| hc read | 546.6 | 20.0 % | one stage's **48 reads**, i.e. **11.39 ms per read** (this table is 24 of the 48 layers - dividing by both stages' 96 halves it and hides the lever). `bf16_proj` -> `Gemm::bf16`: the `Bf16InF32` weight goes straight into `hipblasGemmEx` as **BF16 -> FP32** (no conversion outside the kernel, no hipBLASLt in this build). **Not int8, and not FP16 either.** 2.7 / 4.2 TFLOP/s on the two GEMMs, i.e. 2.2-2.5x *below* the same matrices in FP16. Measured with `STRATA_HIP_PROMPT_F16=1`: **261.4 ms, 10.7 %**, 5.44 ms per read |
 | qsa attn | 427.6 | 15.6 % | gfx906 has no prompt-attention kernel: the decode kernel runs in 32-query batches |
 | gemm gate/up | 414.0 | 15.1 % | int8, repacked GEMM (RP) |
 | gdn (qkv+gate) | 332.7 | 12.2 % | int8 dense MMQ/RP |
