@@ -1,0 +1,2 @@
+label=t3-rp mode=RP ntokens=32700
+EXIT rc=0
