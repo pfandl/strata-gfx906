@@ -1,0 +1,234 @@
+23:48:59 === arm 'base' at 65536: defaults ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+23:49:42 === arm 'base' at 65536: defaults ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 603.2, "tg_tok_s": 44.2, "drafts_accepted": 32, "drafts": 46}
+23:52:40 arm base: pp 603.2 tg 44.2 drafts 32/46
+23:52:40 === arm 'bigchunk' at 65536: PREFILL=auto:16384 ===
+ Container strata Recreate 
+Traceback (most recent call last):
+  File "<workspace>/bench/gfx906-context-bench.py", line 95, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "<workspace>/bench/gfx906-context-bench.py", line 77, in main
+    d = ask_words(a.url, words, a.max_new, a.request_timeout)
+  File "<workspace>/bench/gfx906-context-bench.py", line 50, in ask_words
+    return post(url, {"model": "qwen3.8-flash-next",
+                      "messages": [{"role": "user", "content": " ".join(words) + "\nAnswer briefly."}],
+                      "max_tokens": max_new, "temperature": 0,
+                      "chat_template_kwargs": {"enable_thinking": False}}, timeout)
+  File "<workspace>/bench/gfx906-context-bench.py", line 32, in post
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/urllib/request.py", line 187, in urlopen
+    return opener.open(url, data, timeout)
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/urllib/request.py", line 487, in open
+    response = self._open(req, data)
+  File "/usr/lib/python3.14/urllib/request.py", line 504, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+                              '_open', req)
+  File "/usr/lib/python3.14/urllib/request.py", line 464, in _call_chain
+    result = func(*args)
+  File "/usr/lib/python3.14/urllib/request.py", line 1350, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/urllib/request.py", line 1325, in do_open
+    r = h.getresponse()
+  File "/usr/lib/python3.14/http/client.py", line 1459, in getresponse
+    response.begin()
+    ~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib/python3.14/http/client.py", line 305, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+                             " response")
+http.client.RemoteDisconnected: Remote end closed connection without response
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 598.6, "tg_tok_s": 43.6, "drafts_accepted": 32, "drafts": 46}
+23:55:38 arm bigchunk: pp 598.6 tg 43.6 drafts 32/46
+23:55:38 === arm 'both' at 65536: PREFILL=auto:16384 PREFILL_PIPE=1 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 596.6, "tg_tok_s": 43.6, "drafts_accepted": 32, "drafts": 46}
+23:58:41 arm both: pp 596.6 tg 43.6 drafts 32/46
+23:58:41 restoring defaults
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+00:01:28 === arm 'small' at 65536: PREFILL=4096 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 603.3, "tg_tok_s": 43.9, "drafts_accepted": 32, "drafts": 46}
+00:04:30 arm small: pp 603.3 tg 43.9 drafts 32/46
+00:04:30 === arm 'mmap' at 65536: PLE_IO=mmap ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 599.5, "tg_tok_s": 43.8, "drafts_accepted": 32, "drafts": 46}
+00:07:26 arm mmap: pp 599.5 tg 43.8 drafts 32/46
+00:07:26 === arm 'rich' at 65536: RESIDENT_GIB=28 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 580.0, "tg_tok_s": 43.7, "drafts_accepted": 32, "drafts": 46}
+00:10:32 arm rich: pp 580.0 tg 43.7 drafts 32/46
+00:10:32 restoring defaults
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+13:39:34 === arm 'base' at 65536: PREFILL=auto:16384 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 513.1, "tg_tok_s": 42.6, "drafts_accepted": 32, "drafts": 42}
+13:43:04 arm base: pp 513.1 tg 42.6 drafts 32/42
+13:43:04 === arm 'pipe' at 65536: PREFILL=auto:16384 PREFILL_PIPE=1 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 532.7, "tg_tok_s": 43.4, "drafts_accepted": 25, "drafts": 37}
+13:46:25 arm pipe: pp 532.7 tg 43.4 drafts 25/37
+13:46:25 restoring defaults
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+13:57:05 === arm 'base8k' at 65536: defaults ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 592.7, "tg_tok_s": 43.0, "drafts_accepted": 32, "drafts": 46}
+14:00:13 arm base8k: pp 592.7 tg 43.0 drafts 32/46
+14:00:13 === arm 'pipe8k' at 65536: PREFILL_PIPE=1 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 597.3, "tg_tok_s": 42.0, "drafts_accepted": 24, "drafts": 33}
+14:03:21 arm pipe8k: pp 597.3 tg 42.0 drafts 24/33
+14:03:21 restoring defaults
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+14:57:59 === arm 'pinned' at 65536: defaults ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 589.8, "tg_tok_s": 44.0, "drafts_accepted": 32, "drafts": 46}
+15:01:02 arm pinned: pp 589.8 tg 44.0 drafts 32/46
+15:01:02 === arm 'pageable' at 65536: STRATA_TEST_PAGEABLE=1 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 603.7, "tg_tok_s": 44.2, "drafts_accepted": 32, "drafts": 46}
+15:04:04 arm pageable: pp 603.7 tg 44.2 drafts 32/46
+15:04:04 restoring defaults
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+19:25:53 === arm 'base' at 65536: defaults ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 590.0, "tg_tok_s": 49.7, "drafts_accepted": 34, "drafts": 47}
+19:38:24 arm base: pp 590.0 tg 49.7 drafts 34/47
+19:38:24 === arm 'f16' at 65536: STRATA_HIP_PROMPT_F16=1 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 598.4, "tg_tok_s": 49.7, "drafts_accepted": 34, "drafts": 47}
+19:54:06 arm f16: pp 598.4 tg 49.7 drafts 34/47
+19:54:06 restoring defaults
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+21:13:13 === arm 'base' at 65536: defaults ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 544.3, "tg_tok_s": 47.0, "drafts_accepted": 34, "drafts": 47}
+21:17:28 arm base: pp 544.3 tg 47.0 drafts 34/47
+21:17:28 restoring defaults
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+00:11:51 === arm 'a4096' at 65536: PREFILL=4096 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 636.5, "tg_tok_s": 48.0, "drafts_accepted": 69, "drafts": 105}
+00:15:08 arm a4096: pp 636.5 tg 48.0 drafts 69/105
+00:15:08 === arm 'a2048' at 65536: PREFILL=2048 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 686.1, "tg_tok_s": 48.3, "drafts_accepted": 69, "drafts": 105}
+00:18:13 arm a2048: pp 686.1 tg 48.3 drafts 69/105
+00:18:13 === arm 'a1024' at 65536: PREFILL=1024 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 632.6, "tg_tok_s": 39.0, "drafts_accepted": 14, "drafts": 23}
+00:21:24 arm a1024: pp 632.6 tg 39.0 drafts 14/23
+00:21:24 restoring defaults
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+00:23:19 === arm 'a2048b' at 65536: PREFILL=2048 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 700.2, "tg_tok_s": 48.4, "drafts_accepted": 69, "drafts": 105}
+00:26:28 arm a2048b: pp 700.2 tg 48.4 drafts 69/105
+00:26:28 restoring defaults
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+00:40:07 === arm 'a3072' at 65536: PREFILL=3072 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63297, "pp_tok_s": 701.1, "tg_tok_s": 48.4, "drafts_accepted": 69, "drafts": 105}
+00:43:21 arm a3072: pp 701.1 tg 48.4 drafts 69/105
+00:43:21 restoring defaults
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 

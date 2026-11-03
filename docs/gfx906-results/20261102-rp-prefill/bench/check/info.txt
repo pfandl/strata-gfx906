@@ -1,0 +1,2 @@
+label=check mode=RP_CHECK ntokens=65500
+EXIT rc=0

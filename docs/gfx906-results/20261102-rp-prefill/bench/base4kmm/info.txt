@@ -1,0 +1,2 @@
+label=base4kmm mode=BASELINE ntokens=65500
+EXIT rc=0
