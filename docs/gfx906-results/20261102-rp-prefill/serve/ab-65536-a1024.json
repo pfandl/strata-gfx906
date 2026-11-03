@@ -1,0 +1,27 @@
+{
+ "context": 65536,
+ "prompt_tokens": 63297,
+ "output_tokens": 28,
+ "finish": "stop",
+ "pp_tok_s": 632.6,
+ "prompt_ms": 100053.5,
+ "tg_tok_s": 39.0,
+ "decode_ms": 717.6,
+ "drafts_accepted": 14,
+ "drafts": 23,
+ "first_token_s": 100.7711,
+ "reply_head": "The text is a sequence of random words, primarily consisting",
+ "raw_timings": {
+  "cache_n": 0,
+  "prompt_n": 63297,
+  "prompt_ms": 100053.5,
+  "prompt_per_token_ms": 1.581,
+  "prompt_per_second": 632.6,
+  "predicted_n": 28,
+  "predicted_ms": 717.6,
+  "predicted_per_token_ms": 25.629,
+  "predicted_per_second": 39.0,
+  "draft_n": 23,
+  "draft_n_accepted": 14
+ }
+}

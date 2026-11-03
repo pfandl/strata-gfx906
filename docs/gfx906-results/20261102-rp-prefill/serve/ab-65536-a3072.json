@@ -1,0 +1,27 @@
+{
+ "context": 65536,
+ "prompt_tokens": 63297,
+ "output_tokens": 128,
+ "finish": "length",
+ "pp_tok_s": 701.1,
+ "prompt_ms": 90277.7,
+ "tg_tok_s": 48.4,
+ "decode_ms": 2645.5,
+ "drafts_accepted": 69,
+ "drafts": 105,
+ "first_token_s": 92.9232,
+ "reply_head": "The text is a long sequence of random words, primarily consi",
+ "raw_timings": {
+  "cache_n": 0,
+  "prompt_n": 63297,
+  "prompt_ms": 90277.7,
+  "prompt_per_token_ms": 1.426,
+  "prompt_per_second": 701.1,
+  "predicted_n": 128,
+  "predicted_ms": 2645.5,
+  "predicted_per_token_ms": 20.668,
+  "predicted_per_second": 48.4,
+  "draft_n": 105,
+  "draft_n_accepted": 69
+ }
+}
