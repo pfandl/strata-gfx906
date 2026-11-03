@@ -248,3 +248,81 @@
    qsa indexer             0.0 ms    0.0%    0.0% of GPU
    ple                     0.0 ms    0.0%    0.0% of GPU
 
+== t3-rp: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2561 2675 2645 2620 2631 2659 2653 2677 2685 2708 2729 2744 2743 2766 2780
+   steady mean: GPU 2694 ms, wall 2854 ms, 718 tok/s (wall)
+   hc read               544.9 ms   20.2%   20.2% of GPU
+   qsa attn              420.8 ms   15.6%   15.6% of GPU
+   gemm gate/up          409.4 ms   15.2%   15.2% of GPU
+   gdn                   313.1 ms   11.6%   11.6% of GPU
+   gemm down             192.6 ms    7.2%    7.2% of GPU
+   qsa proj              156.3 ms    5.8%    5.8% of GPU
+   gdn recurrence        130.5 ms    4.8%    4.8% of GPU
+   dequant               126.6 ms    4.7%    4.7% of GPU
+   gdn out proj          124.0 ms    4.6%    4.6% of GPU
+   router+shared         112.1 ms    4.2%    4.2% of GPU
+   qsa select             65.0 ms    2.4%    2.4% of GPU
+   host grouping          33.0 ms    1.2%    1.2% of GPU
+   hc write               21.1 ms    0.8%    0.8% of GPU
+   combine                16.1 ms    0.6%    0.6% of GPU
+   embed+steps            12.0 ms    0.4%    0.4% of GPU
+   gdn conv+gates          8.4 ms    0.3%    0.3% of GPU
+   gather                  4.1 ms    0.2%    0.2% of GPU
+   wait copy               3.8 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+
+== t3-f16io: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2311 2328 2341 2352 2432 2400 2384 2487 2474 2466 2438 2504 2543 2534 2491
+   steady mean: GPU 2441 ms, wall 2602 ms, 787 tok/s (wall)
+   qsa attn              423.7 ms   17.4%   17.4% of GPU
+   gemm gate/up          422.4 ms   17.3%   17.3% of GPU
+   gdn                   306.9 ms   12.6%   12.6% of GPU
+   hc read               261.4 ms   10.7%   10.7% of GPU
+   gemm down             193.4 ms    7.9%    7.9% of GPU
+   qsa proj              164.6 ms    6.7%    6.7% of GPU
+   gdn recurrence        131.4 ms    5.4%    5.4% of GPU
+   dequant               127.4 ms    5.2%    5.2% of GPU
+   gdn out proj          123.9 ms    5.1%    5.1% of GPU
+   router+shared         122.1 ms    5.0%    5.0% of GPU
+   qsa select             64.2 ms    2.6%    2.6% of GPU
+   host grouping          30.1 ms    1.2%    1.2% of GPU
+   hc write               24.6 ms    1.0%    1.0% of GPU
+   combine                16.4 ms    0.7%    0.7% of GPU
+   embed+steps            12.0 ms    0.5%    0.5% of GPU
+   gdn conv+gates          9.0 ms    0.4%    0.4% of GPU
+   gather                  4.5 ms    0.2%    0.2% of GPU
+   wait copy               3.6 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+
+== t3-rp2: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2490 2760 2613 2608 2657 2659 2662 2686 2686 2701 2727 2728 2755 2764 2779
+   steady mean: GPU 2699 ms, wall 2864 ms, 715 tok/s (wall)
+   hc read               544.0 ms   20.2%   20.2% of GPU
+   qsa attn              421.8 ms   15.6%   15.6% of GPU
+   gemm gate/up          414.5 ms   15.4%   15.4% of GPU
+   gdn                   320.1 ms   11.9%   11.9% of GPU
+   gemm down             186.6 ms    6.9%    6.9% of GPU
+   qsa proj              153.3 ms    5.7%    5.7% of GPU
+   gdn recurrence        130.5 ms    4.8%    4.8% of GPU
+   dequant               126.4 ms    4.7%    4.7% of GPU
+   gdn out proj          123.9 ms    4.6%    4.6% of GPU
+   router+shared         112.4 ms    4.2%    4.2% of GPU
+   qsa select             65.1 ms    2.4%    2.4% of GPU
+   host grouping          34.4 ms    1.3%    1.3% of GPU
+   hc write               21.4 ms    0.8%    0.8% of GPU
+   combine                16.3 ms    0.6%    0.6% of GPU
+   embed+steps            12.0 ms    0.4%    0.4% of GPU
+   gdn conv+gates          8.4 ms    0.3%    0.3% of GPU
+   gather                  4.0 ms    0.1%    0.1% of GPU
+   wait copy               3.8 ms    0.1%    0.1% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+

@@ -1,19 +1,23 @@
-# 2026-11-03 - what is left after the RP port: an env-knob audit, a corrected phase profile, and the hyper-connection read priced
+# 2026-11-03 - what is left after the RP port: an env-knob audit (which found one), a corrected phase profile, and the hyper-connection read priced
 
 The [2026-11-02 record](../20261102-rp-prefill/README.md) ended with a claim that needed testing before any more
 kernel work: *every remaining named phase is at its ceiling or algorithmically fixed, so prompt processing needs a
 kernel-scale project (int8 attention scores) or algorithmic work (the GDN scan), not another env lever*. This audit
-tests that claim on the same two-card box, and finds one phase the claim had wrong.
+tests that claim on the same two-card box, and the claim is **wrong in the most direct way**: the box's biggest lever
+is an environment knob that was already in the tree - `STRATA_HIP_PROMPT_F16=1`, whose tip is printed only on gfx103x -
+and it is worth **+10.4 %** of prompt processing here (650/670 -> 739.6 tok/s), because the largest phase is running
+BF16 GEMMs on a card that has no BF16 instructions.
 
 Everything here is one engine start per arm through [`bench/gfx906/rp-ab.sh`](../../../bench/gfx906/rp-ab.sh), the
 same fixed random-word prompt, the four RP flags on in every arm (`BASELINE` was not re-run: the port is the
 deployment now). Context 32768, prompt 32700 tokens, `--prefill 2048`, `--kv int8`, `--spec 4`, `--layer-split 24`,
-`--resident-budget-gib 20`, `--conversation-cache-mib 4096`, 6 pool workers. Engine: this branch at `c14e3abf`
-(13 commits ahead of `origin/gfx906`), built with the flags in `bench/gfx906/rp-check.sh`.
+`--resident-budget-gib 20`, `--conversation-cache-mib 4096`, 6 pool workers. Engine: this branch, `c14e3abf` for the
+`t1`/`t2` passes (13 commits ahead of `origin/gfx906`) and the same binary rebuilt at `af503f57` for `t3` (the only
+change in between is the tip below); built with the flags in `bench/gfx906/rp-check.sh`.
 
-## Two measurement traps this audit had to fix first
+## Three measurement traps this audit had to fix first
 
-Both cost real conclusions in the first pass, so they are worth stating for anyone repeating this.
+All three cost real conclusions in the first pass, so they are worth stating for anyone repeating this.
 
 1. **The first arm of a session is not comparable to the ones after it.** The GGUF is 62 GB and the box has 68 GB of
    RAM, so the *first* engine start reads it from the SSD and every later start finds it in the page cache. In the
@@ -26,7 +30,15 @@ Both cost real conclusions in the first pass, so they are worth stating for anyo
    showed `qsa proj` 261 ms, `gdn` 481 ms and `dequant` 329 ms; the warm arm of the *same* configuration shows 153,
    333 and 128 ms. Reading the cold numbers as kernel costs would have sent the work at the wrong kernels.
 
-With those two fixed, the run-to-run noise is +/-3 % on the end-to-end pp but **+/-0.7 % on the steady-state GPU
+3. **Price a phase against the call the engine makes, and divide it by one stage's work.** The first pass priced the
+   hyper-connection read with the bench's `f16` column while the engine runs `Gemm::bf16` (BF16 hipBLAS, 1.8-2.5x
+   slower on this card), and divided the phase by both cards' reads (96) instead of one stage's (48), halving the
+   per-read cost. Both errors pointed the same way, and together they turned the box's largest remaining lever into a
+   "rejected" item - see the priced section below. A bench column is evidence about the engine only if it is the same
+   call, and a phase table is interpretable only against the layer count that produced it (the phases sum to the
+   printed timeline, and that timeline is one stage's: 24 of the 48 layers, both halves).
+
+With those three fixed, the run-to-run noise is +/-3 % on the end-to-end pp but **+/-0.7 % on the steady-state GPU
 timeline** (the mean of the per-chunk `GPU timeline` line, first chunk excluded), which is what the verdicts below
 use.
 
@@ -46,6 +58,22 @@ The cold first pass (`t1-*`) is kept in `bench/` for the record, not for compari
 configuration as `t2-rp` 643.5, and `t1-sortne` 672.5 vs `t2-sortne` 669.2 shows the knob's apparent +4 % was the
 page cache, not the knob.
 
+A third blocked pass (`t3-*`) closed the question the bench opened - *is the hyper-connection read really at its
+ceiling* - by running the knob that turns the prompt path's 16-bit GEMMs into FP16 (`STRATA_HIP_PROMPT_F16=1`):
+
+| arm | env | GPU ms/chunk | hc read | pp tok/s |
+| --- | --- | ---: | ---: | ---: |
+| `t3-rp` | (the four RP flags) | 2694 | 544.9 | 650.0 |
+| `t3-f16io` | `+ STRATA_HIP_PROMPT_F16=1` | **2441** | **261.4** | **739.6** |
+| `t3-rp2` | (the four RP flags, again) | 2699 | 544.0 | 670.1 |
+
+**-255 ms of GPU timeline (-9.5 %), -283 ms in the hc read alone (-52 %), +10.4 % pp against the better reference
+(+12.1 % against their mean).** The references repeat to 0.2 % on the timeline and 0.1 % on the phase, so this is far
+outside the noise band. Every other phase is roughly unchanged (qsa attn 421 -> 424, gate/up 409 -> 422, gdn 313 ->
+307, qsa proj 156 -> 165): the whole win is the read. The full tables are in `bench/phase-tables.txt` and the arms in
+`bench/t3-*`. (This session's references are 1.4 % faster than `t2`'s - 2696 against 2734 ms on the same
+configuration - so arms are only compared inside their own pass, as everywhere else in this record.)
+
 `STRATA_MMQ_RESIDENT_SORT_NE=1` is worth one sentence because it was the most promising candidate: it sorts each
 chunk's experts by row count so the MMQ groups balance (`mmq_resident_sort_rows`, reachable on gfx906 - unlike
 `STRATA_MMQ_GROUP_SORT`, which needs NVIDIA `whole_tiles` and returns false here). Its per-chunk timeline is visibly
@@ -54,8 +82,9 @@ between the two reference runs. It stays off.
 
 `STRATA_HC_Q8=1` is a **decode** knob, and this audit does not disturb that: it shrinks the hyper-connection weights
 from `Bf16InF32` (4 B/element) to Q8_0, which frees ~0.95 GiB per card. What it does not do is speed the prompt
-path, because `bf16_proj` expands the Q8_0 codes back to bf16 per call (`prefill.cpp`, `hc_q8_to_bf16`) and the hc
-read phase measures the same 542-552 ms with and without it - see the next section.
+path, because `bf16_proj` expands the Q8_0 codes back to bf16 per call (`prefill.cpp`, `hc_q8_to_bf16`), so the GEMM
+stays BF16 hipBLAS and the hc read phase measures the same 542-552 ms with and without it - see the next section for
+what actually costs there.
 
 ## Corrected phase profile (warm, 2048-token chunks, 32700-token prompt)
 
@@ -63,7 +92,7 @@ read phase measures the same 542-552 ms with and without it - see the next secti
 
 | phase | ms/chunk | share | state in the code (checked, not assumed) |
 | --- | ---: | ---: | --- |
-| hc read | 546.6 | 20.0 % | `bf16_proj`: `Bf16InF32` weight -> bf16->f16 conversion per call -> hipBLAS FP16. **Not int8.** ~4.7 TFLOP/s effective |
+| hc read | 546.6 | 20.0 % | `bf16_proj` -> `Gemm::bf16`: the `Bf16InF32` weight goes straight into `hipblasGemmEx` as **BF16 -> FP32** (no conversion outside the kernel, no hipBLASLt in this build). **Not int8, and not FP16 either.** 2.7 / 4.2 TFLOP/s on the two GEMMs, i.e. 2.2-2.5x *below* the same matrices in FP16. Measured with `STRATA_HIP_PROMPT_F16=1`: **261.4 ms, 10.7 %** |
 | qsa attn | 427.6 | 15.6 % | gfx906 has no prompt-attention kernel: the decode kernel runs in 32-query batches |
 | gemm gate/up | 414.0 | 15.1 % | int8, repacked GEMM (RP) |
 | gdn (qkv+gate) | 332.7 | 12.2 % | int8 dense MMQ/RP |
@@ -79,45 +108,98 @@ read phase measures the same 542-552 ms with and without it - see the next secti
 
 The 2026-11-02 section's row for the hyper-connection read said *"dense, int8 through `STRATA_DENSE_*`, at the int8
 instruction ceiling (~11 TF/s)"*. That is **wrong**: the hc projections never enter `Gemm::native` (they are
-`Bf16InF32` with no GGUF blocks) and they run at 4.7 TFLOP/s of FP16, i.e. ~18 % of the card's FP16 peak. It is the
-single biggest phase, so the correction matters even though the conclusion below turns out to be the same.
+`Bf16InF32`, with no GGUF blocks). They run through `Gemm::bf16`, which on gfx906 is `hipblasGemmEx` with BF16 inputs
+and an FP32 accumulator - gfx906 has no BF16 instructions, so rocBLAS widens every element inside the kernel, and the
+two GEMMs run at **2.7 and 4.2 TFLOP/s where the same matrices in FP16 reach 6.5 and 9.0** (priced below).
+It is the single biggest phase *and* the one place where this audit's first pass was wrong in its own favour.
 
-## The hyper-connection read, priced (`dense_mmq_bench`, the two new hc cases)
+## The hyper-connection read, priced (`dense_mmq_bench`: the two hc cases and a BF16 column)
 
 `src/prefill/dense_mmq_bench.cu` gained the two shapes the read actually uses - `hc_*_down` `[10240 -> 320]` and
-`hc_*_up` `[320 -> 10240]` - as Q8_0 cases, so the bench's three paths compare directly: f16 = dequant + hipBLAS
-FP16 (today, including the conversion), mmq = int8 dot products, rp = the repacked int8 GEMM. T = 2048, medians:
+`hc_*_up` `[320 -> 10240]` - as Q8_0 cases, **and a `bf16` column**: the same product on a resident BF16 weight through
+`Gemm::bf16`, which is the call the read makes. An earlier version of this audit compared the int8 paths against the
+bench's `f16` column (`Gemm::native`: dequantize to FP16, then hipBLAS FP16) and so priced them against a path the
+read never runs. T = 2048, medians (T = 4096 in `bench/dense-mmq-hc-shapes.txt`):
 
-| shape | f16 (today) | int8 MMQ (+quantize) | int8 repacked (+quantize) |
+| shape | bf16 = today | f16 (dequant + hipBLAS FP16) | int8 MMQ (+ its quantize) | int8 repacked (+ its quantize) |
+| --- | ---: | ---: | ---: | ---: |
+| hc down [10240 -> 320] | **5.063 ms (2.7 TF)** | 2.068 ms (6.5 TF): **x2.45** | 1.495 + 0.480 = 1.975 ms (-61 %) | 0.917 + 0.480 = **1.397 ms (-72 %)** |
+| hc up [320 -> 10240] | **3.201 ms (4.2 TF)** | 1.491 ms (9.0 TF): **x2.15** | 1.732 + 0.040 = 1.772 ms (-45 %) | not covered (K = 320) |
+
+Two things fall out. First, **BF16 costs 1.8-2.5x on this card on every shape in the bench** (all twelve cases, both
+token counts): the same matrices in FP16 are 2.2-2.5x faster, because FP16 has `v_dot2` and BF16 has to be widened to
+FP32 - so this is not an int8 question at all. Second, the read's own budget only closes on the bf16 numbers: the
+timing table is **one stage's** (24 layers; its phases sum to the 2734 ms timeline, and the gdn phase's 313 ms matches
+289 ms of bench-rate GEMM over 24 layers), so 546.6 ms is **48 reads** and one read costs **11.39 ms** -
+8.26 ms of BF16 hipBLAS (73 %) plus ~3.1 ms of norm, silu, inject (N = 4, negligible) and mix.
+
+Priced per read against the 2734 ms chunk, from the bench (before the `t3` arm):
+
+| change | per read | per chunk | share |
 | --- | ---: | ---: | ---: |
-| hc down [10240 -> 320] | 2.147 ms (6.3 TF) | 1.495 + 0.480 = 1.975 ms (+9 %) | 0.928 + 0.480 = **1.408 ms (+52 %)** |
-| hc up [320 -> 10240] | 1.520 ms (8.8 TF) | 1.742 + 0.038 = 1.780 ms (**-15 %**) | not covered (K = 320) |
+| **the hc weights in FP16** (`Gemm::f16`; bf16 -> f16 is exact, and 16 bits stay 16 bits) | 11.39 -> 6.69 ms | **-226 ms** | **-8.3 %** |
+| ... plus the down projection repacked at int8, paying its activation quantize | -> 6.02 ms | -258 ms | -9.4 % |
+| ... plus the up projection at int8 as well | -> 6.26 ms | -246 ms | -9.0 % (worse - the up side is slower on int8) |
 
-The read is 546.6 ms per chunk over 48 layers x 2 halves = 5.69 ms per layer-half, against 3.67 ms of GEMM in the
-bench (the rest is the norm, the silu, the inject projection and the mix). The best int8 mix - repacked down plus
-MMQ up - saves 1.36 ms of those 5.69, i.e. **~2.4 % of the chunk (~130 ms), for a project that has to repack a
-K=320 shape the rp tiles do not cover and convert the resident weights.** That is not worth doing, and it is the
-reason this audit's headline is a *rejection*: the phase that looked like the biggest leftover is at its practical
-ceiling for this shape.
+**Measured**: the `t3-f16io` arm above applies exactly that idea to every 16-bit GEMM on the prompt path, and the read
+goes **11.35 -> 5.44 ms per read** (chunk 2696 -> 2441). That is *more* than the bench predicted, and the read's own
+budget says why: solving 11.35 = G_bf16 + E and 5.44 = G_f16 + E + conv for the ~1.4 ms of norm/silu/inject/mix
+memory traffic gives G_bf16 ~ 9.9 ms and G_f16 ~ 4.0 ms - a ratio of **2.46**, the same 2.45 the bench measures on
+`hc down`, but ~20 % slower in absolute terms than the isolated bench (two stages share the memory system).
+The error that hid this is trap 3: the phase is one stage's 48 reads, not both stages' 96, and the first pass priced
+the int8 alternatives against a benchmark column that the read never runs.
+
+So the largest phase does not need a kernel. What it needs is the *activations* in FP16 as well (`xn16`, `lo16`, and
+`xn16` again for the inject projection), which is either the `xf16` writers that the bf16->f16 CUDA path already uses
+or a 0.2 ms conversion per read; the weights are already 16-bit, the conversion is exact, and `bf16_to_f16_rows` /
+`Gemm::f16` exist for exactly it. Two variants are on the table: the shipped knob as it is (`STRATA_HIP_PROMPT_F16=1`,
+measured above, converts each weight per call and moves every 16-bit GEMM on the path to FP16), or the same thing
+narrowed to the three hc matrices with a load-time FP16 image. The narrow one keeps the numerics of every other
+projection intact and lands the same ~283 ms.
+
+**Neither variant is numerically free**, and that is the gate before any of this ships: `STRATA_HIP_PROMPT_F16=1` is
+documented as not bit-identical to the default, and on this arm's fixed random-word prompt it changes the generated
+tokens from the third one on (both references produce `259, 76038, 22700` repeating; the FP16 arm produces
+`259, 76038, 49433` repeating). The prompt is gibberish, so that is not evidence of damage - it is evidence that the
+knob has to go through the acceptance harness (MTP acceptance, KL) rather than being flipped on because it is faster.
+This arm measures the speed, not the acceptability.
+
+With this commit the engine prints that tip on gfx906 too (`prompt_f16()` in `gemm.cu`; verified in a 4096-token
+smoke arm, which prints it once per card). It was gated to gfx103x - which is why the knob was invisible on the one
+card where BF16 costs the most.
+
+The int8 line stays as the second-order item: +1.1 % for repacking one matrix, on top of either variant.
 
 ## What is actually left, re-ranked
 
-1. **qsa prompt attention (15.6 %, 428 ms/chunk).** The only block still on a structurally wrong kernel: no
+1. **`STRATA_HIP_PROMPT_F16=1`: +10.4 % pp, measured, already in the tree.** The knob a gfx103x-only tip advertises
+   takes the hc read from 544.5 to 261.4 ms/chunk and the timeline from 2696 to 2441 ms (`t3` pass above). Its gate
+   is numerical, not engineering: it must pass the acceptance harness (MTP acceptance, KL) before it is turned on in
+   the deployment - the knob is documented as not bit-identical, and it is not. If it fails the gate, the same win is
+   available narrower: a load-time FP16 image of `hc_*_down`, `hc_*_up` and `hc_*_inject` with `Gemm::f16`, which
+   leaves every other projection's numerics alone and lands the same ~283 ms.
+2. **qsa prompt attention (15.6 %, 428 ms/chunk).** The only block still on a structurally wrong kernel: no
    gfx906 prompt kernel exists, so `prefill.cpp` loops `qsa_decode_attn_batch` over 32-query batches and every query
    re-reads its KV window. A query-blocked tiled kernel that stages K/V once per 64 cells is the lever; the int8
    scores question stays separate (the *stored* cache can stay FP16 - the int8 that matters for MTP acceptance is
    storage, not a transient on-the-fly quantization). Estimated 150-250 ms/chunk = **+6-10 %**.
-2. **Expert gather/dequant (4.7 %, 128 ms) and the chunk-to-chunk variance it carries.** All 512 experts of a layer
+3. **Expert gather/dequant (4.7 %, 128 ms) and the chunk-to-chunk variance it carries.** All 512 experts of a layer
    are touched every chunk (10 of 512 x 2048 tokens), so a repacked image would hit ~100 % - but the repacked form is
    ~2.5x the GGUF bytes and only ~4 GiB/card is spare. Needs a hot-expert LRU or a repacked-layout decode GEMV.
    ~+4 %.
-3. **GDN recurrence (5.0 %, 136 ms).** Algorithmically open (chunked WY scan; exists for CUDA and gfx11, not
+4. **The hc read's down projection at int8 (+1.1 % on top of (1))**: 1.397 ms per read against 2.068 in FP16, the
+   quantize eating most of the repack's +48 %. The up projection stays 16-bit under every option (int8 is *slower*
+   there).
+5. **GDN recurrence (5.0 %, 136 ms).** Algorithmically open (chunked WY scan; exists for CUDA and gfx11, not
    gfx906), research-grade. ~+2-4 %.
-4. Everything else is at its measured ceiling: the expert GEMMs run at ~16-17 TFLOP/s of int8 (the bench's dense
+6. Everything else is at its measured ceiling: the expert GEMMs run at ~16-17 TFLOP/s of int8 (the bench's dense
    shapes reach 18-19 TOPS repacked), the dense projections at 12-19 TOPS, and the remaining glue is 1.8 %.
 
-So: the 2026-11-02 conclusion survives, with one phase moved from "at its ceiling" to "at its FP16 ceiling, and
-int8 would not help either", and with the attention block confirmed as the next kernel-scale project.
+The 2026-11-02 claim this audit set out to test fails at its own first sentence. There *is* an env lever left, it is
+the largest one on the box, and it shipped all along - with a tip that only gfx103x prints, because
+`prompt_f16()` assumes the FP16 advantage is an RDNA3 property. On a card with no BF16 instructions it is worth more,
+not less: **the reason the phase looked like an int8/FP16 ceiling was that nobody had measured the BF16 call it
+actually makes.**
 
 ## Reproducing
 
@@ -130,13 +212,15 @@ int8 would not help either", and with the attention block confirmed as the next 
 
     # a knob: the same line plus -e STRATA_MMQ_RESIDENT_SORT_NE=1 (and a second plain arm after it)
 
+    # the pass-3 arm: the same line plus -e STRATA_HIP_PROMPT_F16=1, bracketed by two plain arms
+
     # the per-chunk phase table of any arm
-    python3 bench/parse-phases.py <arm dir>
+    python3 docs/gfx906-results/20261103-opt-audit/bench/parse-phases.py data/rp-opt/<arm>
 
-    # the hc shapes on the three dense paths
-    STRATA_MMQ_KQ=1 build-906/dense_mmq_bench 2048
+    # the hc shapes on the four dense paths (f16 | bf16 | int8 mmq | int8 repacked), at 2048 and 4096 tokens
+    for T in 2048 4096; do STRATA_MMQ_KQ=1 build-906/dense_mmq_bench $T; done
 
-`bench/t1-*` and `bench/t2-*` keep `summary.txt`, `info.txt` and the engine's `stderr.log` (the phase tables are in
-their `stderr.log`; `bench/phase-tables.txt` is the parsed form). `bench/dense-mmq-hc-shapes.txt` is the whole bench
-output for both token counts.
+`bench/t1-*`, `bench/t2-*` and `bench/t3-*` keep `summary.txt`, `info.txt` and the engine's `stderr.log` (the phase
+tables are in their `stderr.log`; `bench/phase-tables.txt` is the parsed form). `bench/dense-mmq-hc-shapes.txt` is the
+whole bench output for both token counts, with the `bf16` column that started this.
 
