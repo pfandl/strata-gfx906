@@ -727,7 +727,11 @@ run it; the report below is from a community machine: an RX 6900 XT 16 GB (gfx10
   matrices in FP16 reach 6.5-9.0. The hyper-connection read - 20 % of the prompt chunk and 100 % of the BF16 work -
   halves (544.5 -> 261.4 ms/chunk, i.e. 11.35 -> 5.44 ms per read - the phase table is one stage's
   48 reads, 24 of the 48 layers, not both stages' 96). `dense_mmq_bench`'s `bf16` column measures it
-  directly on any card (1.8-2.5x over all twelve shapes tested on gfx906); the record is
+  directly on any card (1.8-2.5x over all twelve shapes tested on gfx906). It is not bit-identical,
+  and it cleared the acceptance gate the same day on this pack: over `tools/quant_quality.py prompt` +
+  `pcompare` the batched prompt path keeps the default's top token after all 20 prompts at KL 0.0119
+  mean / 0.00035 median, and MTP draft acceptance through the deployment runs 70.3 -> 72.2 % (1,569
+  drafts, greedy, three request types). The record is
   [gfx906-results/20261103-opt-audit](gfx906-results/20261103-opt-audit/README.md).
 - **The verifier's hyper-connection read as one persistent kernel:** `STRATA_HC_PERSIST=1` (opt-in, HIP, 32-lane
   waves) runs the read of 1-8 tokens as one kernel of 80 blocks with two grid barriers instead of three launches; a
