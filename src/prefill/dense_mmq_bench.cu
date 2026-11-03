@@ -2,7 +2,13 @@
 //
 //     STRATA_MMQ_KQ=1 dense_mmq_bench [T]
 //
-// (a) today's path: Gemm::native - the GGUF weight dequantized to FP16, then hipBLAS FP16 GEMM, FP16 activations;
+// (a) today's path for a dense projection: Gemm::native - the GGUF weight dequantized to FP16, then hipBLAS FP16 GEMM,
+//     FP16 activations;
+// (a') the same product on a resident BF16 weight: Gemm::bf16 - hipBLAS BF16 in / FP32 out, nothing converted outside
+//     the kernel.  This is what the engine runs for the hyper-connection read (Bf16InF32 weights, bf16_proj), so for
+//     those rows (a') *is* today, and the bf16/f16 ratio is what BF16 costs on this card (1.8-2.5x).  A read priced
+//     against f16 instead of against this column is priced against a path it does not run;
+//     STRATA_HIP_PROMPT_F16=1 is what moves it (and every 16-bit prompt GEMM) onto the f16 column's product;
 // (b) llama.cpp's MMQ (int8 dot products): the activations rounded to q8_1 (timed with it, and without it: one
 //     quantized input can feed several projections), the weight read as its GGUF blocks;
 // (c) mx-llama.cpp's repacked GEMM (rp_moe), where it covers the type (IQ4_NL), the weight repacked once.
@@ -42,6 +48,30 @@ void ck(cudaError_t e, const char* what) {
 __global__ void to_f16(const float* x, __half* y, int64_t n) {
     for (int64_t i = (int64_t) blockIdx.x * blockDim.x + threadIdx.x; i < n; i += (int64_t) gridDim.x * blockDim.x)
         y[i] = __float2half(x[i]);
+}
+
+// round to nearest, ties to even (the CUDA/HIP default for a bf16 store)
+__host__ __device__ inline uint16_t f32_to_bf16_bits(unsigned u) {
+    u += 0x7fffu + ((u >> 16) & 1u);
+    return (uint16_t) (u >> 16);
+}
+
+uint16_t bf16_rne(float v) {
+    unsigned u;
+    std::memcpy(&u, &v, 4);
+    return f32_to_bf16_bits(u);
+}
+
+float bf16_to_f32(uint16_t b) {
+    const unsigned u = (unsigned) b << 16;
+    float f;
+    std::memcpy(&f, &u, 4);
+    return f;
+}
+
+__global__ void to_bf16(const float* x, uint16_t* y, int64_t n) {
+    for (int64_t i = (int64_t) blockIdx.x * blockDim.x + threadIdx.x; i < n; i += (int64_t) gridDim.x * blockDim.x)
+        y[i] = f32_to_bf16_bits(__float_as_uint(x[i]));
 }
 
 template<class F>
@@ -89,6 +119,9 @@ void run_case(const Case& c, int64_t T, std::mt19937& rng) {
     std::vector<float> wf((size_t) N * K), x((size_t) T * K);
     for (auto& v : wf) v = wd(rng);
     for (auto& v : x) v = xd(rng);
+    // (a')'s weight: the same values as BF16, which is what a Bf16InF32 tensor holds
+    std::vector<uint16_t> wb((size_t) N * K);
+    for (size_t i = 0; i < wb.size(); ++i) wb[i] = bf16_rne(wf[i]);
     const size_t wbytes = ggml_row_size(c.t, K) * (size_t) N;
     std::vector<uint8_t> wq(wbytes + 4096, 0);   // the MMQ tail zeroed
     ggml_quantize_chunk(c.t, wf.data(), wq.data(), 0, N, K, nullptr);
@@ -103,6 +136,15 @@ void run_case(const Case& c, int64_t T, std::mt19937& rng) {
             double s = 0;
             for (int64_t k = 0; k < K; ++k) s += (double) x[(size_t) rows[i] * K + k] * wdq[(size_t) n * K + k];
             ref[i * N + n] = s;
+        }
+    // the same against the BF16 weight, so (a')'s error is the GEMM's own (as (a)'s is the dequantized weight's)
+    std::vector<double> refb(rows.size() * (size_t) N);
+    for (size_t i = 0; i < rows.size(); ++i)
+        for (int64_t n = 0; n < N; ++n) {
+            double s = 0;
+            for (int64_t k = 0; k < K; ++k)
+                s += (double) x[(size_t) rows[i] * K + k] * (double) bf16_to_f32(wb[(size_t) n * K + k]);
+            refb[i * N + n] = s;
         }
 
     // for scale: the error the weight's own quantization already carries (the dequantized product vs the FP32 weight's)
@@ -120,6 +162,7 @@ void run_case(const Case& c, int64_t T, std::mt19937& rng) {
     uint8_t *dw, *drw = nullptr;
     float *dx, *dy;
     __half* dx16;
+    uint16_t *dwb, *dxb;
     void* dq;
     int32_t *dids, *db;
     ck(cudaMalloc(&dw, wq.size()), "w");
@@ -128,6 +171,10 @@ void run_case(const Case& c, int64_t T, std::mt19937& rng) {
     ck(cudaMemcpy(dx, x.data(), x.size() * 4, cudaMemcpyHostToDevice), "x");
     ck(cudaMalloc(&dx16, x.size() * 2), "x16");
     to_f16<<<1024, 256, 0, s>>>(dx, dx16, (int64_t) x.size());
+    ck(cudaMalloc(&dxb, x.size() * 2), "xb");
+    to_bf16<<<1024, 256, 0, s>>>(dx, dxb, (int64_t) x.size());
+    ck(cudaMalloc(&dwb, wb.size() * 2), "wb");
+    ck(cudaMemcpy(dwb, wb.data(), wb.size() * 2, cudaMemcpyHostToDevice), "wb");
     ck(cudaMalloc(&dy, (size_t) T * N * 4), "y");
     ck(cudaMalloc(&dq, mmq::q8_bytes(T, K)), "xq");
     ck(cudaMalloc(&dids, (size_t) T * 4), "ids");
@@ -149,6 +196,12 @@ void run_case(const Case& c, int64_t T, std::mt19937& rng) {
     fetch();
     const double e_f16 = rel_err(y, ref, rows, N);
     const float t_f16 = median_ms(15, [&] { gm.native((const uint16_t*) dx16, c.t, dw, dy, T, N, K); });
+
+    // (a') the same product on a resident BF16 weight and BF16 activations: no dequant, no conversion outside the kernel
+    gm.bf16(dxb, dwb, dy, T, N, K);
+    fetch();
+    const double e_bf16 = rel_err(y, refb, rows, N);
+    const float t_bf16 = median_ms(15, [&] { gm.bf16(dxb, dwb, dy, T, N, K); });
 
     // (b) MMQ: one "expert" of T rows
     const bool mmq_ok = mmq::supported(c.t) && mmq::fits(c.t, N);
@@ -186,6 +239,7 @@ void run_case(const Case& c, int64_t T, std::mt19937& rng) {
     const double gf = 2.0 * T * N * K / 1e9;
     std::printf("  %-26s %-7s [%5lld -> %5lld]  f16 %7.3f ms (%5.1f TF, err %.1e)", c.name, ggml_type_name(c.t),
                 (long long) K, (long long) N, t_f16, gf / t_f16, e_f16);
+    std::printf(" | bf16 %7.3f ms (%5.1f TF, err %.1e) x%.2f", t_bf16, gf / t_bf16, e_bf16, t_bf16 / t_f16);
     if (mmq_ok)
         std::printf(" | mmq %7.3f + q %5.3f ms (%5.1f TOPS, err %.1e) %+4.0f%%", t_mmq, t_q, gf / t_mmq, e_mmq,
                     100.0 * (t_f16 / (t_mmq + t_q) - 1.0));
@@ -195,7 +249,8 @@ void run_case(const Case& c, int64_t T, std::mt19937& rng) {
         std::printf(" | rp %7.3f + q ms (%5.1f TOPS, err %.1e) %+4.0f%%, vs mmq: %s", t_rp, gf / t_rp, e_rp,
                     100.0 * (t_f16 / (t_rp + t_q) - 1.0), rp_diff ? "DIFFERS" : "bitwise");
     std::printf(" | weight quant err %.1e\n", e_wq);
-    for (void* v : {(void*) dw, (void*) dx, (void*) dx16, (void*) dy, dq, (void*) dids, (void*) db, (void*) drw})
+    for (void* v : {(void*) dw, (void*) dx, (void*) dx16, (void*) dwb, (void*) dxb, (void*) dy, dq, (void*) dids,
+                    (void*) db, (void*) drw})
         if (v) cudaFree(v);
     cudaStreamDestroy(s);
 }
@@ -204,7 +259,8 @@ void run_case(const Case& c, int64_t T, std::mt19937& rng) {
 
 int main(int argc, char** argv) {
     const int64_t T = argc > 1 ? std::atoll(argv[1]) : 4096;
-    std::printf("dense_mmq_bench: T %lld; f16 = dequant + hipBLAS FP16 (today), mmq = llama.cpp int8 MMQ (+ q = its "
+    std::printf("dense_mmq_bench: T %lld; f16 = dequant + hipBLAS FP16, bf16 = a resident BF16 weight through hipBLAS "
+                "(the hyper-connection read's own call; x = its cost vs f16), mmq = llama.cpp int8 MMQ (+ q = its "
                 "activation quantize), rp = mx repacked; %% = speedup over f16 incl. the quantize\n", (long long) T);
     const Case cases[] = {
         // Swift GSQ-RCO IQ3_S (our 2-GPU default)
@@ -220,9 +276,11 @@ int main(int argc, char** argv) {
         {"QSA attn_q (IQ4_NL file)", GGML_TYPE_Q6_K, 2560, 12288},
         {"QSA attn_output (IQ4_NL file)", GGML_TYPE_Q5_K, 6144, 2560},
         // The hyper-connection read (hc_*_down / hc_*_up, [hc_dim = 4 x 2560, hc_lr = 320] both ways; every layer,
-        // both halves).  The engine runs these on Bf16InF32 weights through bf16_proj - a bf16 -> f16 conversion,
-        // then hipBLAS FP16, which is the f16 column here.  STRATA_HC_Q8=1 gives the same matrices as Q8_0 codes, so
-        // the mmq/rp columns are what the read would cost on int8 dot products.
+        // both halves).  The engine runs these on Bf16InF32 weights through bf16_proj -> Gemm::bf16, i.e. hipBLAS with
+        // BF16 in and FP32 out and nothing converted outside the kernel: that is the bf16 column.  The f16 column is
+        // only a reference for these rows (Gemm::native's dequant + hipBLAS FP16, which the read never pays).
+        // STRATA_HC_Q8=1 gives the same matrices as Q8_0 codes, so the mmq/rp columns are what the read would cost on
+        // int8 dot products.
         {"hc down (Q8_0, 10240 -> 320)", GGML_TYPE_Q8_0, 10240, 320},
         {"hc up (Q8_0, 320 -> 10240)", GGML_TYPE_Q8_0, 320, 10240},
     };
