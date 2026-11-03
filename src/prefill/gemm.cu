@@ -600,11 +600,22 @@ bool prompt_f16() {
     hipDeviceProp_t p{};
     if (hipGetDeviceProperties(&p, dev) != hipSuccess) { (void) hipGetLastError(); p.gcnArchName[0] = 0; }
     if (on) std::fprintf(stderr, "strata prefill: HIP device %d%s%s - STRATA_HIP_PROMPT_F16=1: the prompt's 16-bit GEMMs run FP16 in and out "
-                                 "(rocBLAS is tuned only for that on gfx103x; not bit-identical to the default)%s",
+                                 "(6.6x faster than FP16-in/FP32-out on gfx103x, 2.2-2.5x faster than the BF16 products on gfx906; "
+                                 "not bit-identical to the default)%s",
                          dev, p.gcnArchName[0] ? " " : "", p.gcnArchName, "\n");
     else if (e == nullptr && std::strncmp(p.gcnArchName, "gfx103", 6) == 0)
         std::fprintf(stderr, "strata prefill: HIP device %d %s - tip: STRATA_HIP_PROMPT_F16=1 reads long prompts about 2x faster here "
                              "(FP16 prompt GEMMs, rocBLAS is tuned only for FP16 on gfx103x; the numbers differ slightly, see docs/AMD_HIP.md)%s",
+                     dev, p.gcnArchName, "\n");
+    else if (e == nullptr && std::strncmp(p.gcnArchName, "gfx906", 6) == 0)
+        // not the RDNA3 tuning here: gfx906 has no BF16 instructions, so the prompt's BF16 products (the
+        // hyper-connection read is most of them) run 2.2-2.5x slower than the same matrices in FP16, which is what
+        // this switch uses.  Measured 2026-11-03, on top of the RP flags: +10.4 % of prompt,
+        // docs/gfx906-results/20261103-opt-audit.
+        std::fprintf(stderr, "strata prefill: HIP device %d %s - tip: STRATA_HIP_PROMPT_F16=1 reads long prompts about "
+                             "10%% faster here: this card has no BF16 instructions, so the prompt's BF16 products (the "
+                             "hyper-connection read is most of them) run 2.2-2.5x slower than the same matrices in FP16, "
+                             "which that switch uses. The numbers differ slightly, see docs/AMD_HIP.md%s",
                      dev, p.gcnArchName, "\n");
     cached[dev].store(on ? 2 : 1, std::memory_order_relaxed);
     return on;
