@@ -1,0 +1,66 @@
+16:31:42 === arm 'c2048' at 65536: PREFILL=2048 ===
+ Container strata Stopping 
+ Container strata Stopped 
+ Container strata Removing 
+ Container strata Removed 
+ Network strata_default Removing 
+ Network strata_default Removed 
+ Network strata_default Creating 
+ Network strata_default Creating 
+ Network strata_default Created 
+ Network strata_default Created 
+ Container strata Creating 
+ Container strata Created 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 773.6, "tg_tok_s": 41.2, "drafts_accepted": 26, "drafts": 41}
+16:35:10 arm c2048: pp 773.6 tg 41.2 drafts 26/41
+16:35:10 === arm 'c4096' at 65536: PREFILL=4096 ===
+ Container strata Stopping 
+ Container strata Stopped 
+ Container strata Removing 
+ Container strata Removed 
+ Network strata_default Removing 
+ Network strata_default Removed 
+ Network strata_default Creating 
+ Network strata_default Creating 
+ Network strata_default Created 
+ Network strata_default Created 
+ Container strata Creating 
+ Container strata Created 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 807.6, "tg_tok_s": 42.1, "drafts_accepted": 27, "drafts": 49}
+16:38:38 arm c4096: pp 807.6 tg 42.1 drafts 27/49
+16:38:38 === arm 'c2048b' at 65536: PREFILL=2048 ===
+ Container strata Stopping 
+ Container strata Stopped 
+ Container strata Removing 
+ Container strata Removed 
+ Network strata_default Removing 
+ Network strata_default Removed 
+ Network strata_default Creating 
+ Network strata_default Creating 
+ Network strata_default Created 
+ Network strata_default Created 
+ Container strata Creating 
+ Container strata Created 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 806.7, "tg_tok_s": 43.1, "drafts_accepted": 26, "drafts": 41}
+16:41:53 arm c2048b: pp 806.7 tg 43.1 drafts 26/41
+16:41:53 restoring defaults
+ Container strata Stopping 
+ Container strata Stopped 
+ Container strata Removing 
+ Container strata Removed 
+ Network strata_default Removing 
+ Network strata_default Removed 
+ Network strata_default Creating 
+ Network strata_default Creating 
+ Network strata_default Created 
+ Network strata_default Created 
+ Container strata Creating 
+ Container strata Created 
+ Container strata Starting 
+ Container strata Started 

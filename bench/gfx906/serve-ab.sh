@@ -9,14 +9,18 @@
 # would run with (`PREFILL=2048`, `STRATA_PF_RP=0`, ...). Defaults are restored at the end.
 #
 # Overridable:
-#   COMPOSE_UP  the restart command (default "docker compose up -d --force-recreate"; where docker
-#               needs the group, e.g. COMPOSE_UP="sg docker -c 'docker compose up -d --force-recreate'")
+#   COMPOSE_UP  the restart command (default "docker compose down && docker compose up -d"; where
+#               docker needs the group, e.g. COMPOSE_UP="sg docker -c 'docker compose down && docker
+#               compose up -d'"). `down` is not cosmetic: `up -d --force-recreate` starts the new
+#               engine while the old one is still unloading 60+ GB (stop_grace_period 120s), and the
+#               arms of docs/gfx906-results/20261104-chunk-sweep/ then spread 673-840 tok/s (25 %) at
+#               a fixed config. Restarting through `down` narrowed the same block to 4.4 %.
 #   OUT         where the JSON and the log go (default: this directory)
 #   URL         the engine (default http://127.0.0.1:8080)
 set -u -o pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
 OUT=${OUT:-$HERE}
-COMPOSE_UP=${COMPOSE_UP:-docker compose up -d --force-recreate}
+COMPOSE_UP=${COMPOSE_UP:-docker compose down && docker compose up -d}
 URL=${URL:-http://127.0.0.1:8080}
 LOG=${LOG:-$OUT/serve-ab.log}
 CTX="$1"; shift

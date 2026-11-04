@@ -1,0 +1,33 @@
+16:14:26 === arm 'b4096' at 65536: PREFILL=4096 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 724.8, "tg_tok_s": 42.7, "drafts_accepted": 27, "drafts": 49}
+16:17:34 arm b4096: pp 724.8 tg 42.7 drafts 27/49
+16:17:34 === arm 'b3072' at 65536: PREFILL=3072 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 840.0, "tg_tok_s": 50.3, "drafts_accepted": 27, "drafts": 32}
+16:20:28 arm b3072: pp 840.0 tg 50.3 drafts 27/32
+16:20:28 === arm 'b2048' at 65536: PREFILL=2048 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 766.8, "tg_tok_s": 43.2, "drafts_accepted": 26, "drafts": 41}
+16:23:22 arm b2048: pp 766.8 tg 43.2 drafts 26/41
+16:23:22 === arm 'b4096b' at 65536: PREFILL=4096 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 743.7, "tg_tok_s": 44.4, "drafts_accepted": 27, "drafts": 49}
+16:26:28 arm b4096b: pp 743.7 tg 44.4 drafts 27/49
+16:26:28 restoring defaults
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 

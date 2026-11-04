@@ -1,0 +1,47 @@
+15:50:03 === arm 'a2048' at 65536: PREFILL=2048 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 673.5, "tg_tok_s": 34.1, "drafts_accepted": 26, "drafts": 41}
+15:53:13 arm a2048: pp 673.5 tg 34.1 drafts 26/41
+15:53:13 === arm 'a4096' at 65536: PREFILL=4096 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 806.6, "tg_tok_s": 44.5, "drafts_accepted": 27, "drafts": 49}
+15:56:07 arm a4096: pp 806.6 tg 44.5 drafts 27/49
+15:56:07 === arm 'a2048b' at 65536: PREFILL=2048 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 829.6, "tg_tok_s": 43.2, "drafts_accepted": 26, "drafts": 41}
+15:59:04 arm a2048b: pp 829.6 tg 43.2 drafts 26/41
+15:59:04 === arm 'a4096b' at 65536: PREFILL=4096 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 802.2, "tg_tok_s": 44.6, "drafts_accepted": 27, "drafts": 49}
+16:02:08 arm a4096b: pp 802.2 tg 44.6 drafts 27/49
+16:02:08 === arm 'a3072' at 65536: PREFILL=3072 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 690.8, "tg_tok_s": 49.9, "drafts_accepted": 27, "drafts": 32}
+16:05:17 arm a3072: pp 690.8 tg 49.9 drafts 27/32
+16:05:17 === arm 'a3072b' at 65536: PREFILL=3072 ===
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
+{"context": 65536, "prompt_tokens": 63267, "pp_tok_s": 804.0, "tg_tok_s": 50.2, "drafts_accepted": 27, "drafts": 32}
+16:08:13 arm a3072b: pp 804.0 tg 50.2 drafts 27/32
+16:08:13 restoring defaults
+ Container strata Recreate 
+ Container strata Recreated 
+ Container strata Starting 
+ Container strata Started 
