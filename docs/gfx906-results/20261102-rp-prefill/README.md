@@ -11,6 +11,8 @@ tokens of seeded random words, so no prompt-cache or n-gram reuse.
 **Verdict: the RP stack (repacked int8 GEMMs on the `dp4a` path) is +6.7 % prefill at the default
 auto chunks and +33 % at 4K chunks, bitwise-parity clean, and chunk size — not the stack — is the
 dominant knob once RP is on (2048-3072 form a ~700 tok/s plateau, 1024 and 4096 both sit ~633).**
+*Chunk claim corrected 2026-11-04: the "+6.7 %/+33 %" verdicts stand, but chunk size is **not** a
+throughput knob — see the correction box in §2 (`…/20261104-chunk-sweep/`).*
 
 ## 1. Controlled A/B, one engine start per arm (`bench/`)
 
@@ -60,6 +62,17 @@ first chunk (shorter first-token latency, finer prompt-cache checkpoints); `PREF
 env override. A `base` arm (defaults, 544.3 tok/s) is in `serve/serve-ab.log`; it is not used as a
 baseline above because it is the same-config run that wandered 545-604 tok/s across that afternoon
 (the `bench/` A/B in §1 measures both arms in one process precisely to avoid that).
+
+> **Correction, 2026-11-04 — the "1024 and 4096 each lose ~10 %" reading is withdrawn.** The `a4096`
+> arm is the **first arm of this block** (`serve-ab.log` 00:11:51, three hours after the previous
+> block), so it is the cold-start trap this repo documents elsewhere and it has no warm 4096 reference
+> to bracket it. Re-measured on the full stack with 5 / 3 / 5 arms in one session
+> (`…/20261104-chunk-sweep/`): 2048, 3072 and 4096 are **one population** (770.0 / 778.3 / 777.0 tok/s,
+> within-size spread 12-23 %). The absolute level above (~700) is also RP-only: the later switches take
+> that harness to ~780-830. `PREFILL=2048` is unchanged, but for the checkpoints and the first chunk,
+> not for throughput. The mechanism that made these five single arms look like a curve is the harness:
+> `up -d --force-recreate` overlaps the new engine with the old one's teardown; `down` first cut the
+> spread from 25 % to 4.4 %.
 
 ## 3. Phase profile (`phase-profile-pre-rp-2026-11-01.txt`)
 

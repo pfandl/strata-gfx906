@@ -37,7 +37,9 @@ per-chunk `PP` line of `stdout.log` agrees to 0.2 % (e.g. `rp2k`: 100502 ms / 65
    `+6.7 %` was measured at 8192 chunks, where *both* arms were partly reading experts off the SSD
    (#669: an 8192-token chunk lends 1891 slots and only 1690 of their experts fit in RAM, so the rest
    are read per chunk) — that masked the stack's advantage. At 4096 it was +18.3 %, at 2048 it is
-   +12.7 %: the stack's gain is chunk-dependent, and 2048 is the chunk the deployment ships.
+   +12.7 %: the stack's gain is chunk-dependent, and 2048 is the chunk the deployment ships. The
+   dependence does **not** rank the chunk sizes — that is measured in `…/20261104-chunk-sweep/`, where
+   2048, 3072 and 4096 are one population in absolute terms (770.0 / 778.3 / 777.0 tok/s).
 2. **The chunk change 8192 → 2048 is worth ~+1.3 %**, not the ~12 % an elimination over the ladder
    suggested: the cold baseline at 8192 (549.0) against the cold baseline at 2048 (556.0). The rest of
    that residual is the stack's larger gain at 2048 plus page-cache warmth.

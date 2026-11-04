@@ -1,0 +1,27 @@
+{
+ "context": 65536,
+ "prompt_tokens": 63267,
+ "output_tokens": 48,
+ "finish": "stop",
+ "pp_tok_s": 773.6,
+ "prompt_ms": 81782.7,
+ "tg_tok_s": 41.2,
+ "decode_ms": 1164.8,
+ "drafts_accepted": 26,
+ "drafts": 41,
+ "first_token_s": 82.9475,
+ "reply_head": "The text is a long, random sequence of words (such as \"walnu",
+ "raw_timings": {
+  "cache_n": 0,
+  "prompt_n": 63267,
+  "prompt_ms": 81782.7,
+  "prompt_per_token_ms": 1.293,
+  "prompt_per_second": 773.6,
+  "predicted_n": 48,
+  "predicted_ms": 1164.8,
+  "predicted_per_token_ms": 24.267,
+  "predicted_per_second": 41.2,
+  "draft_n": 41,
+  "draft_n_accepted": 26
+ }
+}
