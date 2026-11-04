@@ -1,0 +1,8 @@
+=== 20:35:28 arm L1-sortne2 bin=L1 prefill=2048 [STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1 STRATA_MMQ_RESIDENT_SORT_NE=1] start ===
+label=L1-sortne2 mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 50506 ms (647.4 tok/s), 8 generated in 332 ms (24.1 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 20:38:00 arm L1-sortne2 done rc=0 ===
+=== 20:38:20 arm L1-nosort bin=L1 prefill=2048 [STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1] start ===
+label=L1-nosort mode=BASELINE ntokens=32700

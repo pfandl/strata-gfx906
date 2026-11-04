@@ -1,0 +1,69 @@
+=== 20:01:06 arm L1-warm bin=L1 prefill=auto [] start ===
+label=L1-warm mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 71065 ms (460.1 tok/s), 8 generated in 344 ms (23.3 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 20:04:03 arm L1-warm done rc=0 ===
+=== 20:04:23 arm L1-stock bin=L1 prefill=auto [] start ===
+label=L1-stock mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 72964 ms (448.2 tok/s), 8 generated in 333 ms (24.0 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 20:07:11 arm L1-stock done rc=0 ===
+=== 20:07:31 arm L1-geo bin=L1 prefill=2048 [] start ===
+label=L1-geo mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 61417 ms (532.4 tok/s), 8 generated in 335 ms (23.9 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 20:10:08 arm L1-geo done rc=0 ===
+=== 20:10:28 arm L1-f16 bin=L1 prefill=2048 [STRATA_HIP_PROMPT_F16=1] start ===
+label=L1-f16 mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 52023 ms (628.6 tok/s), 8 generated in 329 ms (24.3 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 20:13:06 arm L1-f16 done rc=0 ===
+=== 20:13:26 arm L1-sw bin=L1 prefill=2048 [STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1] start ===
+label=L1-sw mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 56984 ms (573.8 tok/s), 8 generated in 337 ms (23.8 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 20:16:03 arm L1-sw done rc=0 ===
+=== 20:16:23 arm L1-all bin=L1 prefill=2048 [STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1] start ===
+label=L1-all mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 51615 ms (633.5 tok/s), 8 generated in 332 ms (24.1 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 20:18:55 arm L1-all done rc=0 ===
+=== 20:19:15 arm L1-sortne bin=L1 prefill=2048 [STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1 STRATA_MMQ_RESIDENT_SORT_NE=1] start ===
+label=L1-sortne mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 48809 ms (670.0 tok/s), 8 generated in 334 ms (23.9 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 20:21:33 arm L1-sortne done rc=0 ===
+=== 20:21:53 arm L1-pipe bin=L1 prefill=2048 [STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1 STRATA_PREFILL_PIPE=1] start ===
+label=L1-pipe mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 65379 ms (500.2 tok/s), 8 generated in 328 ms (24.4 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 20:24:35 arm L1-pipe done rc=0 ===
+=== 20:24:55 arm L1-all2 bin=L1 prefill=2048 [STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1] start ===
+label=L1-all2 mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 48321 ms (676.7 tok/s), 8 generated in 328 ms (24.4 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 20:27:17 arm L1-all2 done rc=0 ===
+=== BLOCK 1 DONE 20:27:37 ===
+/tmp/layer-ab.sh: 57: un: not found
+=== 20:27:37 arm L3-k2 bin=L3 prefill=2048 [STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1 STRATA_PROMPT_ATTN_GFX906=1] start ===
+label=L3-k2 mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 48217 ms (678.2 tok/s), 8 generated in 333 ms (24.0 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 20:30:04 arm L3-k2 done rc=0 ===
+=== 20:30:24 arm L3-ko2 bin=L3 prefill=2048 [STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1 STRATA_PROMPT_ATTN_GFX906=0] start ===
+label=L3-ko2 mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 53381 ms (612.6 tok/s), 8 generated in 337 ms (23.7 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 20:32:57 arm L3-ko2 done rc=0 ===
+/tmp/layer-ab.sh: 60: Syntax error: "fi" unexpected

@@ -1,0 +1,25 @@
+=== 21:15:25 arm L3-ko3 bin=L3 [STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1 STRATA_PF_RP=1 STRATA_DENSE_MMQ=1 STRATA_DENSE_RP=1 STRATA_MMQ_KQ=1 STRATA_PROMPT_ATTN_GFX906=0] start ===
+label=L3-ko3 mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 49134 ms (665.5 tok/s), 8 generated in 378 ms (21.1 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 21:17:52 arm L3-ko3 done rc=0 ===
+=== 21:18:12 arm L2-rp3 bin=L2 [STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1 STRATA_MMQ_RESIDENT_SORT_NE=1 STRATA_PF_RP=1 STRATA_DENSE_MMQ=1 STRATA_DENSE_RP=1 STRATA_MMQ_KQ=1] start ===
+label=L2-rp3 mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 42974 ms (760.9 tok/s), 8 generated in 331 ms (24.2 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 21:20:40 arm L2-rp3 done rc=0 ===
+=== 21:21:00 arm L3-k3 bin=L3 [STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1 STRATA_MMQ_RESIDENT_SORT_NE=1 STRATA_PF_RP=1 STRATA_DENSE_MMQ=1 STRATA_DENSE_RP=1 STRATA_MMQ_KQ=1 STRATA_PROMPT_ATTN_GFX906=1] start ===
+label=L3-k3 mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 45598 ms (717.1 tok/s), 8 generated in 372 ms (21.5 tok/s), drafts accepted 0 of 1, 1 checkpoints
+=== 21:23:22 arm L3-k3 done rc=0 ===
+=== 21:23:42 arm L3-ko4 bin=L3 [STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1 STRATA_MMQ_RESIDENT_SORT_NE=1 STRATA_PF_RP=1 STRATA_DENSE_MMQ=1 STRATA_DENSE_RP=1 STRATA_MMQ_KQ=1 STRATA_PROMPT_ATTN_GFX906=0] start ===
+label=L3-ko4 mode=BASELINE ntokens=32700
+EXIT rc=0
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 42501 ms (769.4 tok/s), 8 generated in 332 ms (24.1 tok/s), drafts accepted 0 of 0, 1 checkpoints
+=== 21:26:04 arm L3-ko4 done rc=0 ===
+=== PART 4 DONE 21:26:24 ===
