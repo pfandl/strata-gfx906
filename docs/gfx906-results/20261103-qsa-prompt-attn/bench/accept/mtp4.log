@@ -1,0 +1,19 @@
+=== arm prompt_attn=0 at 2026-11-03T21:52:48+01:00 ===
+health after 18 polls: 200
+env in container: 1
+req 1: http=200 wall=20.789074
+req 2: http=200 wall=3.423643
+req 3: http=200 wall=16.133664
+=== arm prompt_attn=1 at 2026-11-03T21:55:01+01:00 ===
+health after 19 polls: 200
+env in container: 1
+req 1: http=200 wall=12.106247
+req 2: http=200 wall=5.006013
+req 3: http=200 wall=16.179578
+=== arm prompt_attn=0 at 2026-11-03T21:57:12+01:00 ===
+health after 18 polls: 200
+env in container: 1
+req 1: http=200 wall=17.667069
+req 2: http=200 wall=5.045009
+req 3: http=200 wall=15.807415
+=== done at 2026-11-03T21:59:23+01:00 ===

@@ -10,7 +10,8 @@ Everything below is the same two-card box, the same fixed random-word prompt (32
 `--prefill 2048`, `--kv int8`, `--spec 4`, `--layer-split 24`), one engine start per arm through
 [`bench/gfx906/rp-ab.sh`](../../../bench/gfx906/rp-ab.sh), and the shipped configuration in every arm: the four RP flags
 **and** `STRATA_HIP_PROMPT_F16=1` (the +10.4 % knob from the audit). Artefacts: `data/rp-opt/s0-*` (the switch arms),
-`data/rp-opt/s1-*` (the kernel's arms), `data/rp-opt/accept-attn/` (the acceptance gate).
+`data/rp-opt/s1-*` and `s2-*` (the kernel's arms, on the host build and on the shipped binary), `data/rp-opt/accept-attn/`
+(the acceptance gate).
 
 ## 1. The two gfx906 attention switches: +5.8 % of prompt, bit-identical
 
@@ -105,14 +106,40 @@ For scale, on the same yardstick: `STRATA_HIP_PROMPT_F16=1` is 0.01185 / 0.00035
 kernels against the FP16 path are 0.095 / 0.0027 and stayed opt-in. This change sits with the first, on a stricter
 input (int8 KV, i.e. the mode the kernel actually acts in).
 
-**Status**: the kernel ships **off by default** (`STRATA_PROMPT_ATTN_GFX906=1` opts in). What is still missing before
-it could become a default is the other half of the gate this box uses - MTP draft acceptance through the deployment:
-three request types, greedy, `timings.draft_n_accepted / draft_n` out of each response, one compose recreate per arm
-(the recipe and its artefacts are `20261103-opt-audit/bench/accept/`, `mtp3-*`). Its speed half is section 3 and clears
-the prediction; the image's engine binary also has to be rebuilt from this commit before the deployment can set the
-variable at all.
+**Acceptance: the MTP gate, run** (2026-11-03, through the deployment: `docker compose`, MTP on, `--spec 4`, greedy,
+three request types, one recreate per arm, blocked A/B/A; artefacts `data/rp-opt/accept-attn/mtp4-*` and
+`bench/accept/`):
 
-## 3. The engine A/B/A: `s1-a1` / `s1-k1` / `s1-a2`
+| arm | docs, 1911-token prompt | factual, 70-token prompt | code, 1532-token prompt | all three |
+| --- | ---: | ---: | ---: | ---: |
+| `a1` decode | 221/307 = 72.0 % | 79/114 = 69.3 % | 311/425 = 73.2 % | **611/846 = 72.22 %** |
+| `k1` kernel | 121/194 = 62.4 % | 79/114 = 69.3 % | 307/396 = 77.5 % | **507/704 = 72.02 %** |
+| `a2` decode | 221/307 = 72.0 % | 79/114 = 69.3 % | 311/425 = 73.2 % | **611/846 = 72.22 %** |
+
+The two reference arms agree to the **last draft count and the last generated token** (only the response `id` differs),
+so the reading is "not reduced", not a measurement of a fraction of a point. Two further controls say the harness and
+the host are steady: `a1` reproduces the audit's shipped-configuration arm from earlier the same day to the draft
+(`mtp3-1-*`: 221/307, 79/114, 311/425), and the kernel arm's *text* differs from the reference arms' while theirs does
+not - i.e. the switch was actually engaged in one arm of three, which a no-op would not show.
+
+Per request it moves both ways. Factual is identical to the draft; code rises 4.3 points; docs drops 9.6 points over
+194 drafts, and on that request the answer is simply a different one - 232 generated tokens instead of 382,
+`finish_reason: stop`, the same three points in three bullets (recorded in `bench/accept/mtp4-k1-1.json` and
+`mtp4-a1-1.json`). A changed prefill changes a greedy continuation; and the same request swings 9.1 points between two
+already-**shipped** configurations in the audit's table (62.9 % default vs 72.0 % FP16), so one greedy sample on it
+cannot resolve nine points in either direction. Aggregate over 1,550 drafts: **72.22 -> 72.02 %**, which is the
+precedent's "not reduced".
+
+**Status: it ships on in the deployment** - `docker-compose.yml` sets `STRATA_PROMPT_ATTN_GFX906=1` with `=0` as the
+opt-out, and the code stays opt-in, so a direct engine run still needs `=1`. Both halves of the gate are run: the
+numerical one in the table above, the acceptance one here. Everything above priced the image's *own* engine binary: the
+image was rebuilt from these commits first (the binary that had been deployed predated them and did not contain the
+variable at all - `grep -a STRATA_PROMPT_ATTN_GFX906` on it: no match), the gate and the `s2` arms ran
+`/opt/strata/build-906/strata` `docker cp`'d out of that container and mounted back in, and a further rebuild from the
+final commit produces the same bytes (`sha256 a17227badbba970241f233571c6044c868b76839088b34f09a10c9f87d52a5f7`) - so
+what was gated, what was benchmarked and what ships are one binary.
+
+## 3. The engine A/B/A: `s1-a1` / `s1-k1` / `s1-a2`, then `s2-*` on the shipped binary
 
 Same box, same prompt (32,700 tokens, context 32768, `--prefill 2048`), the deployment's configuration in every arm
 (four RP flags, `STRATA_HIP_PROMPT_F16=1`, both attention switches), `STRATA_PROMPT_ATTN_GFX906=0` in the two `a` arms.
@@ -133,6 +160,29 @@ is what removing a merge-kernel launch per 32-query batch should look like. Wall
 
 The reference arms' own spread (310.8 vs 312.8 on the phase, 2336 vs 2346 on the chunk) is the resolution limit of one
 run per arm, and the kernel arm's 270.6 is 13 % below both - well outside it.
+
+**Re-run on the shipped binary** (`s2-*`: the engine `docker cp`'d out of `strata-gfx906:local` and mounted over
+`/work/build-906/strata`, the mount checked by sha256 inside the container, and the switch explicit in every arm because
+the committed code is opt-in):
+
+| arm | path | chunks kept | GPU ms/chunk | `qsa attn` | wall tok/s |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `s2-a1` | decode | 12 of 15 | 2362 | 306.1 | 811 |
+| `s2-k1` | **kernel** | 14 of 15 | **2255** | **270.9** | **848** |
+| `s2-a2` | decode | 14 of 15 | 2343 | 313.6 | 818 |
+
+The kernel arm reproduces the host build to 0.1 % on the phase (270.9 vs 270.6) and 0.6 % on the chunk (2255 vs 2268),
+so what ships behaves as measured. Against the reference mean (2352.5 ms, 309.9 ms) it is **-97.5 ms of the chunk
+(-4.1 %) and -39.0 ms of the phase (-12.6 %)**; against the warm reference alone, -88 ms (-3.8 %) and -42.7 ms
+(-13.6 %). The honest bracket for this kernel on this box is therefore **-2.9 to -4.1 % of the chunk** with the phase
+at -12.6 to -13.6 %, and the kernel arm's own number stable to a millisecond across two binaries. `s2`'s reference
+spread is wider (306.1 vs 313.6 on the phase) because `s2-a1` is the first start after an image rebuild and reads the
+62 GB pack off disk again - which is why the result is stated as a bracket.
+
+One bookkeeping note on the `s1` arms: their `k1` arm left `STRATA_PROMPT_ATTN_GFX906` unset, which was the **on**
+state then - the host binary in `rp-build` at that moment predated the commit that made the guard opt-in, and that
+day's probe prints `STRATA_PROMPT_ATTN_GFX906=<unset>` while measuring the kernel path. On the committed code the same
+arm needs `=1`, which is what `s2`, `bench/accept/run-gate.sh` and `docker-compose.yml` say.
 
 
 ## What this changes for the next step
@@ -166,6 +216,15 @@ numerics - a much larger gate than this kernel's - and it is the only remaining 
       -e PROMPT_TOKENS=32700 -e PREFILL=2048 -e STRATA_PREFILL_TIMING=1 \
       -e STRATA_HIP_PROMPT_F16=1 strata-gfx906:local /repo/bench/gfx906/rp-ab.sh s0-a1 RP
     #   ... plus -e STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 -e STRATA_GFX906_ATTN_REDUCE12=1 for the switch arm
+    #   (s2-*: the same three arms with the engine `docker cp`'d out of the image and mounted over
+    #   /work/build-906/strata, -e STRATA_PROMPT_ATTN_GFX906=1 explicit in the kernel arm - the code is opt-in)
+
+    # the MTP-acceptance half, through the deployment (the service on http://localhost:8080): one compose recreate per
+    # arm - decode, kernel, decode - and the three greedy request bodies of bench/accept/requests.json per arm, reading
+    # timings.draft_n_accepted / draft_n out of each response. bench/accept/run-gate.sh is that whole run (health poll,
+    # three requests, blocked A/B/A) and bench/accept/tally.py prints the table above from its responses.
+    STRATA_PROMPT_ATTN_GFX906=0 docker compose up -d --force-recreate
+    #   ... =1 for the kernel arm and =0 again for the second reference
 
     # the kernel: accuracy and time against the decode path on one synthetic chunk
     #   run once WITHOUT the two switch vars to price it against the pre-switch decode path, once WITH them
