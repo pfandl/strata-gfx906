@@ -125,3 +125,65 @@ two ranges overlap completely, and the GPU medians are 2703 against 2692 ms (0.4
 `hc read` 269-270, `qsa attn` 304-305, `gate/up` 541-543 with and without the flag. It stays off - the
 audit's verdict, now with the bracket that proves it.
 
+## Layer 2 - the repacked-int8 port (seven commits by Janus Reith)
+
+The seven commits under test, in order, are `3d2d65f2` (IQ4_NL gate/up experts through the repacked
+GEMM), `464dbb15` (`STRATA_PF_RP=1`: expert products), `2d8254dd` (`STRATA_DENSE_MMQ=1`: dense
+projections on the int8 MMQ path), `57e47e1a` (`STRATA_DENSE_RP=1`), `7864b43d` (a per-product choice
+for the down projection), `238a6d23` (IQ4_XS, `STRATA_DENSE_MMQ_PROFILE`), `e0fb5093` (IQ3_XXS/IQ3_S
+gate/up, which is what this pack's experts are). **They are ported, not written here**: authorship is
+his, the commit messages are his, and the four knobs are the deployment's environment, exactly as
+above. This layer is measured as one step, with each commit's own bench
+([`src/prefill/rp_expert_bench.cpp`](../../../src/prefill/rp_expert_bench.cpp),
+[`src/prefill/dense_mmq_bench.cu`](../../../src/prefill/dense_mmq_bench.cu)) as the per-kernel evidence.
+
+| arm | configuration | pp tok/s | GPU ms/chunk |
+| --- | --- | ---: | ---: |
+| `L1-all` / `L1-all2` / `L1-all3` / `L1-all4` / `L1-nosort` | layer 1 (reference, five arms) | 633.5 / 676.7 / 570.4 / 649.8 / 670.0 | 2728 / 2666 / 2752 / 2690 / 2692 |
+| `L2-rp` | `+ STRATA_PF_RP=1 STRATA_DENSE_MMQ=1 STRATA_DENSE_RP=1 STRATA_MMQ_KQ=1` | 729.8 | 2358 |
+| `L2-rp2` | the same | 738.2 | 2314 |
+| `L2-rp3` | the same | 760.9 | 2318 |
+
+**+13.6 % end to end (median 649.8 -> 738.2 tok/s) and -13.9 % of the GPU timeline (2692 -> 2318 ms per
+2048-token chunk).** The phase table says where, and it is not one kernel but five phases:
+
+| phase | layer 1 | layer 2 | delta | share of the chunk |
+| --- | ---: | ---: | ---: | ---: |
+| gemm gate/up | 542 | 410 | **-132** | -4.9 % |
+| gdn (qkv+gate) | 391 | 304 | **-87** | -3.2 % |
+| gdn out proj | 199 | 124 | **-75** | -2.8 % |
+| gemm down | 245 | 187 | **-58** | -2.2 % |
+| qsa proj | 196 | 165 | **-31** | -1.2 % |
+| hc read | 270 | 260 | -10 | -0.4 % |
+| router+shared | 127 | 118 | -9 | -0.3 % |
+| dequant | 93 | 128 | **+35** | +1.3 % |
+| qsa select | 67 | 76 | +9 | +0.3 % |
+| host grouping / combine | 28 / 13 | 33 / 17 | +5 / +4 | +0.3 % |
+| `qsa attn`, `gdn recurrence`, everything else | | | 0 | 0 % |
+| **GPU timeline** | **2689** | **2352** | **-337** | **-12.5 %** |
+
+The five int8 GEMM phases give up 383 ms and the per-chunk expert repack (`dequant`) takes 35 ms back -
+the port pays for itself 11 times over inside one chunk. Two things are worth noting because they were
+easy to get wrong earlier: `qsa attn` does **not** move (the attention is not part of this port, and the
+two switches from layer 1 already took their 117 ms), and the `dequant` increase is the honest cost of
+repacking IQ3_S into the GEMM's layout per chunk.
+
+This reproduces the 2026-11-02 number (+12.7 % at the same chunk size) on a *different* baseline - that
+run compared against a bare stock build at a 65,500-token prompt, this one against layer 1 at 32,700
+tokens with the FP16 knob and both switches already on. The port's gain does not depend on either.
+
+### Interaction: the port and the FP16 knob are orthogonal, not additive by luck
+
+`L2-nof16` is the port without `STRATA_HIP_PROMPT_F16` (both attention switches on):
+
+| arm | pp tok/s | GPU ms/chunk | hc read | gate/up |
+| --- | ---: | ---: | ---: | ---: |
+| `L2-nof16` | 619.9 | 2594 | **541** | 408 |
+| `L2-rp` / `L2-rp2` / `L2-rp3` | 729.8 / 738.2 / 760.9 | 2358 / 2314 / 2318 | **260** | 409-413 |
+
+The port's own phases are identical in both configurations (`gate/up` 408 against 409-413, `down` 186
+against 186, `gdn` 312 against 304-306) and the whole difference is the hyper-connection read, 541
+against 260 ms: **the FP16 knob is worth +19.1 % on top of the port** (median 738.2 against 619.9), the
+same order as the +18.1 % it was worth in layer 1. The two levers touch different GEMMs, so the ladder
+multiplies them: `649.8 x 1.18 x 1.14` is where layer 2 lands.
+
