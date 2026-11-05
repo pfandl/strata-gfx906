@@ -1,0 +1,33 @@
+trace: rocblas.trace.csv - 1108 f16_r gemm_ex calls, 20 distinct shapes, T = [1951, 2048]
+priced from: tune-census.log; chunk reference 2295 ms
+
+--- the chunk: 554 calls in 10 shapes, 2048 tokens each ---
+     N      K    ldy  calls default ms   best ms  gain       ms   saving
+   512   2560    512     84      121.9      41.7  2.92    121.9     80.2
+     4  10240      4     96       84.1      36.5  2.30     84.1     47.5
+   320  10240    320     96      181.6     139.6  1.30    181.6     42.0
+     1   2560      1     48       17.5       1.7 10.57     17.5     15.8
+  2560    640   2560     48       31.0      20.5  1.51     31.0     10.5
+ 10240    320  10240     96       79.0      72.0  1.10     79.0      7.1
+   128   2560    128     12        3.5       2.0  1.74      3.5      1.5
+    48   2560     96     72        9.3       8.3  1.12      9.3      1.0
+ 10240   2560  10240      1        7.6       7.3  1.03      7.6      0.2
+  2560   2560   2560      1        1.6       1.7  0.96      1.6     -0.1   (the default already wins)
+
+--- T=1951: 554 calls in 10 shapes, 1951 tokens each ---
+     N      K    ldy  calls default ms   best ms  gain       ms   saving
+   320  10240    320     96   unmeasured - run the tool on this shape
+ 10240    320  10240     96   unmeasured - run the tool on this shape
+     4  10240      4     96   unmeasured - run the tool on this shape
+    48   2560     96     72   unmeasured - run the tool on this shape
+   512   2560    512     84   unmeasured - run the tool on this shape
+  2560    640   2560     48   unmeasured - run the tool on this shape
+     1   2560      1     48   unmeasured - run the tool on this shape
+ 10240   2560  10240      1   unmeasured - run the tool on this shape
+  2560   2560   2560      1   unmeasured - run the tool on this shape
+   128   2560    128     12   unmeasured - run the tool on this shape
+  554 calls of shapes with no probe row (left unpriced)
+
+saving at the measured T: 206 ms = 8.96 % of a 2295 ms chunk -> GO (>= 1.5 % GO, >= 0.5 % borderline)
+prompt tok/s at the chunk: 892.4 -> 980.2
+rc=0
