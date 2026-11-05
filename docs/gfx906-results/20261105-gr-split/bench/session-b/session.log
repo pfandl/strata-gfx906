@@ -1,0 +1,24 @@
+11:09:38 === arm base1 at 32768 [the layer-3 stack only] start ===
+label=base1 ntokens=32500 gen=128 prefill=2048 split=24 env=[]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 37875 ms (858.1 tok/s), 125 generated in 3327 ms (37.6 tok/s), drafts accepted 2 of 7, 1 checkpoints
+hand-off: serial order (off)
+11:11:49 === arm base1 done ===
+11:11:49 === arm gr1 at 32768 [STRATA_GR_SPLIT=1] start ===
+label=gr1 ntokens=32500 gen=128 prefill=2048 split=24 env=[STRATA_GR_SPLIT=1]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 37520 ms (866.2 tok/s), 120 generated in 3138 ms (38.2 tok/s), drafts accepted 2 of 7, 1 checkpoints
+hand-off: serial order (off)
+11:14:10 === arm gr1 done ===
+11:14:10 === arm base2 at 32768 [the layer-3 stack only] start ===
+label=base2 ntokens=32500 gen=128 prefill=2048 split=24 env=[]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 37269 ms (872.0 tok/s), 125 generated in 3299 ms (37.9 tok/s), drafts accepted 2 of 7, 1 checkpoints
+hand-off: serial order (off)
+11:16:21 === arm base2 done ===
+11:16:21 === arm gr2 at 32768 [STRATA_GR_SPLIT=1] start ===
+label=gr2 ntokens=32500 gen=128 prefill=2048 split=24 env=[STRATA_GR_SPLIT=1]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 37648 ms (863.3 tok/s), 120 generated in 3156 ms (38.0 tok/s), drafts accepted 2 of 7, 1 checkpoints
+hand-off: serial order (off)
+11:18:32 === arm gr2 done ===

@@ -1,0 +1,59 @@
+10:46:45 === arm base1 at 32768 [the layer-3 stack only] start ===
+label=base1 ntokens=32500 gen=128 prefill=2048 split=24 env=[]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 46548 ms (698.2 tok/s), 125 generated in 3808 ms (32.8 tok/s), drafts accepted 0 of 17, 1 checkpoints
+hand-off: serial order (off)
+10:49:11 === arm base1 done ===
+10:49:11 === arm gr1 at 32768 [STRATA_GR_SPLIT=1] start ===
+label=gr1 ntokens=32500 gen=128 prefill=2048 split=24 env=[STRATA_GR_SPLIT=1]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 44018 ms (738.3 tok/s), 120 generated in 3882 ms (30.9 tok/s), drafts accepted 0 of 22, 1 checkpoints
+hand-off: serial order (off)
+10:51:32 === arm gr1 done ===
+10:51:32 === arm base2 at 32768 [the layer-3 stack only] start ===
+label=base2 ntokens=32500 gen=128 prefill=2048 split=24 env=[]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 47346 ms (686.4 tok/s), 125 generated in 3819 ms (32.7 tok/s), drafts accepted 0 of 17, 1 checkpoints
+hand-off: serial order (off)
+10:53:59 === arm base2 done ===
+10:53:59 === arm gr2 at 32768 [STRATA_GR_SPLIT=1] start ===
+label=gr2 ntokens=32500 gen=128 prefill=2048 split=24 env=[STRATA_GR_SPLIT=1]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 42166 ms (770.8 tok/s), 120 generated in 3761 ms (31.9 tok/s), drafts accepted 0 of 22, 1 checkpoints
+hand-off: serial order (off)
+10:56:20 === arm gr2 done ===
+10:56:20 === arm base3 at 32768 [the layer-3 stack only] start ===
+label=base3 ntokens=32500 gen=128 prefill=2048 split=24 env=[]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 52915 ms (614.2 tok/s), 125 generated in 3880 ms (32.2 tok/s), drafts accepted 0 of 17, 1 checkpoints
+hand-off: serial order (off)
+10:58:51 === arm base3 done ===
+10:58:51 === arm gr3 at 32768 [STRATA_GR_SPLIT=1] start ===
+label=gr3 ntokens=32500 gen=128 prefill=2048 split=24 env=[STRATA_GR_SPLIT=1]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 46699 ms (695.9 tok/s), 120 generated in 3751 ms (32.0 tok/s), drafts accepted 0 of 22, 1 checkpoints
+hand-off: serial order (off)
+11:01:17 === arm gr3 done ===
+11:01:17 session done
+11:01:17 === extra: /work-bench/gr-component.sh ===
+11:01:25 === extra done (/data/grsplit/extra.log) ===
+bench-off-1 rc=0
+bench-off-2 rc=0
+bench-off-3 rc=0
+parity-off rc=0
+bench-on-1 rc=0
+bench-on-2 rc=0
+bench-on-3 rc=0
+parity-on rc=1
+--- fused_gr_bench, T 1..5, old vs fast (us), flag off ---
+--- fused_gr_bench, flag on ---
+--- parity tail, off ---
+  scalar gamma 1.00390625 native pinned GR activation/capture pass (mixed 0.617553174, ref 0.617553174)
+  scalar final mixer native pinned GR pass
+
+gr_read/gr_write: 0 failures
+--- parity tail, on ---
+  scalar gamma 1.00390625 native pinned GR activation/capture pass (mixed 0.617553174, ref 0.617553174)
+  scalar final mixer native pinned GR pass
+
+gr_read/gr_write: 3 failures

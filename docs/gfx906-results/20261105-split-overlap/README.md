@@ -60,8 +60,8 @@ below.
 
 Six arms, interleaved so that a drift in the box cannot read as the flag:
 `base1, ovl1, base2, ovl2, base3, ovl3`, in one container (one engine start per arm, one page
-cache). Harness: `bench/gfx906/overlap-ab.sh` (new; one container, arms in one run, a WRONG-PACK
-assertion and the hand-off line in every arm's summary). Summary: `bench/parse-arms.py`.
+cache). Harness: `bench/gfx906/decode-ab.sh` (new; one container, arms in one run, a WRONG-PACK
+assertion and the hand-off line in every arm's summary). Summary: `bench/gfx906/parse-arms.py`.
 
 ## The arms
 
@@ -127,7 +127,7 @@ strata: this CPU cannot run the expert kernel: missing AVX512F AVX512BW AVX512VL
 
 which reads like a CPU problem and is a pack problem. Two fixes, both in this branch:
 
-- `bench/gfx906/overlap-ab.sh` reads `PACK_DIR` (never `PACK`), logs its argv in every arm's
+- `bench/gfx906/decode-ab.sh` reads `PACK_DIR` (never `PACK`), logs its argv in every arm's
   `cmd.txt`, and prints `WRONG-PACK` in the arm's summary if the engine did not resolve the folder;
 - `bench/gfx906/rp-ab.sh` now ignores an inherited `PACK` that is not an absolute path, so a re-run
   of the 2026-11-02 record cannot silently measure IQ2_XS.
@@ -148,7 +148,13 @@ engine starts, instead of after two and a half minutes of loading.
 - **A drafts-accepted prompt** (chat, code, tool call) - MTP accepts drafts there, windows are 2-5
   rows, and the expected gain is smaller than +1.2 %. That is the number a deployment sees.
 - **`--pipeline-windows 2`** - the other overlapped loop, mutually exclusive with this one and off by
-  default outside gfx1200/gfx1201; it needs its own A/B, not a combination.
+  default outside gfx1200/gfx1201. Its exact gate, its VRAM cost and the `STRATA_MTP_STAGE0=1` it
+  needs on two stages are written down in
+  [`../20261105-gr-split/README.md`](../20261105-gr-split/README.md), "The next decode lever".
+- **`STRATA_GR_SPLIT=1`** was measured on the same box afterwards and is **closed**:
+  [`../20261105-gr-split/README.md`](../20261105-gr-split/README.md) - the read is 10 % faster, the
+  text is not the same, `gr_parity` fails 3 checks at multi-row windows, and with MTP on it costs
+  2.6 % per token because the changed text moves the drafter's work.
 - **Three or more stages / three cards**: middle stages take two hand-offs, and `handoff_failed`
   covers them (`verify.cpp:3110`); untested here.
 - **Batch windows** (`--batch-groups`), which keep the serial order by design - if several
@@ -162,8 +168,8 @@ engine starts, instead of after two and a half minutes of loading.
 ```sh
 # on the host, from the checkout: stops the deployment, runs six arms in one container, brings it back
 ARMS=$(printf 'base1|\novl1|STRATA_SPLIT_OVERLAP=1\nbase2|\novl2|STRATA_SPLIT_OVERLAP=1\nbase3|\novl3|STRATA_SPLIT_OVERLAP=1\n') \
-  bench/gfx906/overlap-ab.sh
-python3 docs/gfx906-results/20261105-split-overlap/bench/parse-arms.py /home/me/Documents/strata/data/overlap
+  bench/gfx906/decode-ab.sh
+python3 bench/gfx906/parse-arms.py /home/me/Documents/strata/data/overlap
 ```
 
 `bench/` holds every arm's `cmd.txt`, `info.txt`, `stdout.log`, `stderr.log` and `summary.txt`, plus

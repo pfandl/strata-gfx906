@@ -1,0 +1,2 @@
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 44018 ms (738.3 tok/s), 120 generated in 3882 ms (30.9 tok/s), drafts accepted 0 of 22, 1 checkpoints
+hand-off: serial order (off)

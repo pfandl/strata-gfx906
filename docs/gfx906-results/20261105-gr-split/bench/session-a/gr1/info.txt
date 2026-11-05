@@ -1,0 +1,2 @@
+label=gr1 ntokens=32500 gen=128 prefill=2048 split=24 env=[STRATA_GR_SPLIT=1]
+EXIT rc=0

@@ -1,0 +1,4 @@
+env STRATA_PF_RP=1 STRATA_DENSE_MMQ=1 STRATA_DENSE_RP=1 STRATA_MMQ_KQ=1 STRATA_HIP_PROMPT_F16=1 STRATA_GFX906_ATTN_QUERY_SWIZZLE=1 STRATA_GFX906_ATTN_REDUCE12=1 STRATA_GR_SPLIT=1 /work/build-906/strata --serve --pack /data/packs/iq3_s --native /data/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf --ple-gguf /data/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00002-of-00002.gguf --mtp  --suffix-draft 0 (empty MTP = none)
+  --expert-profile /opt/strata/data/expert-profile.bin --expert-cache auto --prefill 2048 --spec 4 --spec-min-p 0.5 --max-context 32768 --kv int8
+  --pool-workers 6 --pcie-frac 0 --vram-reserve-mib 0 --conversation-cache-mib 4096 --resident-budget-gib 20
+  --layer-split 24

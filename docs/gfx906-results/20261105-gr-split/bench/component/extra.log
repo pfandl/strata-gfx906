@@ -1,0 +1,20 @@
+bench-off-1 rc=0
+bench-off-2 rc=0
+bench-off-3 rc=0
+parity-off rc=0
+bench-on-1 rc=0
+bench-on-2 rc=0
+bench-on-3 rc=0
+parity-on rc=1
+--- fused_gr_bench, T 1..5, old vs fast (us), flag off ---
+--- fused_gr_bench, flag on ---
+--- parity tail, off ---
+  scalar gamma 1.00390625 native pinned GR activation/capture pass (mixed 0.617553174, ref 0.617553174)
+  scalar final mixer native pinned GR pass
+
+gr_read/gr_write: 0 failures
+--- parity tail, on ---
+  scalar gamma 1.00390625 native pinned GR activation/capture pass (mixed 0.617553174, ref 0.617553174)
+  scalar final mixer native pinned GR pass
+
+gr_read/gr_write: 3 failures

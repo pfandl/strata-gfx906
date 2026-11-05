@@ -1,0 +1,31 @@
+T 1 apply 0 inject 0 | old   48.9 us  fast   44.9 us | bitwise equal | hash 9cfee64a06967933
+T 1 apply 0 inject 1 | old   49.0 us  fast   44.8 us | bitwise equal | hash 8ca65c46c48a8d53
+T 1 apply 1 inject 0 | old   58.4 us  fast   49.4 us | bitwise equal | hash cab9f1ce842e3555
+T 1 apply 1 inject 1 | old   58.6 us  fast   49.5 us | bitwise equal | hash 2ba1c73f9d608dc5
+T 2 apply 0 inject 0 | old   60.2 us  fast   53.5 us | bitwise equal | hash 0fdbf3215250654d
+T 2 apply 0 inject 1 | old   61.4 us  fast   54.9 us | bitwise equal | hash 6769b5b138495265
+T 2 apply 1 inject 0 | old   70.3 us  fast   57.3 us | bitwise equal | hash 588bc1c278424374
+T 2 apply 1 inject 1 | old   71.2 us  fast   58.3 us | bitwise equal | hash 4d6c0c8eb1b3fade
+T 3 apply 0 inject 0 | old   70.2 us  fast   61.5 us | bitwise equal | hash 3fb5f332af7cf50e
+T 3 apply 0 inject 1 | old   71.3 us  fast   62.9 us | bitwise equal | hash 8504aa213f51d44a
+T 3 apply 1 inject 0 | old   80.5 us  fast   65.7 us | bitwise equal | hash f93de075b1254deb
+T 3 apply 1 inject 1 | old   81.1 us  fast   66.7 us | bitwise equal | hash eca32c693e9e4de6
+T 4 apply 0 inject 0 | old   80.0 us  fast   69.7 us | bitwise equal | hash 843047971dc28b39
+T 4 apply 0 inject 1 | old   81.9 us  fast   70.6 us | bitwise equal | hash 7fb8dbc70d63a0c3
+T 4 apply 1 inject 0 | old   90.2 us  fast   73.8 us | bitwise equal | hash e62593f1976429ec
+T 4 apply 1 inject 1 | old   91.3 us  fast   74.7 us | bitwise equal | hash 332018fda6427bfe
+T 5 apply 0 inject 0 | old   95.5 us  fast   84.3 us | bitwise equal | hash 1c3a07ca7eb8facb
+T 5 apply 0 inject 1 | old   96.7 us  fast   85.2 us | bitwise equal | hash e838230a2dc6ab0c
+T 5 apply 1 inject 0 | old  105.5 us  fast   87.8 us | bitwise equal | hash 9d076b6fae838164
+T 5 apply 1 inject 1 | old  106.0 us  fast   89.0 us | bitwise equal | hash 6dc4174cb7381e53
+Q8 vs bf16 T 1 apply 0 | rel rms lo 0.0000 mixed 0.0010 | max |dR,dinject| 4.77e-07 | q8_1 image vs mixed rel rms 0.0053 | hash 266528a3e5ee6924
+Q8 vs bf16 T 1 apply 1 | rel rms lo 0.0000 mixed 0.0008 | max |dR,dinject| 2.38e-07 | q8_1 image vs mixed rel rms 0.0054 | hash 831146e324ff80e0
+Q8 vs bf16 T 2 apply 0 | rel rms lo 0.0000 mixed 0.0010 | max |dR,dinject| 5.66e-07 | q8_1 image vs mixed rel rms 0.0054 | hash 0eeb64012e8d5d98
+Q8 vs bf16 T 2 apply 1 | rel rms lo 0.0000 mixed 0.0008 | max |dR,dinject| 2.98e-07 | q8_1 image vs mixed rel rms 0.0054 | hash c070894e28354eb2
+Q8 vs bf16 T 3 apply 0 | rel rms lo 0.0000 mixed 0.0009 | max |dR,dinject| 5.66e-07 | q8_1 image vs mixed rel rms 0.0054 | hash 7167f6f6a08b3809
+Q8 vs bf16 T 3 apply 1 | rel rms lo 0.0000 mixed 0.0008 | max |dR,dinject| 2.98e-07 | q8_1 image vs mixed rel rms 0.0055 | hash 3fd00d682274cd96
+Q8 vs bf16 T 4 apply 0 | rel rms lo 0.0000 mixed 0.0010 | max |dR,dinject| 5.66e-07 | q8_1 image vs mixed rel rms 0.0054 | hash f0fdd566282874c4
+Q8 vs bf16 T 4 apply 1 | rel rms lo 0.0000 mixed 0.0008 | max |dR,dinject| 9.54e-07 | q8_1 image vs mixed rel rms 0.0055 | hash d0319ba7f72167a0
+Q8 vs bf16 T 5 apply 0 | rel rms lo 0.0000 mixed 0.0009 | max |dR,dinject| 5.66e-07 | q8_1 image vs mixed rel rms 0.0054 | hash 11c88016d9b6119f
+Q8 vs bf16 T 5 apply 1 | rel rms lo 0.0000 mixed 0.0008 | max |dR,dinject| 9.54e-07 | q8_1 image vs mixed rel rms 0.0055 | hash 2dd41970da7cc842
+fused_gr_bench: 0 differing
