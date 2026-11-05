@@ -1,0 +1,802 @@
+meta device_arch=gfx906 rocblas_version=5.5.0.cd957402309 shapes=80 min_gain=1.020
+case T=256 N=320 K=10240 ldy=320 default_ms=0.8027 default_padding_writes=0
+  solution=-605557497 ms=0.4431 gain=1.81 relative_l2=3.13e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557499 ms=0.4512 gain=1.78 relative_l2=3.13e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557493 ms=0.4884 gain=1.64 relative_l2=2.59e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557545 ms=0.4572 gain=1.76 relative_l2=3.4e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557544 ms=0.4551 gain=1.76 relative_l2=3.4e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557551 ms=0.4764 gain=1.68 relative_l2=3.4e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557548 ms=0.4740 gain=1.69 relative_l2=3.4e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557546 ms=0.4823 gain=1.66 relative_l2=3.4e-05 max_abs=0.0625 padding_writes=0 ok
+best T=256 N=320 K=10240 ldy=320 solution=-605557497 ms=0.4431 default_ms=0.8027 gain=1.81
+case T=256 N=10240 K=320 ldy=10240 default_ms=0.1320 default_padding_writes=0
+  solution=-605557554 ms=0.1112 gain=1.19 relative_l2=8.85e-06 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557558 ms=0.1220 gain=1.08 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=0.1236 gain=1.07 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=0.1314 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=0.1250 gain=1.06 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=0.1235 gain=1.07 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=0.1254 gain=1.05 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557541 ms=0.1382 gain=0.96 relative_l2=8.85e-06 max_abs=0.0156 padding_writes=0 ok
+best T=256 N=10240 K=320 ldy=10240 solution=-605557554 ms=0.1112 default_ms=0.1320 gain=1.19
+case T=256 N=4 K=10240 ldy=4 default_ms=0.8042 default_padding_writes=0
+  solution=-605557499 ms=0.3458 gain=2.33 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557497 ms=0.3462 gain=2.32 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557493 ms=0.3579 gain=2.25 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557489 ms=0.3567 gain=2.25 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557548 ms=0.4350 gain=1.85 relative_l2=2.06e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557551 ms=0.4315 gain=1.86 relative_l2=2.06e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557540 ms=0.4459 gain=1.80 relative_l2=2.06e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557543 ms=0.4429 gain=1.82 relative_l2=2.06e-05 max_abs=0.0156 padding_writes=0 ok
+best T=256 N=4 K=10240 ldy=4 solution=-605557499 ms=0.3458 default_ms=0.8042 gain=2.33
+case T=256 N=48 K=2560 ldy=96 default_ms=0.1354 default_padding_writes=0
+  solution=-605557489 ms=0.0916 gain=1.48 relative_l2=1.94e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557493 ms=0.0920 gain=1.47 relative_l2=1.94e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557497 ms=0.0909 gain=1.49 relative_l2=1.99e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557499 ms=0.0908 gain=1.49 relative_l2=1.99e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557548 ms=0.1146 gain=1.18 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557551 ms=0.1150 gain=1.18 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557542 ms=0.1170 gain=1.16 relative_l2=4.47e-06 max_abs=0.00781 padding_writes=0 ok
+  solution=-605557543 ms=0.1173 gain=1.15 relative_l2=4.47e-06 max_abs=0.00781 padding_writes=0 ok
+best T=256 N=48 K=2560 ldy=96 solution=-605557499 ms=0.0908 default_ms=0.1354 gain=1.49
+case T=256 N=512 K=2560 ldy=512 default_ms=0.1664 default_padding_writes=0
+  solution=-605557546 ms=0.1222 gain=1.36 relative_l2=1.96e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557550 ms=0.1239 gain=1.34 relative_l2=1.96e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.1187 gain=1.40 relative_l2=1.96e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.1191 gain=1.40 relative_l2=1.96e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557541 ms=0.1372 gain=1.21 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557551 ms=0.1448 gain=1.15 relative_l2=1.96e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557548 ms=0.1443 gain=1.15 relative_l2=1.96e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557547 ms=0.1439 gain=1.16 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=256 N=512 K=2560 ldy=512 solution=-605557544 ms=0.1187 default_ms=0.1664 gain=1.40
+case T=256 N=2560 K=640 ldy=2560 default_ms=0.1045 default_padding_writes=0
+  solution=-605557541 ms=0.0832 gain=1.26 relative_l2=1.74e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557544 ms=0.0750 gain=1.39 relative_l2=1.74e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557545 ms=0.0777 gain=1.34 relative_l2=1.74e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557554 ms=0.0944 gain=1.11 relative_l2=1.74e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557546 ms=0.0942 gain=1.11 relative_l2=1.74e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557550 ms=0.0951 gain=1.10 relative_l2=1.74e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557553 ms=0.1021 gain=1.02 relative_l2=1.74e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557555 ms=0.1019 gain=1.03 relative_l2=1.74e-05 max_abs=0.0156 padding_writes=0 ok
+best T=256 N=2560 K=640 ldy=2560 solution=-605557544 ms=0.0750 default_ms=0.1045 gain=1.39
+case T=256 N=1 K=2560 ldy=1 default_ms=0.3662 default_padding_writes=0
+  solution=-9 ms=0.0102 gain=35.95 relative_l2=0.000109 max_abs=0.0312 padding_writes=0 ok
+  solution=-536 ms=0.2622 gain=1.40 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-530 ms=0.2590 gain=1.41 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-534 ms=0.2790 gain=1.31 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-528 ms=0.2592 gain=1.41 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557517 ms=0.2379 gain=1.54 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557519 ms=0.2622 gain=1.40 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557513 ms=0.2379 gain=1.54 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=256 N=1 K=2560 ldy=1 solution=-9 ms=0.0102 default_ms=0.3662 gain=35.95
+case T=256 N=10240 K=2560 ldy=10240 default_ms=1.6640 default_padding_writes=0
+  solution=-605557554 ms=1.1826 gain=1.41 relative_l2=1.9e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557558 ms=0.8669 gain=1.92 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557631 ms=0.8825 gain=1.89 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557632 ms=0.8910 gain=1.87 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557634 ms=0.8898 gain=1.87 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557559 ms=0.9572 gain=1.74 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557636 ms=0.9652 gain=1.72 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557635 ms=0.9658 gain=1.72 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+best T=256 N=10240 K=2560 ldy=10240 solution=-605557558 ms=0.8669 default_ms=1.6640 gain=1.92
+case T=256 N=2560 K=2560 ldy=2560 default_ms=0.3746 default_padding_writes=0
+  solution=-605557541 ms=0.3135 gain=1.19 relative_l2=2.04e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557554 ms=0.3589 gain=1.04 relative_l2=2.04e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.3099 gain=1.21 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557544 ms=0.2915 gain=1.28 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557558 ms=0.3589 gain=1.04 relative_l2=2.01e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557550 ms=0.4497 gain=0.83 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557490 ms=0.4009 gain=0.93 relative_l2=2.36e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557634 ms=0.3690 gain=1.02 relative_l2=2.01e-05 max_abs=0.0312 padding_writes=0 ok
+best T=256 N=2560 K=2560 ldy=2560 solution=-605557544 ms=0.2915 default_ms=0.3746 gain=1.28
+case T=256 N=128 K=2560 ldy=128 default_ms=0.1350 default_padding_writes=0
+  solution=-605557497 ms=0.0951 gain=1.42 relative_l2=2.03e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557499 ms=0.0954 gain=1.42 relative_l2=2.03e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557489 ms=0.0955 gain=1.41 relative_l2=1.74e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557493 ms=0.0964 gain=1.40 relative_l2=1.74e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557548 ms=0.1092 gain=1.24 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557546 ms=0.1145 gain=1.18 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557551 ms=0.1094 gain=1.23 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557550 ms=0.1143 gain=1.18 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=256 N=128 K=2560 ldy=128 solution=-605557497 ms=0.0951 default_ms=0.1350 gain=1.42
+case T=512 N=320 K=10240 ldy=320 default_ms=1.1636 default_padding_writes=0
+  solution=-605557544 ms=0.4835 gain=2.41 relative_l2=3.58e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557545 ms=0.5004 gain=2.33 relative_l2=3.58e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557546 ms=0.5419 gain=2.15 relative_l2=3.58e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557548 ms=0.6211 gain=1.87 relative_l2=3.58e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557551 ms=0.6242 gain=1.86 relative_l2=3.58e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557550 ms=0.6697 gain=1.74 relative_l2=3.58e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557540 ms=0.7305 gain=1.59 relative_l2=3.71e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557542 ms=0.7749 gain=1.50 relative_l2=3.71e-05 max_abs=0.0625 padding_writes=0 ok
+best T=512 N=320 K=10240 ldy=320 solution=-605557544 ms=0.4835 default_ms=1.1636 gain=2.41
+case T=512 N=10240 K=320 ldy=10240 default_ms=0.2460 default_padding_writes=0
+  solution=-605557558 ms=0.2031 gain=1.21 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557554 ms=0.2252 gain=1.09 relative_l2=8.83e-06 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557559 ms=0.2461 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557556 ms=0.2600 gain=0.95 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=0.2259 gain=1.09 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=0.2276 gain=1.08 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=0.2263 gain=1.09 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=0.2449 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=512 N=10240 K=320 ldy=10240 solution=-605557558 ms=0.2031 default_ms=0.2460 gain=1.21
+case T=512 N=4 K=10240 ldy=4 default_ms=0.8069 default_padding_writes=0
+  solution=-605557499 ms=0.3429 gain=2.35 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557497 ms=0.3434 gain=2.35 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557493 ms=0.3615 gain=2.23 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557489 ms=0.3623 gain=2.23 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557548 ms=0.4313 gain=1.87 relative_l2=2.38e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557551 ms=0.4322 gain=1.87 relative_l2=2.38e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557542 ms=0.4454 gain=1.81 relative_l2=2.38e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557540 ms=0.4447 gain=1.81 relative_l2=2.38e-05 max_abs=0.0312 padding_writes=0 ok
+best T=512 N=4 K=10240 ldy=4 solution=-605557499 ms=0.3429 default_ms=0.8069 gain=2.35
+case T=512 N=48 K=2560 ldy=96 default_ms=0.1374 default_padding_writes=0
+  solution=-605557499 ms=0.0924 gain=1.49 relative_l2=1.64e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557497 ms=0.0924 gain=1.49 relative_l2=1.64e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557489 ms=0.0934 gain=1.47 relative_l2=2.38e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557493 ms=0.0939 gain=1.46 relative_l2=2.38e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557551 ms=0.1111 gain=1.24 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557550 ms=0.1192 gain=1.15 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557546 ms=0.1179 gain=1.17 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557548 ms=0.1095 gain=1.26 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=512 N=48 K=2560 ldy=96 solution=-605557499 ms=0.0924 default_ms=0.1374 gain=1.49
+case T=512 N=512 K=2560 ldy=512 default_ms=0.2942 default_padding_writes=0
+  solution=-605557550 ms=0.1722 gain=1.71 relative_l2=2.65e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557546 ms=0.1673 gain=1.76 relative_l2=2.65e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557540 ms=0.1940 gain=1.52 relative_l2=2.54e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.1802 gain=1.63 relative_l2=2.65e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.1806 gain=1.63 relative_l2=2.65e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557541 ms=0.2018 gain=1.46 relative_l2=2.54e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557543 ms=0.2066 gain=1.42 relative_l2=2.54e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557542 ms=0.2066 gain=1.42 relative_l2=2.54e-05 max_abs=0.0312 padding_writes=0 ok
+best T=512 N=512 K=2560 ldy=512 solution=-605557546 ms=0.1673 default_ms=0.2942 gain=1.76
+case T=512 N=2560 K=640 ldy=2560 default_ms=0.1914 default_padding_writes=0
+  solution=-605557554 ms=0.1400 gain=1.37 relative_l2=1.54e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557541 ms=0.1524 gain=1.26 relative_l2=1.54e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557558 ms=0.1512 gain=1.27 relative_l2=1.59e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557634 ms=0.1524 gain=1.26 relative_l2=1.59e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557633 ms=0.1523 gain=1.26 relative_l2=1.59e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557544 ms=0.1530 gain=1.25 relative_l2=1.6e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557545 ms=0.1535 gain=1.25 relative_l2=1.6e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557559 ms=0.1650 gain=1.16 relative_l2=1.59e-05 max_abs=0.0156 padding_writes=0 ok
+best T=512 N=2560 K=640 ldy=2560 solution=-605557554 ms=0.1400 default_ms=0.1914 gain=1.37
+case T=512 N=1 K=2560 ldy=1 default_ms=0.3675 default_padding_writes=0
+  solution=-9 ms=0.0133 gain=27.56 relative_l2=8.44e-08 max_abs=3.05e-05 padding_writes=0 ok
+  solution=-605557517 ms=0.2381 gain=1.54 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-536 ms=0.2363 gain=1.56 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-530 ms=0.2361 gain=1.56 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-534 ms=0.2553 gain=1.44 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-528 ms=0.2548 gain=1.44 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557519 ms=0.2621 gain=1.40 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557513 ms=0.2385 gain=1.54 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=512 N=1 K=2560 ldy=1 solution=-9 ms=0.0133 default_ms=0.3675 gain=27.56
+case T=512 N=10240 K=2560 ldy=10240 default_ms=3.6342 default_padding_writes=0
+  solution=-605557632 ms=2.0647 gain=1.76 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557558 ms=1.7272 gain=2.10 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557631 ms=1.7674 gain=2.06 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557633 ms=1.8310 gain=1.98 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557634 ms=1.8420 gain=1.97 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557636 ms=1.9963 gain=1.82 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557635 ms=1.9829 gain=1.83 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557637 ms=1.9289 gain=1.88 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+best T=512 N=10240 K=2560 ldy=10240 solution=-605557558 ms=1.7272 default_ms=3.6342 gain=2.10
+case T=512 N=2560 K=2560 ldy=2560 default_ms=0.5801 default_padding_writes=0
+  solution=-605557554 ms=0.6118 gain=0.95 relative_l2=1.87e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557558 ms=0.5793 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=0.5848 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=0.5846 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=0.6326 gain=0.92 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=0.5818 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=0.6346 gain=0.91 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557545 ms=0.5861 gain=0.99 relative_l2=1.93e-05 max_abs=0.0312 padding_writes=0 ok
+keep_default T=512 N=2560 K=2560 ldy=2560 (164 solutions; best 0.5793 ms vs default 0.5801)
+case T=512 N=128 K=2560 ldy=128 default_ms=0.1306 default_padding_writes=0
+  solution=-605557499 ms=0.1062 gain=1.23 relative_l2=2.44e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557497 ms=0.1067 gain=1.22 relative_l2=2.44e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557550 ms=0.1207 gain=1.08 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557548 ms=0.1214 gain=1.08 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557546 ms=0.1210 gain=1.08 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557551 ms=0.1212 gain=1.08 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557489 ms=0.1095 gain=1.19 relative_l2=2.45e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557493 ms=0.1097 gain=1.19 relative_l2=2.45e-05 max_abs=0.0312 padding_writes=0 ok
+best T=512 N=128 K=2560 ldy=128 solution=-605557499 ms=0.1062 default_ms=0.1306 gain=1.23
+case T=768 N=320 K=10240 ldy=320 default_ms=0.8719 default_padding_writes=0
+  solution=-605557544 ms=0.5582 gain=1.56 relative_l2=3.4e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557545 ms=0.6108 gain=1.43 relative_l2=3.4e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557548 ms=0.8047 gain=1.08 relative_l2=3.4e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557551 ms=0.7803 gain=1.12 relative_l2=3.4e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557490 ms=0.9420 gain=0.93 relative_l2=2.52e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557540 ms=0.8689 gain=1.00 relative_l2=3.46e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557560 ms=0.9053 gain=0.96 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557546 ms=0.6751 gain=1.29 relative_l2=3.4e-05 max_abs=0.0625 padding_writes=0 ok
+best T=768 N=320 K=10240 ldy=320 solution=-605557544 ms=0.5582 default_ms=0.8719 gain=1.56
+case T=768 N=10240 K=320 ldy=10240 default_ms=0.3330 default_padding_writes=0
+  solution=-605557554 ms=0.2932 gain=1.14 relative_l2=9.02e-06 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557558 ms=0.3146 gain=1.06 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=0.3198 gain=1.04 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=0.3051 gain=1.09 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=0.3342 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=0.3316 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=0.3062 gain=1.09 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=0.3213 gain=1.04 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=768 N=10240 K=320 ldy=10240 solution=-605557554 ms=0.2932 default_ms=0.3330 gain=1.14
+case T=768 N=4 K=10240 ldy=4 default_ms=0.8276 default_padding_writes=0
+  solution=-605557499 ms=0.3452 gain=2.40 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557497 ms=0.3460 gain=2.39 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557493 ms=0.3637 gain=2.28 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557489 ms=0.3630 gain=2.28 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557548 ms=0.4282 gain=1.93 relative_l2=3.48e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557551 ms=0.4292 gain=1.93 relative_l2=3.48e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557542 ms=0.4516 gain=1.83 relative_l2=3.48e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557540 ms=0.4500 gain=1.84 relative_l2=3.48e-05 max_abs=0.0312 padding_writes=0 ok
+best T=768 N=4 K=10240 ldy=4 solution=-605557499 ms=0.3452 default_ms=0.8276 gain=2.40
+case T=768 N=48 K=2560 ldy=96 default_ms=0.1065 default_padding_writes=0
+  solution=-605557497 ms=0.0951 gain=1.12 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557489 ms=0.0964 gain=1.10 relative_l2=1.97e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557499 ms=0.0961 gain=1.11 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557493 ms=0.0972 gain=1.09 relative_l2=1.97e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557551 ms=0.1114 gain=0.96 relative_l2=2.63e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557546 ms=0.1207 gain=0.88 relative_l2=2.63e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557548 ms=0.1102 gain=0.97 relative_l2=2.63e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557550 ms=0.1202 gain=0.89 relative_l2=2.63e-05 max_abs=0.0312 padding_writes=0 ok
+best T=768 N=48 K=2560 ldy=96 solution=-605557497 ms=0.0951 default_ms=0.1065 gain=1.12
+case T=768 N=512 K=2560 ldy=512 default_ms=0.3014 default_padding_writes=0
+  solution=-605557541 ms=0.2235 gain=1.35 relative_l2=2.29e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.2042 gain=1.48 relative_l2=2.42e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.1844 gain=1.63 relative_l2=2.42e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557540 ms=0.2622 gain=1.15 relative_l2=2.29e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557550 ms=0.2554 gain=1.18 relative_l2=2.42e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557542 ms=0.2521 gain=1.20 relative_l2=2.29e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557543 ms=0.2567 gain=1.17 relative_l2=2.29e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557560 ms=0.2862 gain=1.05 relative_l2=2.1e-05 max_abs=0.0312 padding_writes=0 ok
+best T=768 N=512 K=2560 ldy=512 solution=-605557545 ms=0.1844 default_ms=0.3014 gain=1.63
+case T=768 N=2560 K=640 ldy=2560 default_ms=0.2486 default_padding_writes=0
+  solution=-605557554 ms=0.1486 gain=1.67 relative_l2=1.58e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557558 ms=0.1570 gain=1.58 relative_l2=1.64e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557634 ms=0.1559 gain=1.59 relative_l2=1.64e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557633 ms=0.1562 gain=1.59 relative_l2=1.64e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557632 ms=0.1582 gain=1.57 relative_l2=1.64e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557631 ms=0.1591 gain=1.56 relative_l2=1.64e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557556 ms=0.1787 gain=1.39 relative_l2=1.64e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557635 ms=0.1686 gain=1.47 relative_l2=1.64e-05 max_abs=0.0156 padding_writes=0 ok
+best T=768 N=2560 K=640 ldy=2560 solution=-605557554 ms=0.1486 default_ms=0.2486 gain=1.67
+case T=768 N=1 K=2560 ldy=1 default_ms=0.3705 default_padding_writes=0
+  solution=-9 ms=0.0159 gain=23.31 relative_l2=1.81e-05 max_abs=0.00781 padding_writes=0 ok
+  solution=-605557517 ms=0.2395 gain=1.55 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-536 ms=0.2407 gain=1.54 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-530 ms=0.2406 gain=1.54 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-534 ms=0.2595 gain=1.43 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-528 ms=0.2588 gain=1.43 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557519 ms=0.2657 gain=1.39 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557513 ms=0.2410 gain=1.54 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=768 N=1 K=2560 ldy=1 solution=-9 ms=0.0159 default_ms=0.3705 gain=23.31
+case T=768 N=10240 K=2560 ldy=10240 default_ms=5.2327 default_padding_writes=0
+  solution=-605557558 ms=2.8895 gain=1.81 relative_l2=1.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557631 ms=2.5574 gain=2.05 relative_l2=1.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557632 ms=2.6067 gain=2.01 relative_l2=1.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557637 ms=2.7423 gain=1.91 relative_l2=1.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557634 ms=2.7067 gain=1.93 relative_l2=1.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557559 ms=2.7475 gain=1.90 relative_l2=1.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557635 ms=2.8201 gain=1.86 relative_l2=1.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557636 ms=2.8089 gain=1.86 relative_l2=1.97e-05 max_abs=0.0625 padding_writes=0 ok
+best T=768 N=10240 K=2560 ldy=10240 solution=-605557631 ms=2.5574 default_ms=5.2327 gain=2.05
+case T=768 N=2560 K=2560 ldy=2560 default_ms=0.5896 default_padding_writes=0
+  solution=-605557558 ms=0.6618 gain=0.89 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=0.5958 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557554 ms=0.7027 gain=0.84 relative_l2=1.94e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557636 ms=0.6459 gain=0.91 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=0.5963 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=0.6451 gain=0.91 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=0.5951 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=0.5954 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=768 N=2560 K=2560 ldy=2560 (164 solutions; best 0.5951 ms vs default 0.5896)
+case T=768 N=128 K=2560 ldy=128 default_ms=0.1286 default_padding_writes=0
+  solution=-605557550 ms=0.1231 gain=1.04 relative_l2=2.15e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557548 ms=0.1230 gain=1.05 relative_l2=2.15e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557546 ms=0.1223 gain=1.05 relative_l2=2.15e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557551 ms=0.1240 gain=1.04 relative_l2=2.15e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.1214 gain=1.06 relative_l2=2.15e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557499 ms=0.1150 gain=1.12 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557545 ms=0.1218 gain=1.06 relative_l2=2.15e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557497 ms=0.1154 gain=1.11 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=768 N=128 K=2560 ldy=128 solution=-605557499 ms=0.1150 default_ms=0.1286 gain=1.12
+case T=1024 N=320 K=10240 ldy=320 default_ms=1.3651 default_padding_writes=0
+  solution=-605557544 ms=0.8596 gain=1.59 relative_l2=3.29e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557545 ms=0.9221 gain=1.48 relative_l2=3.29e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557540 ms=1.2028 gain=1.13 relative_l2=3.33e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557548 ms=1.1470 gain=1.19 relative_l2=3.29e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557551 ms=1.1378 gain=1.20 relative_l2=3.29e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557588 ms=1.3270 gain=1.03 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557552 ms=1.2341 gain=1.11 relative_l2=3.33e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557554 ms=1.2915 gain=1.06 relative_l2=3.33e-05 max_abs=0.0625 padding_writes=0 ok
+best T=1024 N=320 K=10240 ldy=320 solution=-605557544 ms=0.8596 default_ms=1.3651 gain=1.59
+case T=1024 N=10240 K=320 ldy=10240 default_ms=0.4586 default_padding_writes=0
+  solution=-605557554 ms=0.4731 gain=0.97 relative_l2=8.83e-06 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557632 ms=0.4325 gain=1.06 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557558 ms=0.4329 gain=1.06 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=0.4086 gain=1.12 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=0.4090 gain=1.12 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=0.4580 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=0.4391 gain=1.04 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=0.4348 gain=1.05 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=1024 N=10240 K=320 ldy=10240 solution=-605557634 ms=0.4086 default_ms=0.4586 gain=1.12
+case T=1024 N=4 K=10240 ldy=4 default_ms=0.8254 default_padding_writes=0
+  solution=-605557499 ms=0.3509 gain=2.35 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557497 ms=0.3508 gain=2.35 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557493 ms=0.3726 gain=2.21 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557489 ms=0.3722 gain=2.22 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557548 ms=0.4257 gain=1.94 relative_l2=3.7e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557551 ms=0.4259 gain=1.94 relative_l2=3.7e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557543 ms=0.4551 gain=1.81 relative_l2=3.7e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557540 ms=0.4539 gain=1.82 relative_l2=3.7e-05 max_abs=0.0625 padding_writes=0 ok
+best T=1024 N=4 K=10240 ldy=4 solution=-605557497 ms=0.3508 default_ms=0.8254 gain=2.35
+case T=1024 N=48 K=2560 ldy=96 default_ms=0.1077 default_padding_writes=0
+  solution=-605557497 ms=0.0962 gain=1.12 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557499 ms=0.0965 gain=1.12 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557493 ms=0.1006 gain=1.07 relative_l2=1.43e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557489 ms=0.1003 gain=1.07 relative_l2=1.43e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557548 ms=0.1218 gain=0.88 relative_l2=2.76e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557546 ms=0.1228 gain=0.88 relative_l2=2.76e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557551 ms=0.1216 gain=0.89 relative_l2=2.76e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557550 ms=0.1230 gain=0.88 relative_l2=2.76e-05 max_abs=0.0312 padding_writes=0 ok
+best T=1024 N=48 K=2560 ldy=96 solution=-605557497 ms=0.0962 default_ms=0.1077 gain=1.12
+case T=1024 N=512 K=2560 ldy=512 default_ms=0.3943 default_padding_writes=0
+  solution=-605557541 ms=0.3041 gain=1.30 relative_l2=2.33e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557540 ms=0.3345 gain=1.18 relative_l2=2.33e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557550 ms=0.3462 gain=1.14 relative_l2=2.38e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.3107 gain=1.27 relative_l2=2.38e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.2888 gain=1.37 relative_l2=2.38e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557542 ms=0.3174 gain=1.24 relative_l2=2.33e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557554 ms=0.3249 gain=1.21 relative_l2=2.33e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557496 ms=0.3626 gain=1.09 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=1024 N=512 K=2560 ldy=512 solution=-605557545 ms=0.2888 default_ms=0.3943 gain=1.37
+case T=1024 N=2560 K=640 ldy=2560 default_ms=0.3340 default_padding_writes=0
+  solution=-605557554 ms=0.2178 gain=1.53 relative_l2=1.65e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557558 ms=0.2282 gain=1.46 relative_l2=1.65e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557633 ms=0.2288 gain=1.46 relative_l2=1.65e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557634 ms=0.2291 gain=1.46 relative_l2=1.65e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557631 ms=0.2294 gain=1.46 relative_l2=1.65e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557632 ms=0.2295 gain=1.46 relative_l2=1.65e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557559 ms=0.2480 gain=1.35 relative_l2=1.65e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557636 ms=0.2481 gain=1.35 relative_l2=1.65e-05 max_abs=0.0156 padding_writes=0 ok
+best T=1024 N=2560 K=640 ldy=2560 solution=-605557554 ms=0.2178 default_ms=0.3340 gain=1.53
+case T=1024 N=1 K=2560 ldy=1 default_ms=0.3690 default_padding_writes=0
+  solution=-9 ms=0.0204 gain=18.07 relative_l2=2.98e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557517 ms=0.2399 gain=1.54 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-534 ms=0.2599 gain=1.42 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-528 ms=0.2600 gain=1.42 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-536 ms=0.2634 gain=1.40 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-530 ms=0.2631 gain=1.40 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557519 ms=0.2643 gain=1.40 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557513 ms=0.2420 gain=1.53 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=1024 N=1 K=2560 ldy=1 solution=-9 ms=0.0204 default_ms=0.3690 gain=18.07
+case T=1024 N=10240 K=2560 ldy=10240 default_ms=6.9276 default_padding_writes=0
+  solution=-605557558 ms=3.8479 gain=1.80 relative_l2=1.96e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557631 ms=3.4588 gain=2.00 relative_l2=1.96e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557632 ms=3.4524 gain=2.01 relative_l2=1.96e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557634 ms=3.5316 gain=1.96 relative_l2=1.96e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557637 ms=3.6717 gain=1.89 relative_l2=1.96e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557559 ms=3.6584 gain=1.89 relative_l2=1.96e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557633 ms=3.5639 gain=1.94 relative_l2=1.96e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557635 ms=3.7779 gain=1.83 relative_l2=1.96e-05 max_abs=0.0625 padding_writes=0 ok
+best T=1024 N=10240 K=2560 ldy=10240 solution=-605557632 ms=3.4524 default_ms=6.9276 gain=2.01
+case T=1024 N=2560 K=2560 ldy=2560 default_ms=0.8748 default_padding_writes=0
+  solution=-605557558 ms=1.0155 gain=0.86 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=0.8797 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=0.8803 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557554 ms=1.4531 gain=0.60 relative_l2=1.88e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557559 ms=0.9468 gain=0.92 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=0.9588 gain=0.91 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=0.9418 gain=0.93 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557635 ms=0.9498 gain=0.92 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=1024 N=2560 K=2560 ldy=2560 (164 solutions; best 0.8797 ms vs default 0.8748)
+case T=1024 N=128 K=2560 ldy=128 default_ms=0.1554 default_padding_writes=0
+  solution=-605557546 ms=0.1227 gain=1.27 relative_l2=2.21e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557550 ms=0.1243 gain=1.25 relative_l2=2.21e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.1189 gain=1.31 relative_l2=2.21e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.1190 gain=1.31 relative_l2=2.21e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557551 ms=0.1449 gain=1.07 relative_l2=2.21e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557548 ms=0.1447 gain=1.07 relative_l2=2.21e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557541 ms=0.1501 gain=1.04 relative_l2=2.07e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557542 ms=0.1495 gain=1.04 relative_l2=2.07e-05 max_abs=0.0312 padding_writes=0 ok
+best T=1024 N=128 K=2560 ldy=128 solution=-605557544 ms=0.1189 default_ms=0.1554 gain=1.31
+case T=1536 N=320 K=10240 ldy=320 default_ms=1.3908 default_padding_writes=0
+  solution=-605557544 ms=1.0166 gain=1.37 relative_l2=3.46e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557545 ms=1.1138 gain=1.25 relative_l2=3.46e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557541 ms=1.4450 gain=0.96 relative_l2=3.4e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557555 ms=1.4361 gain=0.97 relative_l2=3.4e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557559 ms=1.4714 gain=0.95 relative_l2=3.46e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557637 ms=1.4874 gain=0.94 relative_l2=3.46e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557635 ms=1.5023 gain=0.93 relative_l2=3.46e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557636 ms=1.4959 gain=0.93 relative_l2=3.46e-05 max_abs=0.0625 padding_writes=0 ok
+best T=1536 N=320 K=10240 ldy=320 solution=-605557544 ms=1.0166 default_ms=1.3908 gain=1.37
+case T=1536 N=10240 K=320 ldy=10240 default_ms=0.6493 default_padding_writes=0
+  solution=-605557633 ms=0.7098 gain=0.91 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557558 ms=0.6201 gain=1.05 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=0.5901 gain=1.10 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557554 ms=0.6062 gain=1.07 relative_l2=8.75e-06 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557631 ms=0.6186 gain=1.05 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=0.6118 gain=1.06 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557635 ms=0.6260 gain=1.04 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=0.6263 gain=1.04 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=1536 N=10240 K=320 ldy=10240 solution=-605557634 ms=0.5901 default_ms=0.6493 gain=1.10
+case T=1536 N=4 K=10240 ldy=4 default_ms=0.8409 default_padding_writes=0
+  solution=-605557497 ms=0.3650 gain=2.30 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557499 ms=0.3640 gain=2.31 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557493 ms=0.3928 gain=2.14 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557489 ms=0.3915 gain=2.15 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557548 ms=0.4442 gain=1.89 relative_l2=3.69e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557551 ms=0.4421 gain=1.90 relative_l2=3.69e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557544 ms=0.4732 gain=1.78 relative_l2=3.69e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557545 ms=0.4617 gain=1.82 relative_l2=3.69e-05 max_abs=0.0625 padding_writes=0 ok
+best T=1536 N=4 K=10240 ldy=4 solution=-605557499 ms=0.3640 default_ms=0.8409 gain=2.31
+case T=1536 N=48 K=2560 ldy=96 default_ms=0.1189 default_padding_writes=0
+  solution=-605557497 ms=0.1069 gain=1.11 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557499 ms=0.1073 gain=1.11 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557548 ms=0.1241 gain=0.96 relative_l2=2.3e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557489 ms=0.1102 gain=1.08 relative_l2=1.33e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557493 ms=0.1105 gain=1.08 relative_l2=1.33e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557546 ms=0.1242 gain=0.96 relative_l2=2.3e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557550 ms=0.1245 gain=0.96 relative_l2=2.3e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557551 ms=0.1253 gain=0.95 relative_l2=2.3e-05 max_abs=0.0312 padding_writes=0 ok
+best T=1536 N=48 K=2560 ldy=96 solution=-605557497 ms=0.1069 default_ms=0.1189 gain=1.11
+case T=1536 N=512 K=2560 ldy=512 default_ms=0.5028 default_padding_writes=0
+  solution=-605557554 ms=0.3582 gain=1.40 relative_l2=2.42e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557558 ms=0.3827 gain=1.31 relative_l2=2.4e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557633 ms=0.3701 gain=1.36 relative_l2=2.4e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557635 ms=0.3728 gain=1.35 relative_l2=2.4e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557559 ms=0.3866 gain=1.30 relative_l2=2.4e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557634 ms=0.3797 gain=1.32 relative_l2=2.4e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557636 ms=0.3972 gain=1.27 relative_l2=2.4e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557637 ms=0.3945 gain=1.27 relative_l2=2.4e-05 max_abs=0.0312 padding_writes=0 ok
+best T=1536 N=512 K=2560 ldy=512 solution=-605557554 ms=0.3582 default_ms=0.5028 gain=1.40
+case T=1536 N=2560 K=640 ldy=2560 default_ms=0.4763 default_padding_writes=0
+  solution=-605557558 ms=0.2737 gain=1.74 relative_l2=1.7e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557631 ms=0.2958 gain=1.61 relative_l2=1.7e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557554 ms=0.2965 gain=1.61 relative_l2=1.6e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557559 ms=0.3220 gain=1.48 relative_l2=1.7e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557637 ms=0.3223 gain=1.48 relative_l2=1.7e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557636 ms=0.3229 gain=1.48 relative_l2=1.7e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557633 ms=0.2955 gain=1.61 relative_l2=1.7e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557632 ms=0.2969 gain=1.60 relative_l2=1.7e-05 max_abs=0.0156 padding_writes=0 ok
+best T=1536 N=2560 K=640 ldy=2560 solution=-605557558 ms=0.2737 default_ms=0.4763 gain=1.74
+case T=1536 N=1 K=2560 ldy=1 default_ms=0.3661 default_padding_writes=0
+  solution=-9 ms=0.0262 gain=13.95 relative_l2=1.28e-05 max_abs=0.00781 padding_writes=0 ok
+  solution=-605557517 ms=0.2391 gain=1.53 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-534 ms=0.2628 gain=1.39 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-528 ms=0.2626 gain=1.39 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-536 ms=0.2656 gain=1.38 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-530 ms=0.2653 gain=1.38 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557519 ms=0.2623 gain=1.40 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557513 ms=0.2547 gain=1.44 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=1536 N=1 K=2560 ldy=1 solution=-9 ms=0.0262 default_ms=0.3661 gain=13.95
+case T=1536 N=10240 K=2560 ldy=10240 default_ms=5.3610 default_padding_writes=0
+  solution=-605557632 ms=5.7390 gain=0.93 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=5.3223 gain=1.01 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557558 ms=5.3052 gain=1.01 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=5.6167 gain=0.95 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=5.6077 gain=0.96 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=5.4494 gain=0.98 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=5.4918 gain=0.98 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557635 ms=5.7850 gain=0.93 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=1536 N=10240 K=2560 ldy=10240 (164 solutions; best 5.3052 ms vs default 5.3610)
+case T=1536 N=2560 K=2560 ldy=2560 default_ms=1.1074 default_padding_writes=0
+  solution=-605557558 ms=1.4829 gain=0.75 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=1.2497 gain=0.89 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=1.2308 gain=0.90 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=1.2388 gain=0.89 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=1.1818 gain=0.94 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=1.2594 gain=0.88 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=1.2870 gain=0.86 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=1.3017 gain=0.85 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=1536 N=2560 K=2560 ldy=2560 (164 solutions; best 1.1818 ms vs default 1.1074)
+case T=1536 N=128 K=2560 ldy=128 default_ms=0.2454 default_padding_writes=0
+  solution=-605557545 ms=0.1217 gain=2.02 relative_l2=2.48e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.1202 gain=2.04 relative_l2=2.48e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557550 ms=0.1333 gain=1.84 relative_l2=2.48e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557546 ms=0.1389 gain=1.77 relative_l2=2.48e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557540 ms=0.1519 gain=1.62 relative_l2=2.65e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557542 ms=0.1598 gain=1.54 relative_l2=2.65e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557543 ms=0.1721 gain=1.43 relative_l2=2.65e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557541 ms=0.1575 gain=1.56 relative_l2=2.65e-05 max_abs=0.0312 padding_writes=0 ok
+best T=1536 N=128 K=2560 ldy=128 solution=-605557544 ms=0.1202 default_ms=0.2454 gain=2.04
+case T=2048 N=320 K=10240 ldy=320 default_ms=1.8462 default_padding_writes=0
+  solution=-605557544 ms=1.4580 gain=1.27 relative_l2=3.36e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557555 ms=1.5501 gain=1.19 relative_l2=3.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557635 ms=1.6298 gain=1.13 relative_l2=3.38e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557559 ms=1.6102 gain=1.15 relative_l2=3.38e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557637 ms=1.6120 gain=1.15 relative_l2=3.38e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557545 ms=1.6585 gain=1.11 relative_l2=3.36e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557636 ms=1.6253 gain=1.14 relative_l2=3.38e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557558 ms=1.8571 gain=0.99 relative_l2=3.38e-05 max_abs=0.0625 padding_writes=0 ok
+best T=2048 N=320 K=10240 ldy=320 solution=-605557544 ms=1.4580 default_ms=1.8462 gain=1.27
+case T=2048 N=10240 K=320 ldy=10240 default_ms=0.8115 default_padding_writes=0
+  solution=-605557558 ms=0.9953 gain=0.82 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=0.7542 gain=1.08 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=0.7865 gain=1.03 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=0.8041 gain=1.01 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557554 ms=0.8051 gain=1.01 relative_l2=8.91e-06 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557631 ms=0.7837 gain=1.04 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557635 ms=0.8017 gain=1.01 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=0.8049 gain=1.01 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=2048 N=10240 K=320 ldy=10240 solution=-605557633 ms=0.7542 default_ms=0.8115 gain=1.08
+case T=2048 N=4 K=10240 ldy=4 default_ms=0.8850 default_padding_writes=0
+  solution=-605557497 ms=0.3813 gain=2.32 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557499 ms=0.3840 gain=2.30 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557493 ms=0.4057 gain=2.18 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557489 ms=0.4071 gain=2.17 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557544 ms=0.4910 gain=1.80 relative_l2=3.41e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557551 ms=0.4797 gain=1.85 relative_l2=3.41e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557548 ms=0.4791 gain=1.85 relative_l2=3.41e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557550 ms=0.4781 gain=1.85 relative_l2=3.41e-05 max_abs=0.0625 padding_writes=0 ok
+best T=2048 N=4 K=10240 ldy=4 solution=-605557497 ms=0.3813 default_ms=0.8850 gain=2.32
+case T=2048 N=48 K=2560 ldy=96 default_ms=0.1289 default_padding_writes=0
+  solution=-605557546 ms=0.1246 gain=1.03 relative_l2=2.84e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557550 ms=0.1257 gain=1.03 relative_l2=2.84e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.1237 gain=1.04 relative_l2=2.84e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557497 ms=0.1158 gain=1.11 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557499 ms=0.1156 gain=1.11 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557544 ms=0.1239 gain=1.04 relative_l2=2.84e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557489 ms=0.1215 gain=1.06 relative_l2=1.91e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557493 ms=0.1257 gain=1.03 relative_l2=1.91e-05 max_abs=0.0312 padding_writes=0 ok
+best T=2048 N=48 K=2560 ldy=96 solution=-605557499 ms=0.1156 default_ms=0.1289 gain=1.11
+case T=2048 N=512 K=2560 ldy=512 default_ms=1.4273 default_padding_writes=0
+  solution=-605557558 ms=0.5625 gain=2.54 relative_l2=2.42e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.4932 gain=2.89 relative_l2=2.44e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557541 ms=0.4987 gain=2.86 relative_l2=2.46e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557545 ms=0.5002 gain=2.85 relative_l2=2.44e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557554 ms=0.5477 gain=2.61 relative_l2=2.46e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557633 ms=0.5821 gain=2.45 relative_l2=2.42e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557634 ms=0.5816 gain=2.45 relative_l2=2.42e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557636 ms=0.6328 gain=2.26 relative_l2=2.42e-05 max_abs=0.0312 padding_writes=0 ok
+best T=2048 N=512 K=2560 ldy=512 solution=-605557544 ms=0.4932 default_ms=1.4273 gain=2.89
+case T=2048 N=2560 K=640 ldy=2560 default_ms=0.6454 default_padding_writes=0
+  solution=-605557554 ms=0.4619 gain=1.40 relative_l2=1.61e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557558 ms=0.4270 gain=1.51 relative_l2=1.63e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557631 ms=0.4285 gain=1.51 relative_l2=1.63e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557633 ms=0.4273 gain=1.51 relative_l2=1.63e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557636 ms=0.4686 gain=1.38 relative_l2=1.63e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557637 ms=0.4685 gain=1.38 relative_l2=1.63e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557559 ms=0.4697 gain=1.37 relative_l2=1.63e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557634 ms=0.4276 gain=1.51 relative_l2=1.63e-05 max_abs=0.0156 padding_writes=0 ok
+best T=2048 N=2560 K=640 ldy=2560 solution=-605557558 ms=0.4270 default_ms=0.6454 gain=1.51
+case T=2048 N=1 K=2560 ldy=1 default_ms=0.3643 default_padding_writes=0
+  solution=-9 ms=0.0321 gain=11.35 relative_l2=2.09e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-605557517 ms=0.2417 gain=1.51 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557519 ms=0.2610 gain=1.40 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557513 ms=0.2551 gain=1.43 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-530 ms=0.2801 gain=1.30 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-536 ms=0.2801 gain=1.30 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557521 ms=0.2735 gain=1.33 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-528 ms=0.2910 gain=1.25 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=2048 N=1 K=2560 ldy=1 solution=-9 ms=0.0321 default_ms=0.3643 gain=11.35
+case T=2048 N=10240 K=2560 ldy=10240 default_ms=7.5323 default_padding_writes=0
+  solution=-605557631 ms=7.6150 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557558 ms=7.3040 gain=1.03 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=7.3511 gain=1.02 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=7.6772 gain=0.98 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=7.7941 gain=0.97 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=7.7928 gain=0.97 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=7.8116 gain=0.96 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=8.1186 gain=0.93 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=2048 N=10240 K=2560 ldy=10240 solution=-605557558 ms=7.3040 default_ms=7.5323 gain=1.03
+case T=2048 N=2560 K=2560 ldy=2560 default_ms=1.6093 default_padding_writes=0
+  solution=-605557558 ms=2.0447 gain=0.79 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=1.8150 gain=0.89 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=1.7938 gain=0.90 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=1.7955 gain=0.90 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=1.8306 gain=0.88 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557635 ms=1.9709 gain=0.82 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=1.9517 gain=0.82 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=1.9521 gain=0.82 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=2048 N=2560 K=2560 ldy=2560 (164 solutions; best 1.7938 ms vs default 1.6093)
+case T=2048 N=128 K=2560 ldy=128 default_ms=0.2945 default_padding_writes=0
+  solution=-605557550 ms=0.1678 gain=1.75 relative_l2=2.47e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557546 ms=0.1797 gain=1.64 relative_l2=2.47e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.1843 gain=1.60 relative_l2=2.47e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.1830 gain=1.61 relative_l2=2.47e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557540 ms=0.1980 gain=1.49 relative_l2=2.42e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557541 ms=0.2153 gain=1.37 relative_l2=2.42e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557542 ms=0.2055 gain=1.43 relative_l2=2.42e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557543 ms=0.2021 gain=1.46 relative_l2=2.42e-05 max_abs=0.0312 padding_writes=0 ok
+best T=2048 N=128 K=2560 ldy=128 solution=-605557550 ms=0.1678 default_ms=0.2945 gain=1.75
+case T=4096 N=320 K=10240 ldy=320 default_ms=4.1016 default_padding_writes=0
+  solution=-605557636 ms=2.8556 gain=1.44 relative_l2=3.3e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557559 ms=2.8112 gain=1.46 relative_l2=3.3e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557637 ms=2.7957 gain=1.47 relative_l2=3.3e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557635 ms=2.8137 gain=1.46 relative_l2=3.3e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557544 ms=2.8885 gain=1.42 relative_l2=3.34e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557632 ms=3.1276 gain=1.31 relative_l2=3.3e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557634 ms=3.1474 gain=1.30 relative_l2=3.3e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557631 ms=3.0439 gain=1.35 relative_l2=3.3e-05 max_abs=0.0625 padding_writes=0 ok
+best T=4096 N=320 K=10240 ldy=320 solution=-605557637 ms=2.7957 default_ms=4.1016 gain=1.47
+case T=4096 N=10240 K=320 ldy=10240 default_ms=1.7188 default_padding_writes=0
+  solution=-605557558 ms=1.9195 gain=0.90 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=1.6546 gain=1.04 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=1.6619 gain=1.03 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=1.7550 gain=0.98 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=1.6801 gain=1.02 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=1.6249 gain=1.06 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=1.7773 gain=0.97 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=1.7432 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=4096 N=10240 K=320 ldy=10240 solution=-605557633 ms=1.6249 default_ms=1.7188 gain=1.06
+case T=4096 N=4 K=10240 ldy=4 default_ms=1.9571 default_padding_writes=0
+  solution=-605557545 ms=0.5677 gain=3.45 relative_l2=3.02e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557497 ms=0.5649 gain=3.46 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557489 ms=0.5743 gain=3.41 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557499 ms=0.5874 gain=3.33 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557493 ms=0.5883 gain=3.33 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557544 ms=0.5762 gain=3.40 relative_l2=3.02e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557550 ms=0.6619 gain=2.96 relative_l2=3.02e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557551 ms=0.6372 gain=3.07 relative_l2=3.02e-05 max_abs=0.0625 padding_writes=0 ok
+best T=4096 N=4 K=10240 ldy=4 solution=-605557497 ms=0.5649 default_ms=1.9571 gain=3.46
+case T=4096 N=48 K=2560 ldy=96 default_ms=0.6124 default_padding_writes=0
+  solution=-605557550 ms=0.2934 gain=2.09 relative_l2=2.18e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.1949 gain=3.14 relative_l2=2.18e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.1966 gain=3.11 relative_l2=2.18e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557540 ms=0.2173 gain=2.82 relative_l2=2.37e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557541 ms=0.2182 gain=2.81 relative_l2=2.37e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557542 ms=0.2123 gain=2.88 relative_l2=2.37e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557543 ms=0.2146 gain=2.85 relative_l2=2.37e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557551 ms=0.2340 gain=2.62 relative_l2=2.18e-05 max_abs=0.0312 padding_writes=0 ok
+best T=4096 N=48 K=2560 ldy=96 solution=-605557544 ms=0.1949 default_ms=0.6124 gain=3.14
+case T=4096 N=512 K=2560 ldy=512 default_ms=1.0854 default_padding_writes=0
+  solution=-605557558 ms=0.9748 gain=1.11 relative_l2=2.31e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557632 ms=0.8729 gain=1.24 relative_l2=2.31e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557634 ms=0.8764 gain=1.24 relative_l2=2.31e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557633 ms=0.8770 gain=1.24 relative_l2=2.31e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557637 ms=0.9495 gain=1.14 relative_l2=2.31e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557636 ms=0.9525 gain=1.14 relative_l2=2.31e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557541 ms=0.8740 gain=1.24 relative_l2=2.28e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557635 ms=0.9524 gain=1.14 relative_l2=2.31e-05 max_abs=0.0312 padding_writes=0 ok
+best T=4096 N=512 K=2560 ldy=512 solution=-605557632 ms=0.8729 default_ms=1.0854 gain=1.24
+case T=4096 N=2560 K=640 ldy=2560 default_ms=0.7711 default_padding_writes=0
+  solution=-605557558 ms=0.9364 gain=0.82 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557554 ms=0.7704 gain=1.00 relative_l2=1.24e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557634 ms=0.7687 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=0.7682 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=0.7724 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=0.7714 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=0.8507 gain=0.91 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=0.8500 gain=0.91 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=4096 N=2560 K=640 ldy=2560 (164 solutions; best 0.7682 ms vs default 0.7711)
+case T=4096 N=1 K=2560 ldy=1 default_ms=0.5150 default_padding_writes=0
+  solution=-9 ms=0.0549 gain=9.38 relative_l2=3.09e-05 max_abs=0.0156 padding_writes=0 ok
+  solution=-528 ms=0.3534 gain=1.46 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-534 ms=0.3557 gain=1.45 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557517 ms=0.3525 gain=1.46 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557513 ms=0.3635 gain=1.42 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-530 ms=0.4069 gain=1.27 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-536 ms=0.4037 gain=1.28 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557519 ms=0.4083 gain=1.26 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=4096 N=1 K=2560 ldy=1 solution=-9 ms=0.0549 default_ms=0.5150 gain=9.38
+case T=4096 N=10240 K=2560 ldy=10240 default_ms=15.7173 default_padding_writes=0
+  solution=-605557558 ms=15.1382 gain=1.04 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=15.1239 gain=1.04 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=15.2341 gain=1.03 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=15.8335 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=15.8829 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=15.9611 gain=0.98 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=15.9726 gain=0.98 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=16.5008 gain=0.95 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=4096 N=10240 K=2560 ldy=10240 solution=-605557631 ms=15.1239 default_ms=15.7173 gain=1.04
+case T=4096 N=2560 K=2560 ldy=2560 default_ms=3.1977 default_padding_writes=0
+  solution=-605557558 ms=3.8594 gain=0.83 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=3.5232 gain=0.91 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=3.4959 gain=0.91 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=3.5599 gain=0.90 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=3.7158 gain=0.86 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=3.5409 gain=0.90 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=3.7901 gain=0.84 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=3.7327 gain=0.86 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=4096 N=2560 K=2560 ldy=2560 (164 solutions; best 3.4959 ms vs default 3.1977)
+case T=4096 N=128 K=2560 ldy=128 default_ms=0.9944 default_padding_writes=0
+  solution=-605557550 ms=1.1745 gain=0.85 relative_l2=2.35e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557541 ms=0.3056 gain=3.25 relative_l2=2.43e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.3117 gain=3.19 relative_l2=2.35e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557540 ms=0.3451 gain=2.88 relative_l2=2.43e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.3075 gain=3.23 relative_l2=2.35e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557554 ms=0.3158 gain=3.15 relative_l2=2.43e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557546 ms=1.1350 gain=0.88 relative_l2=2.35e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557560 ms=0.3947 gain=2.52 relative_l2=2.08e-05 max_abs=0.0312 padding_writes=0 ok
+best T=4096 N=128 K=2560 ldy=128 solution=-605557541 ms=0.3056 default_ms=0.9944 gain=3.25
+case T=8192 N=320 K=10240 ldy=320 default_ms=7.2793 default_padding_writes=0
+  solution=-605557555 ms=6.1972 gain=1.17 relative_l2=3.32e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557559 ms=5.5883 gain=1.30 relative_l2=3.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557632 ms=5.6636 gain=1.29 relative_l2=3.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557637 ms=5.5612 gain=1.31 relative_l2=3.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557635 ms=5.6482 gain=1.29 relative_l2=3.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557558 ms=5.8130 gain=1.25 relative_l2=3.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557544 ms=5.5781 gain=1.30 relative_l2=3.32e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557634 ms=5.7164 gain=1.27 relative_l2=3.35e-05 max_abs=0.0625 padding_writes=0 ok
+best T=8192 N=320 K=10240 ldy=320 solution=-605557637 ms=5.5612 default_ms=7.2793 gain=1.31
+case T=8192 N=10240 K=320 ldy=10240 default_ms=3.5371 default_padding_writes=0
+  solution=-605557631 ms=3.8638 gain=0.92 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557558 ms=3.6036 gain=0.98 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=3.5786 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=3.7246 gain=0.95 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=3.6253 gain=0.98 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=3.7614 gain=0.94 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=3.6443 gain=0.97 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557635 ms=3.8252 gain=0.92 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=8192 N=10240 K=320 ldy=10240 (164 solutions; best 3.5786 ms vs default 3.5371)
+case T=8192 N=4 K=10240 ldy=4 default_ms=1.7164 default_padding_writes=0
+  solution=-605557545 ms=0.8945 gain=1.92 relative_l2=3.93e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557544 ms=0.8852 gain=1.94 relative_l2=3.93e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557489 ms=1.0689 gain=1.61 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557493 ms=1.1050 gain=1.55 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557551 ms=1.0977 gain=1.56 relative_l2=3.93e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557548 ms=1.1219 gain=1.53 relative_l2=3.93e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557550 ms=1.2932 gain=1.33 relative_l2=3.93e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557624 ms=1.3421 gain=1.28 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=8192 N=4 K=10240 ldy=4 solution=-605557544 ms=0.8852 default_ms=1.7164 gain=1.94
+case T=8192 N=48 K=2560 ldy=96 default_ms=0.5846 default_padding_writes=0
+  solution=-605557544 ms=0.3061 gain=1.91 relative_l2=8.6e-06 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.3192 gain=1.83 relative_l2=8.6e-06 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557541 ms=0.3211 gain=1.82 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557554 ms=0.3391 gain=1.72 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557540 ms=0.3572 gain=1.64 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557491 ms=0.4049 gain=1.44 relative_l2=2.46e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557496 ms=0.3990 gain=1.47 relative_l2=2.46e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557555 ms=0.3713 gain=1.57 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=8192 N=48 K=2560 ldy=96 solution=-605557544 ms=0.3061 default_ms=0.5846 gain=1.91
+case T=8192 N=512 K=2560 ldy=512 default_ms=1.3080 default_padding_writes=0
+  solution=-605557558 ms=1.6853 gain=0.78 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=1.4532 gain=0.90 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=1.4509 gain=0.90 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=1.4759 gain=0.89 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=1.5629 gain=0.84 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=1.4901 gain=0.88 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=1.5420 gain=0.85 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557635 ms=1.5697 gain=0.83 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=8192 N=512 K=2560 ldy=512 (164 solutions; best 1.4509 ms vs default 1.3080)
+case T=8192 N=2560 K=640 ldy=2560 default_ms=1.4963 default_padding_writes=0
+  solution=-605557558 ms=1.9441 gain=0.77 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=1.5923 gain=0.94 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=1.5930 gain=0.94 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=1.5617 gain=0.96 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=1.5664 gain=0.96 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=1.6645 gain=0.90 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=1.6976 gain=0.88 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=1.7173 gain=0.87 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=8192 N=2560 K=640 ldy=2560 (164 solutions; best 1.5617 ms vs default 1.4963)
+case T=8192 N=1 K=2560 ldy=1 default_ms=0.7059 default_padding_writes=0
+  solution=-9 ms=0.1052 gain=6.71 relative_l2=9.22e-06 max_abs=0.00781 padding_writes=0 ok
+  solution=-605557517 ms=0.5590 gain=1.26 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-534 ms=0.5579 gain=1.27 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557513 ms=0.5620 gain=1.26 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-528 ms=0.5516 gain=1.28 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557516 ms=0.5938 gain=1.19 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557512 ms=0.5891 gain=1.20 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557518 ms=0.6281 gain=1.12 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=8192 N=1 K=2560 ldy=1 solution=-9 ms=0.1052 default_ms=0.7059 gain=6.71
+case T=8192 N=10240 K=2560 ldy=10240 default_ms=30.6278 default_padding_writes=0
+  solution=-605557558 ms=30.5466 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=30.7505 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=30.6488 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=31.7603 gain=0.96 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=31.8949 gain=0.96 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=32.1337 gain=0.95 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=32.1130 gain=0.95 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557635 ms=33.0638 gain=0.93 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=8192 N=10240 K=2560 ldy=10240 (164 solutions; best 30.5466 ms vs default 30.6278)
+case T=8192 N=2560 K=2560 ldy=2560 default_ms=7.1002 default_padding_writes=0
+  solution=-605557632 ms=7.7021 gain=0.92 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557558 ms=7.4094 gain=0.96 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=7.4556 gain=0.95 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=7.6458 gain=0.93 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=7.6396 gain=0.93 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=7.9005 gain=0.90 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=7.9149 gain=0.90 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557636 ms=8.0397 gain=0.88 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=8192 N=2560 K=2560 ldy=2560 (164 solutions; best 7.4094 ms vs default 7.1002)
+case T=8192 N=128 K=2560 ldy=128 default_ms=0.5913 default_padding_writes=0
+  solution=-605557541 ms=0.5362 gain=1.10 relative_l2=1.23e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.5265 gain=1.12 relative_l2=1.54e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.5421 gain=1.09 relative_l2=1.54e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557558 ms=0.5882 gain=1.01 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557554 ms=0.5808 gain=1.02 relative_l2=1.23e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557634 ms=0.5919 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=0.5921 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=0.5907 gain=1.00 relative_l2=0 max_abs=0 padding_writes=0 ok
+best T=8192 N=128 K=2560 ldy=128 solution=-605557544 ms=0.5265 default_ms=0.5913 gain=1.12
+wrote 80 rows (67 with a solution) to /src/tools/hip/gfx906-rocblas-5.5.0.cd957402309.txt

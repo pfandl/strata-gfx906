@@ -1,0 +1,144 @@
+== /home/me/Documents/strata/data/rocblas-bracket2/base1: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2157 2137 2211 2093 2108 2124 2127 2158 2173 2183 2192 2191 2255 2227 2233
+   steady mean: GPU 2172 ms, wall 2178 ms, 940 tok/s (wall)
+   gemm gate/up          364.3 ms   16.8%   16.8% of GPU
+   qsa attn              304.6 ms   14.0%   14.0% of GPU
+   gdn                   296.6 ms   13.7%   13.7% of GPU
+   hc read               264.0 ms   12.2%   12.2% of GPU
+   gemm down             181.6 ms    8.4%    8.4% of GPU
+   qsa proj              164.1 ms    7.6%    7.6% of GPU
+   gdn recurrence        135.5 ms    6.2%    6.2% of GPU
+   gdn out proj          123.6 ms    5.7%    5.7% of GPU
+   router+shared         120.4 ms    5.5%    5.5% of GPU
+   dequant                69.5 ms    3.2%    3.2% of GPU
+   qsa select             63.6 ms    2.9%    2.9% of GPU
+   host grouping          31.3 ms    1.4%    1.4% of GPU
+   hc write               20.0 ms    0.9%    0.9% of GPU
+   embed+steps            12.0 ms    0.6%    0.6% of GPU
+   gdn conv+gates          9.0 ms    0.4%    0.4% of GPU
+   combine                 8.3 ms    0.4%    0.4% of GPU
+   gather                  4.0 ms    0.2%    0.2% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== /home/me/Documents/strata/data/rocblas-bracket2/tab1: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2239 2007 1965 1997 2011 2177 2014 2043 2054 2071 2077 2088 2095 2121 2107
+   steady mean: GPU 2059 ms, wall 2065 ms, 992 tok/s (wall)
+   gemm gate/up          363.4 ms   17.6%   17.7% of GPU
+   qsa attn              305.7 ms   14.8%   14.8% of GPU
+   gdn                   301.3 ms   14.6%   14.6% of GPU
+   hc read               197.9 ms    9.6%    9.6% of GPU
+   gemm down             182.5 ms    8.9%    8.9% of GPU
+   qsa proj              150.8 ms    7.3%    7.3% of GPU
+   gdn recurrence        132.3 ms    6.4%    6.4% of GPU
+   gdn out proj          123.6 ms    6.0%    6.0% of GPU
+   router+shared          82.6 ms    4.0%    4.0% of GPU
+   dequant                69.1 ms    3.4%    3.4% of GPU
+   qsa select             68.2 ms    3.3%    3.3% of GPU
+   host grouping          28.1 ms    1.4%    1.4% of GPU
+   hc write               20.0 ms    1.0%    1.0% of GPU
+   embed+steps            12.0 ms    0.6%    0.6% of GPU
+   gdn conv+gates          9.0 ms    0.4%    0.4% of GPU
+   combine                 8.6 ms    0.4%    0.4% of GPU
+   gather                  4.3 ms    0.2%    0.2% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== /home/me/Documents/strata/data/rocblas-bracket2/base2: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2101 2166 2082 2226 2408 2186 2130 2401 2175 2174 2184 2205 2200 2227 2223
+   steady mean: GPU 2213 ms, wall 2218 ms, 923 tok/s (wall)
+   gemm gate/up          363.9 ms   16.4%   16.4% of GPU
+   gdn                   310.2 ms   14.0%   14.0% of GPU
+   qsa attn              303.3 ms   13.7%   13.7% of GPU
+   hc read               279.1 ms   12.6%   12.6% of GPU
+   gemm down             192.3 ms    8.7%    8.7% of GPU
+   qsa proj              164.6 ms    7.4%    7.4% of GPU
+   gdn recurrence        143.6 ms    6.5%    6.5% of GPU
+   gdn out proj          123.3 ms    5.6%    5.6% of GPU
+   router+shared         118.1 ms    5.3%    5.3% of GPU
+   dequant                70.0 ms    3.2%    3.2% of GPU
+   qsa select             63.7 ms    2.9%    2.9% of GPU
+   host grouping          28.6 ms    1.3%    1.3% of GPU
+   hc write               20.0 ms    0.9%    0.9% of GPU
+   embed+steps            12.0 ms    0.5%    0.5% of GPU
+   gdn conv+gates          9.0 ms    0.4%    0.4% of GPU
+   combine                 8.6 ms    0.4%    0.4% of GPU
+   gather                  4.0 ms    0.2%    0.2% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== /home/me/Documents/strata/data/rocblas-bracket2/tab2: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 3054 1969 1982 1972 1988 2024 2011 2084 2055 2132 2079 2090 2175 2160 2283
+   steady mean: GPU 2072 ms, wall 2078 ms, 986 tok/s (wall)
+   gemm gate/up          362.1 ms   17.5%   17.5% of GPU
+   qsa attn              307.7 ms   14.9%   14.9% of GPU
+   gdn                   300.0 ms   14.5%   14.5% of GPU
+   hc read               189.5 ms    9.1%    9.1% of GPU
+   gemm down             181.7 ms    8.8%    8.8% of GPU
+   qsa proj              149.3 ms    7.2%    7.2% of GPU
+   gdn recurrence        134.8 ms    6.5%    6.5% of GPU
+   gdn out proj          123.1 ms    5.9%    5.9% of GPU
+   router+shared          83.7 ms    4.0%    4.0% of GPU
+   dequant                69.3 ms    3.3%    3.3% of GPU
+   qsa select             64.4 ms    3.1%    3.1% of GPU
+   host grouping          34.5 ms    1.7%    1.7% of GPU
+   gdn conv+gates         21.1 ms    1.0%    1.0% of GPU
+   hc write               20.0 ms    1.0%    1.0% of GPU
+   embed+steps            17.6 ms    0.8%    0.8% of GPU
+   combine                 8.4 ms    0.4%    0.4% of GPU
+   gather                  4.4 ms    0.2%    0.2% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== /home/me/Documents/strata/data/rocblas-bracket2/base3: 17 chunks
+   15 chunks of 2048 tokens
+   per chunk: gpu ms | 2205 2076 2246 2812 2116 2280 2134 3025 2178 3179 2194 2691 2201 2279 2226
+   steady mean: GPU 2403 ms, wall 2408 ms, 850 tok/s (wall)
+   gemm gate/up          445.8 ms   18.6%   18.6% of GPU
+   gdn                   332.4 ms   13.8%   13.8% of GPU
+   qsa attn              313.3 ms   13.0%   13.0% of GPU
+   hc read               255.5 ms   10.6%   10.6% of GPU
+   gemm down             233.6 ms    9.7%    9.7% of GPU
+   qsa proj              164.7 ms    6.9%    6.9% of GPU
+   gdn recurrence        131.7 ms    5.5%    5.5% of GPU
+   dequant               131.6 ms    5.5%    5.5% of GPU
+   gdn out proj          123.4 ms    5.1%    5.1% of GPU
+   router+shared         118.3 ms    4.9%    4.9% of GPU
+   qsa select             64.6 ms    2.7%    2.7% of GPU
+   host grouping          34.6 ms    1.4%    1.4% of GPU
+   hc write               20.0 ms    0.8%    0.8% of GPU
+   embed+steps            12.0 ms    0.5%    0.5% of GPU
+   gdn conv+gates          9.0 ms    0.4%    0.4% of GPU
+   combine                 8.5 ms    0.4%    0.4% of GPU
+   gather                  4.1 ms    0.2%    0.2% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+
+== /home/me/Documents/strata/data/rocblas-bracket2/tab3: 12 chunks
+   12 chunks of 2048 tokens
+   per chunk: gpu ms | 2114 2039 2429 2002 1988 2004 2026 2061 2046 2068 2076 2092
+   steady mean: GPU 2076 ms, wall 2082 ms, 984 tok/s (wall)
+   gemm gate/up          360.9 ms   17.4%   17.4% of GPU
+   qsa attn              316.9 ms   15.3%   15.3% of GPU
+   gdn                   299.1 ms   14.4%   14.4% of GPU
+   hc read               189.6 ms    9.1%    9.1% of GPU
+   gemm down             188.8 ms    9.1%    9.1% of GPU
+   qsa proj              154.8 ms    7.5%    7.5% of GPU
+   gdn recurrence        132.6 ms    6.4%    6.4% of GPU
+   gdn out proj          123.7 ms    6.0%    6.0% of GPU
+   router+shared         100.5 ms    4.8%    4.8% of GPU
+   dequant                67.8 ms    3.3%    3.3% of GPU
+   qsa select             54.5 ms    2.6%    2.6% of GPU
+   host grouping          31.4 ms    1.5%    1.5% of GPU
+   hc write               20.0 ms    1.0%    1.0% of GPU
+   embed+steps            12.0 ms    0.6%    0.6% of GPU
+   gdn conv+gates         11.1 ms    0.5%    0.5% of GPU
+   combine                 8.5 ms    0.4%    0.4% of GPU
+   gather                  4.0 ms    0.2%    0.2% of GPU
+   qsa indexer             0.0 ms    0.0%    0.0% of GPU
+   ple                     0.0 ms    0.0%    0.0% of GPU
+

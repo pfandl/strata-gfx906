@@ -1,12 +1,13 @@
-# 2026-11-05 - a gfx906 rocBLAS solution table: 206 ms of a chunk (9.0 %), no accuracy cost, not in this branch
+# 2026-11-05 - a gfx906 rocBLAS solution table: priced at 9.0 %, shipped, and the engine pays 5.5 %
 
 `STRATA_ROCBLAS_TUNING` is the engine's table of rocBLAS solution indices for the prompt path's FP16-out
 GEMMs ([`src/prefill/rocblas_tuning.hpp`](../../../src/prefill/rocblas_tuning.hpp), `Gemm::f16_inplace`). It
 ships for **gfx1030** (`tools/hip/gfx1030-rocblas-5.6.0.8d1ae90e.txt`), where rocBLAS's own pick is up to
-**6.8x** slower than the best kernel the library holds for the same shape. gfx906 has no table. This record
-measures whether it wants one: **it does - 206 ms of a 2295 ms chunk (9.0 %) with no accuracy cost at all**,
-measured as a call census plus a per-shape probe, not estimated - but it is a follow-up of its own, because on
-this branch the reader is compiled out and the artifact is pinned to one library build.
+**6.8x** slower than the best kernel the library holds for the same shape. gfx906 had no table and - as
+section 1 found - no reader either. This record prices the lever with a call census, and the branch it is
+committed on carries it: **206 ms of a 2295 ms chunk in isolation (9.0 %), -5.5 % of the chunk measured on
+the engine, and no accuracy cost at all** (the generated tokens are identical in every arm).
+
 
 Everything here was measured on this box the same day: rocBLAS **5.5.0.cd957402309** (the deployment's
 `/opt/rocm/lib`), the deployment's two-card gfx906 split (48 layers, 24 a card), T = 2048 (the deployed chunk
@@ -25,13 +26,12 @@ f16o 512 2560 512 2048 -605557544     # attn_k/attn_v: rocBLAS's pick 1.451 ms -
 same products, another kernel's summation order - every row the tool writes was checked against the default
 kernel's own output (`relative_l2`, ULP, no write past the result).
 
-## 1. The mechanism is inert in this branch's gfx906 build
+## 1. The mechanism was inert in this build (un-gated on this branch)
 
-Before the numbers: a table would do **nothing** today. The only reader, `try_rocblas_f16o`, is inside
-`#if defined(STRATA_ROCBLAS_AVAILABLE)` ([`gemm.cu:1350`](../../../src/prefill/gemm.cu)), and CMake defines
-that macro only under `if(STRATA_ENABLE_HIP AND STRATA_ROCBLAS_AVAILABLE)`
-([`CMakeLists.txt:838`](../../../CMakeLists.txt)). This branch's gfx906 build is `STRATA_ENABLE_CUDA=ON` +
-hipcc -
+Before the numbers: a table did **nothing** here. The only reader, `try_rocblas_f16o`, is inside
+`#if defined(STRATA_ROCBLAS_AVAILABLE)` ([`gemm.cu:1350`](../../../src/prefill/gemm.cu)), and CMake defined
+that macro under `if(STRATA_ENABLE_HIP AND STRATA_ROCBLAS_AVAILABLE)` only. This build is
+`STRATA_HIP_GFX906=ON` (the gfx906 compat path) with `STRATA_ENABLE_HIP=OFF` -
 
 ```
 $ grep -E 'STRATA_ENABLE_(HIP|CUDA)' rp-build/build-906/CMakeCache.txt
@@ -39,9 +39,11 @@ STRATA_ENABLE_CUDA:BOOL=ON
 STRATA_ENABLE_HIP:BOOL=OFF
 ```
 
-- so the macro is undefined, the reader is compiled out, and `STRATA_ROCBLAS_TUNING` is a **silent no-op**
-on this platform (not a missing file: a missing branch). A gfx906 table is therefore the smaller half of the
-work; un-gating the reader for the CUDA-path build is the other half.
+- so the macro was undefined, the reader compiled out, and `STRATA_ROCBLAS_TUNING` a **silent no-op** on this
+platform (not a missing file: a missing branch). `CMakeLists.txt` now calls `find_package(rocblas)` in the
+`STRATA_HIP_GFX906` branch too, defines the macro and links `roc::rocblas`, so the switch works here and the
+configure log says so.
+
 
 ## 2. The tool runs here unchanged, and rocBLAS offers 164 solutions a shape
 
@@ -115,38 +117,50 @@ exactly the shapes gfx906's heuristic gets wrong (1.10x to 10.6x here).
   path: the 320-wide hc products and `attn_k`/`attn_v` are not streamed over the SSD, so they should be, but
   only an A/B/A bracket proves it. (3) The T = 1951 chunk reuses the T = 2048 prices.
 
-## 5. Why it is still not in this branch
+## 5. It shipped, and the engine pays 5.5 % of a chunk
 
-- **The reader is compiled out here** (section 1). A table file added to this branch would do nothing on this
-  box until `try_rocblas_f16o` is un-gated for the `STRATA_ENABLE_CUDA` build, which is a code change to the
-  GEMM header, not a data file - a different kind of change from everything else this branch ships.
-- **The win is real and free, and that is the argument for doing it next.** 206 ms of a 2295 ms chunk is
-  **9.0 %**, with **no accuracy budget at all**: the same FP16 products, summed in another order by another
-  kernel rocBLAS already ships, each row verified against the default's own output (`relative_l2` <= 4e-5,
-  `max_abs` <= 0.0625 on every row that matters here, no write past the result). For scale: layer 3's
-  prompt-attention kernel is worth 1.4 %, the int8-score option 1.2 %, the GDN chunked scan 0 %. This is the
-  largest lever left on this box and the only one that costs nothing numerically.
-- **It is an artifact pinned to one library build.** The header carries `gfx906` + `5.5.0.cd957402309`; any
-  ROCm refresh invalidates every row, exactly as `tools/hip/gfx1030-rocblas-5.6.0.8d1ae90e.txt` shows for the
-  RDNA2 file - and the five separate gfx1100 hipBLASLt tables in `tools/hip/` are that cost, paid repeatedly.
-- **And it is the same "two answers to one question" risk as before, only inverted.** The shapes the port
-  already owns (experts, GDN, the hc read's int8 neighbours) *are* the table's biggest raw gains by ratio
-  (1.85x at `6144x2560`); the census shows they never reach rocBLAS in this configuration, so the table
-  cannot collide with them - but if `STRATA_DENSE_MMQ` or `STRATA_PF_RP` were ever turned off, most of this
-  206 ms would go back to rocBLAS and the table's value would change shape. A table is only the right lever
-  *because* the port came first.
+Sections 1-4 priced the lever. This branch now carries it: the CMake un-gating above, the table
+(`tools/hip/gfx906-rocblas-5.5.0.cd957402309.txt`, 80 rows - the 10 shapes of section 3 at the eight token
+buckets the gfx1030 table uses, 67 with a solution), the script that makes one
+(`tools/hip/make-gfx906-table.sh`) and the gate (`gfx906_prefill_rocblas_gemm`, 4/4 PASS at `relative_l2`
+2.1e-4, skipping without the variable).
 
-## 6. What it would take
+`bench/gfx906/decode-ab.sh`, 32,500-token prompt, `--prefill 2048`, MTP off, six interleaved arms with
+`STRATA_PREFILL_TIMING=1` (the logs are `bench/table-e2e-phases.txt` and `bench/table-e2e-arms-timed.txt`):
 
-1. **Done, in this record.** The census (section 3): one engine run on two 2048-token chunks with the rocBLAS
-   logs on, priced per shape. It replaces the earlier phase-name estimate (3 %) with the measured 9.0 %.
-2. Un-gate `try_rocblas_f16o` for a `STRATA_ENABLE_CUDA`-mode build (or link rocBLAS there), with
-   `tests/hip/prefill_rocblas_gemm.cpp` as the gate - it already refuses a table for another architecture or
-   rocBLAS build.
-3. `tune_rocblas --tuning-out tools/hip/gfx906-rocblas-5.5.0.cd957402309.txt` for the live shape list (the 10
-   rows of section 3 are what it must cover - the tool's 14-shape default list still contains `12288x2560`,
-   `6144x2560` and `2560x6144`, which the deployment never calls), and an A/B/A bracket through
-   [`bench/gfx906/decode-ab.sh`](../../../bench/gfx906/decode-ab.sh) reading `hc read`, `qsa proj` and
-   `router+shared`. The bracket is the number that matters: section 4's caveat (2) says where it could
-   dissipate.
+| arm | GPU ms/chunk | pp tok/s | hc read | qsa proj | router+shared |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| base 1 | 2172 | 861.1 | 264.0 | 164.1 | 120.4 |
+| base 2 | 2213 | 855.0 | 279.1 | 164.6 | 118.1 |
+| base 3 * | 2403 | 796.7 | 255.5 | 164.7 | 118.3 |
+| table 1 | 2059 | 903.4 | 197.9 | 150.8 | 82.6 |
+| table 2 | 2072 | 867.3 | 189.5 | 149.3 | 83.7 |
+| table 3 | 2076 | 904.9 | 189.6 | 154.8 | 100.5 |
+
+**-5.5 % of a 2048-token chunk** (2172/2213 -> 2059/2072/2076 ms), **+5.4-6 % prompt throughput**, and the
+deltas land exactly on the three phases the census said they would: `hc read` **-78 ms (-29 %)**,
+`router+shared` -26 ms (-22 %), `qsa proj` -13 ms (-8 %), every other phase flat under 1 %
+(`bench/table-e2e-applied.txt` is the arm's own pick log: 10 shapes, `tuned_launches=4415 fallbacks=1`).
+\* base 3 is excluded from the deltas - its own phases show an expert-stream hiccup (`dequant` 132 against
+69, `gemm gate/up` 446 against 364), so the arm was slow before the flag was considered. A second, untimed
+bracket reads the same direction (854.9/866.9/765.7 against 884.0/922.5/809.7, `bench/table-e2e-arms.txt`),
+and **the generated token ids are identical in all twelve arms**.
+
+**Why 5.5 % and not 9.0 %.** Section 3's 206 ms prices each GEMM in isolation. The engine hides part of the
+`qsa proj` saving behind the rest of that phase (the 512-wide pair is issued beside the selection and the
+residual traffic), so that phase takes -8 % where its GEMMs alone allow -50 %; the `hc read` and the shared
+expert are exposed and take -29 % and -22 %. The 9.0 % was the ceiling, 5.5 % is what the pipeline pays -
+which is what section 4's caveat (2) said to expect, and why the bracket was the measurement that mattered.
+
+## 6. What is left
+
+1. **Done.** The census (section 3), the un-gating (section 1), the table and its script, the gate, and the
+   bracket (section 5).
+2. Regenerate after any ROCm refresh: `tools/hip/make-gfx906-table.sh` (~25 minutes) rewrites
+   `tools/hip/gfx906-rocblas-5.5.0.<version>.txt`; a stale file is refused loudly by the engine, which then
+   runs the default kernels.
+3. Only if `STRATA_DENSE_MMQ` or `STRATA_PF_RP` were ever turned off would the shape list change: the wide
+   products (experts, GDN) would come back to rocBLAS and the table would need their rows too - the tool's
+   14-shape default list already covers them.
+
 

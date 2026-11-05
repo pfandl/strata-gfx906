@@ -1,0 +1,14 @@
+prefill gemm: rocBLAS tuning enabled (80 rows, 67 with a solution, gfx906, rocBLAS 5.5.0.cd957402309)
+prefill gemm: rocBLAS solution -605557544 for T=2048 N=320 K=10240 ldy=320
+prefill gemm: rocBLAS solution -605557544 refused (status 6) for T=2048 N=320 K=10240 ldy=320; the default kernel this time
+prefill gemm: rocBLAS solution -605557633 for T=2048 N=10240 K=320 ldy=10240
+prefill gemm: rocBLAS solution -605557497 for T=2048 N=4 K=10240 ldy=4
+prefill gemm: rocBLAS solution -605557499 for T=2048 N=48 K=2560 ldy=96
+prefill gemm: rocBLAS solution -605557544 for T=2048 N=512 K=2560 ldy=512
+prefill gemm: rocBLAS solution -605557558 for T=2048 N=2560 K=640 ldy=2560
+prefill gemm: rocBLAS solution -9 for T=2048 N=1 K=2560 ldy=1
+prefill gemm: rocBLAS solution -605557558 for T=2048 N=10240 K=2560 ldy=10240
+prefill gemm: rocBLAS solution -605557550 for T=2048 N=128 K=2560 ldy=128
+prefill gemm: rocBLAS solution -605557544 for T=2048 N=320 K=10240 ldy=320
+prefill gemm: rocBLAS solution -605557544 refused (status 6) for T=2048 N=320 K=10240 ldy=320; the default kernel this time
+prefill gemm: rocBLAS tuning summary tuned_launches=4415 fallbacks=1

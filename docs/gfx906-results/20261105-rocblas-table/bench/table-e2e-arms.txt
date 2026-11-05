@@ -1,0 +1,8 @@
+arm      prompt  pp tok/s  tg tok/s   dec ms  ms/tok  drafts    hand-off  ids           md5
+base1     32500     854.9      25.4    630.0   39.38     2/7      serial   16  9bf16b450ff2
+base2     32500     866.9      26.0    614.0   38.38     2/7      serial   16  9bf16b450ff2
+base3     32500     765.7      25.7    622.0   38.88     2/7      serial   16  9bf16b450ff2
+tab1      32500     884.0      25.8    620.0   38.75     2/7      serial   16  9bf16b450ff2
+tab2      32500     922.5      25.8    619.0   38.69     2/7      serial   16  9bf16b450ff2
+tab3      32500     809.7      25.8    620.0   38.75     2/7      serial   16  9bf16b450ff2
+generated token ids: identical in all 6 arms (16 tokens)

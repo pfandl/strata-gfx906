@@ -161,6 +161,20 @@ if(STRATA_HIP_GFX906)
   enable_language(HIP)
   find_package(hip REQUIRED)
   find_package(hipblas REQUIRED)
+  # rocBLAS is the library behind roc::hipblas, so this build's prompt-path FP16-out GEMMs already run on it - and
+  # a table of its solution indices (STRATA_ROCBLAS_TUNING) is the one prompt lever gfx906 had left that costs
+  # nothing numerically: 206 ms of a 2048-token chunk (9.0 %), measured as a call census
+  # (docs/gfx906-results/20261105-rocblas-table/).  Same roc::rocblas target/handling as the native HIP backend
+  # (cmake/hip_backend.cmake) so the define/link sites below stay one branch each; STRATA_ENABLE_HIP is OFF in this
+  # build, which is why they cannot be gated on it.
+  find_package(rocblas QUIET)
+  if(TARGET roc::rocblas)
+    set(STRATA_ROCBLAS_AVAILABLE ON)
+    message(STATUS "Strata: rocBLAS found (gfx906 compat); the prompt path's solution table is available")
+  else()
+    set(STRATA_ROCBLAS_AVAILABLE OFF)
+    message(STATUS "Strata: rocBLAS not found (gfx906 compat); STRATA_ROCBLAS_TUNING stays a no-op")
+  endif()
   add_library(CUDA::cudart INTERFACE IMPORTED)
   target_link_libraries(CUDA::cudart INTERFACE hip::host)
   target_compile_definitions(CUDA::cudart INTERFACE STRATA_HIP_GFX906=1 __HIP_PLATFORM_AMD__=1)
@@ -757,14 +771,18 @@ if(STRATA_ENABLE_CUDA OR STRATA_ENABLE_HIP)
     add_executable(tune_hipblaslt tools/hip/tune_hipblaslt.cpp)
     target_link_libraries(tune_hipblaslt PRIVATE hip::host roc::hipblas roc::hipblaslt)
   endif()
-  if(STRATA_ENABLE_HIP AND STRATA_ROCBLAS_AVAILABLE)
-    # the prompt path's rocBLAS solution table (STRATA_ROCBLAS_TUNING; tools/hip/tune_rocblas makes one)
+  # The prompt path's rocBLAS solution table (STRATA_ROCBLAS_TUNING; tools/hip/tune_rocblas makes one).  Deliberately
+  # NOT gated on STRATA_ENABLE_HIP: the gfx906 compat build (STRATA_HIP_GFX906) runs the same FP16-out GEMMs through
+  # roc::hipblas, which is rocBLAS, and that build has no hipBLASLt tables - this is the lever it has
+  # (docs/gfx906-results/20261105-rocblas-table/).
+  if(STRATA_ROCBLAS_AVAILABLE)
     target_compile_definitions(strata_prefill PRIVATE STRATA_ROCBLAS_AVAILABLE=1)
     target_link_libraries(strata_prefill PRIVATE roc::rocblas)
 
     add_executable(tune_rocblas tools/hip/tune_rocblas.cpp)
     target_link_libraries(tune_rocblas PRIVATE hip::host roc::rocblas)
   endif()
+
 
   # DFlash2 drafter tools (not built by default: cmake --build <dir> --target dflash2_parity dflash2_gemm_bench dflash2_attn_bench): the drafter against
   # the torch port on a synthetic case (needs the pack and a case file, tools/dflash2/mk_parity_case.py), and the timing of its Q8 GEMM and attention
@@ -1231,6 +1249,18 @@ if(STRATA_ENABLE_CUDA OR STRATA_ENABLE_HIP)
     target_link_libraries(gfx906_gdn_rec_head PRIVATE strata_prefill ${_strata_gpu_runtime_target})
     add_test(NAME gfx906_gdn_rec_head COMMAND gfx906_gdn_rec_head)
     set_tests_properties(gfx906_gdn_rec_head PROPERTIES TIMEOUT 120)
+    if(STRATA_ROCBLAS_AVAILABLE)
+      # the rocBLAS solution table of the FP16-out prompt GEMMs: opt-in, and it SKIPS (77) without
+      # STRATA_ROCBLAS_TUNING.  Same test the native HIP backend registers; here it is the gate the table needs
+      # (docs/gfx906-results/20261105-rocblas-table/).
+      add_executable(gfx906_prefill_rocblas_gemm tests/hip/prefill_rocblas_gemm.cpp)
+      target_include_directories(gfx906_prefill_rocblas_gemm PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/prefill"
+                                 ${_strata_gpu_include_directories})
+      target_link_libraries(gfx906_prefill_rocblas_gemm PRIVATE strata_prefill ${_strata_gpu_runtime_target}
+                            roc::rocblas roc::hipblas)
+      add_test(NAME gfx906_prefill_rocblas_gemm COMMAND gfx906_prefill_rocblas_gemm)
+      set_tests_properties(gfx906_prefill_rocblas_gemm PROPERTIES TIMEOUT 120 SKIP_RETURN_CODE 77)
+    endif()
   endif()
   if(STRATA_ENABLE_CUDA)
     # the Volta prompt experts (gemm_iq_f16_grouped, STRATA_PF_WMMA) against a double reference; skipped below sm_70

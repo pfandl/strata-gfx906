@@ -862,6 +862,24 @@ ninja -C build-906 strata
 container with `--device=/dev/kfd --device=/dev/dri --group-add video --ipc=host --ulimit memlock=-1`; on some boards
 `HSA_OVERRIDE_GFX_VERSION=9.0.6` is needed for the runtime to accept the card.
 
+**The rocBLAS solution table is shipped for this card (`STRATA_ROCBLAS_TUNING`,
+`tools/hip/gfx906-rocblas-5.5.0.cd957402309.txt`).** The prompt path's FP16-out GEMMs run through
+`roc::hipblas`, i.e. rocBLAS, and on `N=512 K=2560` (`attn_k`/`attn_v`) or `N=1` (the shared expert's gate
+scalar) its own kernel choice is 2.9x to 10.6x off the best kernel it holds. The table names the solution per
+shape and token bucket, and this build now reads it: the `STRATA_HIP_GFX906` CMake branch calls
+`find_package(rocblas)` and defines `STRATA_ROCBLAS_AVAILABLE` (this branch's un-gating - before it the switch
+was a silent no-op on gfx906). Point the engine at the file or at the directory holding it -
+`STRATA_ROCBLAS_TUNING=/data/tables` - and it says `rocBLAS tuning enabled (80 rows, 67 with a solution,
+gfx906, rocBLAS 5.5.0.cd957402309)` at start. Measured on the engine in a six-arm A/B/A: **-5.5 % of a
+2048-token chunk** (2192 -> 2072 ms of GPU timeline; `hc read` -29 %, `router+shared` -22 %, `qsa proj` -8 %,
+everything else flat), **+5.4-6 % prompt throughput**, generated tokens identical, and no accuracy budget
+spent (the same FP16 products, another rocBLAS kernel's summation order). A table is pinned to one GPU
+architecture and one rocBLAS build: after a ROCm refresh regenerate it with
+`tools/hip/make-gfx906-table.sh` (~25 minutes) rather than editing it. `tests/hip/prefill_rocblas_gemm.cpp`
+(`gfx906_prefill_rocblas_gemm`) is the gate; it skips without the variable. Details and the census:
+[docs/GFX906.md](GFX906.md#the-rocblas-solution-table-opt-in-strata_rocblas_tuning) and
+[gfx906-results/20261105-rocblas-table](gfx906-results/20261105-rocblas-table/README.md).
+
 0.2.1 builds `ninja -C build-906 strata` again (0.1.44 to 0.2.0 stopped at `cublasSgemm` in `src/qwen35/q36_engine.cu`, at
 `cuda.h` in `strata_mmq_w4a4` and at three link errors, #3172 #3271; compiled for gfx906 on ROCm 7.10 with clang 22, all 161 targets,
 not run on a card). The Qwen3.6 family (`qwen35moe`) is not part of the gfx906 build: its engine calls cuBLAS entry points the compat
