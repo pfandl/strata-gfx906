@@ -1,0 +1,29 @@
+INFO logit_bias=1 context=32768 kv=int8 kv_resident=0 expert_slots=24576 expert_cache_mib=47962 expert_slots_primary=12288 expert_cache_primary_mib=22675 spec=4 mtp_max=0 lookup=0 vram_free_mib=4584 cvec=0 arena_mib=1207 pool_workers=6 pcie_frac=0.00 spec_min_p=0.50 conversation_cache_mib=4096 conversation_cache_slots=4 conversation_cache_min_free_mib=2560 conversation_cache_min_tokens=0 tail_role_token=-1 vram_elastic=0 prefill_cap=2048 prefill_stages=2 stream_all_min=1024 prefill_pipe=0 engine=0.1.49.2
+READY 32768 stop
+RESUME 0
+PP 2048 32700 4760 430.2
+PP 4096 32700 7349 557.4
+PP 6144 32700 10262 598.7
+PP 8192 32700 12639 648.2
+PP 10240 32700 15042 680.8
+PP 12288 32700 17464 703.6
+PP 14336 32700 19885 720.9
+PP 16384 32700 22387 731.8
+PP 18432 32700 24849 741.8
+PP 20480 32700 27318 749.7
+PP 22528 32700 29794 756.1
+PP 24576 32700 32291 761.1
+PP 26624 32700 34791 765.3
+PP 28672 32700 37314 768.4
+PP 30720 32700 39836 771.2
+PP 32699 32700 42305 772.9
+REUSED 0
+T 259
+T 76038
+T 49433
+T 49433
+T 49433
+T 49433
+T 49433
+T 49433
+DONE 8 32700 42501.5 332.5 length 0 0 0 0 0 0 0 0.0 32700 0 chunk=2048 experts_streamed=9312

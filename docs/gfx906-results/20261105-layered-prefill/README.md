@@ -187,3 +187,125 @@ against 260 ms: **the FP16 knob is worth +19.1 % on top of the port** (median 73
 same order as the +18.1 % it was worth in layer 1. The two levers touch different GEMMs, so the ladder
 multiplies them: `649.8 x 1.18 x 1.14` is where layer 2 lands.
 
+## Layer 3 - the prompt-attention kernel (this branch)
+
+This is the one layer whose code is written here: `src/kernels/cuda/qsa_prompt_attn_gfx906.cu` plus the
+dispatch in `qsa_prompt_attn.cu` / `qsa_prompt_attn.hpp`, opt-in as `STRATA_PROMPT_ATTN_GFX906=1` (the
+deployment sets it). The layer-2 binary and the layer-3 binary differ by nothing else.
+
+Seven arms, interleaved, all with the layer-1 baseline and the port on:
+
+| arm | `STRATA_PROMPT_ATTN_GFX906` | pp tok/s | GPU ms/chunk | qsa attn |
+| --- | --- | ---: | ---: | ---: |
+| `L3-ko` | 0 | 682.3 | 2340 | 305.5 |
+| `L3-k` | 1 | 751.1 | 2300 | 274 |
+| `L3-k2` | 1 | 760.3 | 2295 | 275 |
+| `L3-ko2` | 0 | 702.5 | 2298 | 305 |
+| `L3-ko3` | 0 | 665.5 | 2341 | 305 |
+| `L3-k3` | 1 | 717.1 | 2270 | 272.5 |
+| `L3-ko4` | 0 | 769.4 | 2314 | 304.5 |
+
+**The phase table is unambiguous and the end-to-end number is not.** `qsa attn` reads 304-305.5 ms/chunk
+in all four kernel-off arms and 272.5-275 in all three kernel-on arms - **-31 ms per 2048-token chunk, a
+10 % cut of that phase and 1.4 % of the chunk** (`2327 -> 2295` ms on the chunk medians) - and every other
+phase is identical to the millisecond:
+
+| phase | `L3-ko2` | `L3-k2` | delta |
+| --- | ---: | ---: | ---: |
+| qsa attn | 305 | 275 | **-30** |
+| qsa proj | 165 | 164 | -1 |
+| dequant | 129 | 126 | -3 |
+| host grouping | 30 | 28 | -2 |
+| gemm gate/up | 413 | 414 | +1 |
+| everything else | | | 0 |
+| GPU timeline (median) | 2298 | 2289 | -9 |
+
+End to end the same seven arms read **665.5-769.4 tok/s with the kernel off and 717.1-760.3 with it on** -
+overlapping ranges, a median of 692.4 against 751.1. That looks like +8.5 % and it is not: the GPU-side
+medians differ by 1.4 % (2327 against 2295), and the pp numbers are dominated by the 2.5-13.8 s of
+per-prompt work the engine does outside its per-chunk timing (see `L1-pipe`, where that gap is 13.8 s and
+the GPU timeline is unchanged). **So this layer's honest number is the phase delta, -1.4 % of a chunk
+(2327 -> 2295 ms), and its end-to-end contribution is inside this box's noise band.** At 32,700 tokens a
+1.4 % chunk saving
+is ~0.4 s out of ~43 s; nothing on this box can resolve that in one arm.
+
+**This corrects the 2026-11-03 record.** That one reported "-2.9 to -4.1 % of the chunk" from chunk walls of
+2362 -> 2255 ms, on two arms per side. Two things say it is too large. Its **own** phase measurement there
+was -40 ms of `qsa attn`, which is 1.7 % of a 2340 ms chunk, not 3-4 % - a chunk-level figure twice its own
+phase delta needs a second mechanism, and there is none in the phase table. And with seven arms here the
+chunk-level delta is `2327 -> 2295` ms = **-32 ms, -1.4 %**, which is the phase delta and nothing more. The
+kernel is real, its size is 1.3-1.4 % of the chunk at this prompt size, and the 4 % reading was two fast
+draws against a quiet reference.
+
+**The quality gate is unchanged** and was run on exactly this kernel code: top-1 20/20 (100 %) against
+the default path at KL 0.01364 / 0.00062 on the 20-prompt yardstick, and MTP draft acceptance 72.2 -> 72.0 %
+over 1,550 drafts, with both reference arms reproducing their counts and their text exactly - see
+[20261103-qsa-prompt-attn](../20261103-qsa-prompt-attn/README.md).
+
+
+
+
+`STRATA_PREFILL_PIPE=1` is the more interesting negative: the GPU timeline is **identical** (2677 ms
+against 2666-2728) while the end-to-end number collapses to 500.2 tok/s. The pipeline overlaps stage 1's
+read of chunk *c-1* with stage 0's read of chunk *c*, which is the right shape for a stream of prompts
+and the wrong shape for one 32,700-token prompt: each chunk now waits for both stages before the next
+starts, and the host staging that `--prefill 2048` was hiding behind the GPU becomes visible. Two cards,
+a layer split and a single long prompt is not the case it was written for.
+
+hold here (this session crossed a container kill that evicted part of the 62 GB GGUF, and the audit's
+arms ran back-to-back inside one warm window). **Every verdict below therefore rests on interleaved
+A/B/A arms plus the phase table, never on a single arm**, and a difference smaller than the band is
+reported as no effect.
+
+## The ladder
+
+All at a 32,700-token prompt, context 32768, `--prefill 2048`, medians of the arms named above:
+
+| step | pp tok/s | GPU ms/chunk | gain |
+| --- | ---: | ---: | --- |
+| **as shipped** - base commit, no env, `--prefill auto` (8192) | 448.2 | 11032 | - |
+| **layer 1** - every lever the engine already had | 649.8 (633.5-676.7) | 2692 | **+45.0 %** |
+| **layer 2** - the ported repacked-int8 stack | 738.2 (729.8-760.9) | 2318 | **+13.6 %** |
+| **layer 3** - the gfx906 prompt-attention kernel | 751.1 (717.1-760.3) | 2295 | -1.4 % GPU (pp inside the band) |
+
+**448.2 -> 751.1 tok/s is +67.6 % end to end. Of that, +15 % is code under review (the port, +13.6 %, and
+the kernel, -1.4 % of the GPU timeline); the other +45 % is configuration the engine already supported** -
+one chunk-geometry decision, one opt-in GEMM precision (upstream #835) and two attention switches
+(upstream #1661, #1718).
+
+These are this prompt size on this box. At the deployment's 262,144-token context and a 64K prompt the
+absolute tok/s are higher for every layer (the 2026-11-02 record read 769.7 tok/s with layer 1 + layer 2
+at 65,500 tokens), but the ratios are what the layers claim and those are measured here.
+
+## What this record changes in the earlier ones
+
+- **`549.0 -> 769.7 (+40 %)` becomes `448.2 -> 751.1 (+67.6 %)`, of which +15 % is code.** The old
+  headline compared a cold arm at 8192-token chunks against a warm one, and counted three upstream levers
+  as part of the change.
+- **`STRATA_HIP_PROMPT_F16=1`**: +18.1 % in layer 1, +19.1 % on top of the port (the 2026-11-03 audit
+  measured +10.4 % at 65,500 tokens and 8192-token chunks; the knob's value tracks the share of the
+  hyper-connection read, which is a larger share at the smaller chunk).
+- **The two attention switches**: +7.8 % at layer 1 against the audit's +5.8 % on top of the port - the
+  same effect inside this box's band, bit-identical output either way.
+- **The prompt-attention kernel**: -31 ms of `qsa attn` per 2048-token chunk, -1.4 % on the chunk medians
+  (`2327 -> 2295`), rather than the -2.9 to -4.1 % that its own record read off two chunk walls - there the
+  phase itself moved only 1.7 % of a chunk. Its end-to-end effect is inside this box's noise band.
+- **`STRATA_MMQ_RESIDENT_SORT_NE=1` stays off** - the audit's verdict, now with a bracket around it.
+- **`STRATA_PREFILL_PIPE=1` is a -21 % regression on this workload** (new; the GPU timeline is unchanged,
+  the wall clock is not).
+- **"No env lever is left" holds for the runtime levers that reach the prompt path on gfx906.** The
+  candidates that still look like levers are CMake options, not environment: `STRATA_MMQ_TAB`,
+  `STRATA_PREFILL_FUSED`, `STRATA_MMQ_KQUANTS`, `STRATA_PREFILL_MMQ`. `STRATA_HCD_EXACT` needs the gfx1151
+  hipBLASLt tuning table (`src/core/arch_defaults.cpp:17`), and `STRATA_PF_GEMM` / `STRATA_PF_PAD` are
+  documented as gfx11-only in `docs/AMD_HIP.md`.
+
+## What is still open
+
+- **int8 attention scores** (~+6-10 % on the old estimate, never built): the largest remaining phase at
+  the kernel level, `qsa attn` 274 ms of 2295 after layer 3.
+- **The GDN scan** (`gdn recurrence` 131 ms; the chunked WY form is CUDA/gfx11 only) - algorithmic work,
+  not a knob.
+- **The 8192-chunk over-lending**: the engine's own warning says the prompt path borrows more cache slots
+  than fit in RAM. That is the +18.8 % of layer 1, and it is a *memory-budget* problem
+  (`--resident-budget-gib`), not a kernel one; 2048 is the deployed workaround, not a fix.
+
