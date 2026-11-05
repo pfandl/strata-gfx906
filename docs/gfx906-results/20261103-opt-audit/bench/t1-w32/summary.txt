@@ -1,0 +1,2 @@
+=== result ===
+strata serve: prompt 32700 tokens = 0 reused + 32700 read in 53007 ms (616.9 tok/s), 8 generated in 325 ms (24.6 tok/s), drafts accepted 0 of 0, 1 checkpoints

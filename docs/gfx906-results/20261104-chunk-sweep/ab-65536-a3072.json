@@ -1,0 +1,27 @@
+{
+ "context": 65536,
+ "prompt_tokens": 63267,
+ "output_tokens": 48,
+ "finish": "stop",
+ "pp_tok_s": 690.8,
+ "prompt_ms": 91587.3,
+ "tg_tok_s": 49.9,
+ "decode_ms": 961.2,
+ "drafts_accepted": 27,
+ "drafts": 32,
+ "first_token_s": 92.5485,
+ "reply_head": "The text is a long, repetitive sequence of random words (suc",
+ "raw_timings": {
+  "cache_n": 0,
+  "prompt_n": 63267,
+  "prompt_ms": 91587.3,
+  "prompt_per_token_ms": 1.448,
+  "prompt_per_second": 690.8,
+  "predicted_n": 48,
+  "predicted_ms": 961.2,
+  "predicted_per_token_ms": 20.025,
+  "predicted_per_second": 49.9,
+  "draft_n": 32,
+  "draft_n_accepted": 27
+ }
+}

@@ -5,8 +5,8 @@ the [2026-11-03 audit](../20261103-opt-audit/README.md) prices the knobs on top 
 both mislead as a *change under review*, because that ladder climbs over four different things at once:
 
 1. **levers the engine already ships** - `STRATA_HIP_PROMPT_F16` (opt-in, #835) and the two gfx906
-   attention switches, which are upstream PRs [#1661](https://github.com/webzone/strata/pull/1661)
-   (`STRATA_GFX906_ATTN_QUERY_SWIZZLE`) and [#1718](https://github.com/webzone/strata/pull/1718)
+   attention switches, which are upstream PRs [#1661](https://github.com/Niko1221/Strata/pull/1661)
+   (`STRATA_GFX906_ATTN_QUERY_SWIZZLE`) and [#1718](https://github.com/Niko1221/Strata/pull/1718)
    (`STRATA_GFX906_ATTN_REDUCE12`), merged off by default. None of that is code in this branch: on the
    base commit the switches live in `src/kernels/cuda/qsa_decode_attn.cu` and the FP16 path in
    `src/prefill/gemm.cu:581`, and the deployment turns them on by environment, not by a patch.
@@ -24,9 +24,15 @@ from an earlier session.
 
 | layer | what it is | where the code comes from | measured against |
 | --- | --- | --- | --- |
-| 1 | every lever the engine already had, enabled | base commit `048effa1`, env only | as shipped |
-| 2 | the repacked-int8 prompt stack | Janus Reith, seven commits, ported | layer 1 |
+| 1 | every lever the engine already had, enabled | base commit `048effa1` on `webzone/strata-gfx906@gfx906`, env only | as shipped |
+| 2 | the repacked-int8 prompt stack | Janus Reith (`janus-reith/strata-gfx906`), seven commits, ported | layer 1 |
 | 3 | the gfx906 prompt-attention kernel | this branch | layer 2 |
+
+Layer 2 is **Janus Reith's** work, from <https://github.com/janus-reith/strata-gfx906>: seven commits,
+carried unmodified with his authorship. His repack kernels derive from `mx-llama.cpp`, and that MIT
+notice travels with them as `src/prefill/rp/LICENSE.mx-llama.cpp`. None of his fork is merged upstream,
+and neither is the fork base these layers are measured on - see [`docs/GFX906.md`](../../GFX906.md) for
+what the fork contains beyond upstream.
 
 ## The box, the prompt, the harness
 

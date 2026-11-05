@@ -1,0 +1,2 @@
+label=t2-sortne mode=RP ntokens=32700
+EXIT rc=0

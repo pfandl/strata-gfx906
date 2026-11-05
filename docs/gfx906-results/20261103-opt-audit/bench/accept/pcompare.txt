@@ -1,0 +1,2 @@
+reference: /data/rp-opt/accept/arm0
+arm1                                     prompts  20  top-1 100.00%  KL mean 0.01185  median 0.00035  max 0.13436

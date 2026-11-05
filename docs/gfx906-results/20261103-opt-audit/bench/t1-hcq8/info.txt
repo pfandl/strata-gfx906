@@ -1,0 +1,2 @@
+label=t1-hcq8 mode=RP ntokens=32700
+EXIT rc=0

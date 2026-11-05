@@ -1,5 +1,14 @@
 # 2026-11-03 - the prompt attention: two in-tree switches (+5.8 % measured) and a gfx906 prompt kernel
 
+> **Correction, 2026-11-05 - the kernel's chunk-level size is smaller than the bracket below.** The
+> [layered record](../20261105-layered-prefill/README.md) re-measured this kernel with seven bracketed arms
+> (three with it on, four off) at the same prompt and chunk: `qsa attn` 304-305.5 -> 272.5-275 ms/chunk, so
+> **-31 ms per chunk, and the chunk medians 2327 -> 2295 ms = -1.4 %**. The phase saving here (-40 ms) and
+> there (-31 ms) agree; the chunk-level `-2.9 to -4.1 %` below does not survive, and it cannot: -40 ms of
+> phase is 1.7 % of a 2340 ms chunk, so a -3 to -4 % chunk needs a second mechanism that the phase table does
+> not contain. Read the bracket below as an upper bound from two arms per side. The kernel and its gates
+> stand; only its size changes.
+
 The 2026-11-03 [opt audit](../20261103-opt-audit/README.md) ended with one kernel-scale item: `qsa attn`, 427.6 ms of a
 2734 ms chunk, is not a GEMM on this card at all - `qsa_prompt_attn_batch()` refuses gfx906 (its kernels are
 m16n8k16 MMAs and cp.async), so `prefill.cpp` loops the *decode* kernel over 32-query batches and every query re-reads
