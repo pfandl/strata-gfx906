@@ -744,6 +744,12 @@ if(STRATA_ENABLE_CUDA OR STRATA_ENABLE_HIP)
     # Volta-only (cc 7.0) and gated on STRATA_EXPERIMENTAL_SM60; the path itself stays opt-in (STRATA_GDN_CHUNK).
     target_sources(strata_prefill PRIVATE src/prefill/gdn_chunk.cu)
   endif()
+  # gfx906's chunked GDN prompt recurrence (docs/GDN_CHUNK_SCAN.md): the prep/scan pair reshaped for 64 KB of LDS.
+  # Opt-in behind STRATA_GDN_CHUNKED, dispatched from src/prefill/kernels.cu's HIP branch.  Added unconditionally on
+  # purpose: the AMD build of this tree runs with STRATA_ENABLE_HIP=OFF and hipcc as the CUDA compiler, so an
+  # `if(STRATA_ENABLE_HIP)` here would leave it out; its body is behind `#if defined(__HIPCC__)` and a CUDA build gets
+  # the stub that returns false.
+  target_sources(strata_prefill PRIVATE src/prefill/gdn_chunk_906.cu)
   if(STRATA_ENABLE_HIP AND STRATA_HIPBLASLT_AVAILABLE)
     target_compile_definitions(strata_prefill PRIVATE STRATA_HIPBLASLT_AVAILABLE=1)
     target_link_libraries(strata_prefill PRIVATE roc::hipblaslt)
@@ -2439,6 +2445,9 @@ if(STRATA_HIP_GFX906)
   # the prompt path's own kernel against the decode kernel it replaces: accuracy (max |diff|) and time, one run
   add_executable(gfx906_qsa_prompt_attn_probe bench/gfx906_qsa_prompt_attn_probe.cpp)
   target_link_libraries(gfx906_qsa_prompt_attn_probe PRIVATE strata_kernels ${_strata_gpu_runtime_target})
+  # the chunked GDN prompt recurrence against the shipped token recurrence: time, and the two outputs side by side
+  add_executable(gfx906_gdn_chunk_probe bench/gfx906_gdn_chunk_probe.cpp)
+  target_link_libraries(gfx906_gdn_chunk_probe PRIVATE strata_prefill ${_strata_gpu_runtime_target})
 endif()
 
 # ---- DeepSeek-V4.1 on a box with no GPU toolkit ------------------------------------------------

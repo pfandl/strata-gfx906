@@ -61,6 +61,15 @@ namespace strata::prefill {
 /// token chain hurts and where this was measured; every other architecture keeps the existing recurrence.
 bool gdn_chunk_available();
 
+/// The same WY form for gfx906 (HIP, docs/GDN_CHUNK_SCAN.md): the prep and scan pair of src/prefill/kernels.cu's
+/// gdn_rec_chunked, reshaped for this card's 64 KB of LDS and 64-lane waves.  Same buffers and conventions as
+/// `gdn_recurrence` minus the output norm, which the caller runs over the whole chunk afterwards.  Returns false
+/// without launching anything when the device is not a gfx906, `T` is 0, or the scratch could not be had - the caller
+/// then takes the token recurrence.  FP32-level, not bit-exact: another order of the same sums.
+bool gdn_chunk_gfx906(float* state, const float* h, const float* gate, const float* beta, float* oc, int64_t T,
+                      void* stream);
+
+
 /// The chunked recurrence over `T` tokens (T a multiple of 64 - the caller keeps `T % 64` for the recurrent
 /// kernel; `gdn_recurrence` does this itself).  Same buffers and conventions as `gdn_recurrence`, minus the
 /// output norm, which the caller runs over the whole chunk as before:

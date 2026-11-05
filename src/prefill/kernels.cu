@@ -2620,6 +2620,14 @@ void gdn_recurrence_variant(int variant, float* state, const float* h, const flo
             check("gdn_recurrence (chunked, WMMA)");
             return;
         }
+        // STRATA_GDN_CHUNKED=1 on gfx906: the same WY form in FP32, reshaped for 64 KB of LDS (docs/GDN_CHUNK_SCAN.md).
+        // Prepared with the prep kernel and scanned per (key head, 8 columns); the norm kernel below still runs after
+        // it, so y / y16 / z / gamma keep their contract.  The threshold is kernels.cu's kGdnChunkedMin.
+        if (chunked && !serial && T >= 128 && gdn_chunk_gfx906(state, h, gate, beta, y, T, stream)) {
+            gdn_out_norm_kernel<<<dim3((unsigned) T, HV), S, 0, (cudaStream_t) stream>>>(z, gamma, eps, y, y16, ld16);
+            check("gdn_recurrence (chunked, gfx906)");
+            return;
+        }
     }
     if (variant == 3) {   // diagnostics: the quad recurrence + the old norm kernel
         if (T > 0) {
