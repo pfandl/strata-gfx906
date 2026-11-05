@@ -1,0 +1,25 @@
+=== scores8=1 skip=0 ===
+STRATA_PROMPT_ATTN_GFX906=1 masked_pages=0
+accuracy vs the decode kernel: max_abs=2.185e-02 max_rel=2.353e+04 rms=6.930e-04 bitwise=53/12582912
+time: decode 64.7308 ms | prompt 36.4593 ms | 1.775x | us/query 31.607 -> 17.802
+=== scores8=1 skip=1 ===
+STRATA_PROMPT_ATTN_GFX906=1 masked_pages=0
+accuracy vs the decode kernel: max_abs=2.952e+00 max_rel=1.000e+00 rms=1.147e-01 bitwise=0/12582912
+time: decode 64.7994 ms | prompt 15.3045 ms | 4.234x | us/query 31.640 -> 7.473
+=== scores8=1 skip=2 ===
+STRATA_PROMPT_ATTN_GFX906=1 masked_pages=0
+accuracy vs the decode kernel: max_abs=2.957e+00 max_rel=6.772e+05 rms=1.118e-01 bitwise=0/12582912
+time: decode 64.8246 ms | prompt 23.7976 ms | 2.724x | us/query 31.653 -> 11.620
+=== scores8=0 skip=0 ===
+STRATA_PROMPT_ATTN_GFX906=1 masked_pages=0
+accuracy vs the decode kernel: max_abs=5.960e-06 max_rel=1.389e+00 rms=9.477e-08 bitwise=515839/12582912
+time: decode 64.8506 ms | prompt 39.9273 ms | 1.624x | us/query 31.665 -> 19.496
+=== scores8=0 skip=1 ===
+STRATA_PROMPT_ATTN_GFX906=1 masked_pages=0
+accuracy vs the decode kernel: max_abs=2.952e+00 max_rel=1.000e+00 rms=1.147e-01 bitwise=0/12582912
+time: decode 64.8309 ms | prompt 19.7338 ms | 3.285x | us/query 31.656 -> 9.636
+=== scores8=0 skip=2 ===
+STRATA_PROMPT_ATTN_GFX906=1 masked_pages=0
+accuracy vs the decode kernel: max_abs=2.957e+00 max_rel=6.772e+05 rms=1.118e-01 bitwise=0/12582912
+time: decode 64.8561 ms | prompt 23.6340 ms | 2.744x | us/query 31.668 -> 11.540
+=== done, deployment back ===

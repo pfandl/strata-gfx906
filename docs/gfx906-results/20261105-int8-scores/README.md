@@ -126,10 +126,44 @@ A/B/A, `draft_n` / `draft_n_accepted` out of the responses).
 - **What would change it**: a configuration where the attention is a bigger share of the chunk - more
   selected cells per query, a shorter chunk, or a box whose `qsa attn` is not already ~12 % of the prompt.
   Nothing in the current deployment is close.
-- **What is left in the kernel**: the *value* phase (thread-per-dimension, 12 FMAs per cell per thread, one
-  int8 load and one fp16 scale per cell) is the other ~90 %, and it is load-bound in the same way; a
-  dp4a-shaped rewrite there would have to quantize the probabilities, which is a different numerical
-  question with a much larger accuracy bill.
+- **What is left in the kernel**: the *value* phase, which was measured afterwards - see the section below:
+  it is 58 % of the kernel and it is latency-bound, not instruction-bound, so it does not take a dp4a-style
+  rewrite (that would mean quantizing the probabilities); it takes more memory-level parallelism at no
+  register cost.
+
+## The value phase, checked
+
+The dp4a win is bounded by the other phase, so the kernel was instrumented to split it (a temporary `skip`
+argument: `skip=1` removes the value loop, `skip=2` replaces the scores with 0 and keeps the softmax; the
+knob is not committed). Component probe, nq 2048, ctx 32768, int8 pools, 20 reps, ms:
+
+| scores | full | no value loop | no score phase | value phase | score phase | rest |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| dp4a | 36.46 | 15.30 | 23.80 | **21.16 (58 %)** | 12.66 (35 %) | 2.64 |
+| fp32 | 39.93 | 19.73 | 23.63 | **20.20 (51 %)** | 16.30 (41 %) | 3.43 |
+
+The two arms' score-phase difference (16.30 - 12.66 = 3.64 ms) is the kernel's own dp4a delta (3.47 ms), so
+the split is consistent. Per cell per thread the value phase is: 1 `srow[c]` LDS read whose result *is* the
+next load's address, 1 int8 V byte + 1 fp16 scale (broadcast) + 2 converts + 1 multiply, 12 broadcast
+`LDS.32` of `sp[h][c]`, 12 FMAs - about 30 instructions per cell per thread, 2051 cells per query, 2 KV
+heads, 2048 queries per chunk.
+
+Two attempts, both measured on the component and both **byte-identical** to the probe's reference output:
+
+| attempt | dp4a | fp32 | verdict |
+| --- | ---: | ---: | --- |
+| cell-major probability tile: `spv[64][16]`, written by the softmax, read as 3 broadcast `LDS.128` instead of 12 broadcast `LDS.32` | 36.16 (-0.8 %) | 40.27 (+0.9 %) | **neutral** - the phase is not LDS-issue bound |
+| 4-deep gather pipeline (`VDEPTH=4`: four V rows loaded before any is consumed) | 48.31 (**+33 %**) | 49.86 (+25 %) | **a loss** - and the same build's *no-value* variant reads 19.54 vs 15.30, i.e. the extra live registers cost occupancy for the whole kernel |
+
+So the phase is **latency- and dependency-bound, not instruction-bound**: the per-cell chain is `srow` LDS
+read -> global address -> 256-byte V row gather -> convert -> 12 FMAs, with ~12 resident waves per CU to hide
+it, and neither halving its LDS instructions nor deepening the gather moves it. What is left worth trying is
+**cooperative staging of the pass's V rows into LDS** (64 x 256 B = 16 KB per pass: 4 coalesced `LDG.128` +
+4 `STS.128` per thread, so the gathers issue as one batch and the loop's dependency chain becomes LDS-only).
+It costs 16.5 KB of LDS per block, which takes the fp32-score path from 3 to 2 blocks per CU - and the two
+experiments above say the occupancy is what decides it. Not attempted here: this lever's end-to-end ceiling
+is 1.2 % of a chunk, and that rewrite would need the whole gate again for a phase that is already 58 % of a
+kernel that is 12 % of a chunk.
 
 ## Reproduce
 
@@ -160,8 +194,11 @@ python3 tools/quant_quality.py pcompare /data/gate-i8/ref /data/gate-i8/fp32 /da
 ```
 
 `bench/` holds the probe output (`probe.txt`), the phase table (`arms-phases.txt`) with the script that
-prints it (`qsa-phases.py`), and the gate (`gate.txt`). The raw arm directories (`/data/qsa8`, 15 chunks
-each) and the three gate directories (`/data/gate-i8/*`, 21 files each) stay on the box.
+prints it (`qsa-phases.py`), the gate (`gate.txt`), and the value-phase investigation
+(`value-phase-split.txt`, `value-phase-sp-transposed.txt`, `value-phase-pipeline-d4.txt` - the last two are
+the two attempts' raw runs, byte-identity checked with `cmp` against `/data/i8/int8-32768.bin` and
+`/data/i8/fp32-32768.bin`). The raw arm directories (`/data/qsa8`, 15 chunks each) and the three gate
+directories (`/data/gate-i8/*`, 21 files each) stay on the box.
 
 ## Files
 
