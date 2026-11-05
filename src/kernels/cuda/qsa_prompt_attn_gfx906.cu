@@ -19,8 +19,21 @@
 // The query-LDS swizzle is applied unconditionally here, unlike the decode kernel's STRATA_GFX906_ATTN_QUERY_SWIZZLE
 // switch: it is a bit-identical permutation of the tile (proved by bench/gfx906_qsa_query_swizzle_probe), and the
 // kernel as a whole is already the opt-in.
+//
+// STRATA_QSA_INT8_SCORES=1 (opt-in, int8 KV only): the score phase's operand.  This card has no matrix cores, but it
+// does have V_DOT4_I32_I8 (dp4a), so the query is quantized to int8 per 32-dim group once per block (the Q8_0 rounding
+// of ggml) and each head's 8-dim product becomes two dp4a on the K cell's own int8 codes instead of eight
+// dequantize-and-FMA steps: 8 FMAs + 8 converts + a float4 pair of LDS reads per head become 2 dp4a + 2 LDS words, and
+// the per-64 K scale and per-32 query scale are folded into one multiply.  The sum is the same operands in a different
+// order (the products are exact in int32, the scales are applied per lane before the cross-lane reduction), so it is
+// NOT bitwise the FP32 path.  Off by default and not in the deployment: the phase is 9.9 % faster and the kernel 9.4 %
+// (component), but the phase is a tenth of the kernel and the kernel a tenth of a chunk, so the chunk gain (-1.2 % at
+// best, -7/-8 ms measured against a 2284 ms chunk) is under this box's noise - docs/gfx906-results/20261105-int8-scores.
+// Its numerical gate is run and clean (top-1 100 % (20/20), KL 0.01403 vs the FP32 path's 0.01112 on the same run); the
+// acceptance gate is the one of the 2026-11-03 record and would have to be re-run if this is ever turned on.
 #include "strata/kernels/qsa_prompt_attn.hpp"
 #include "strata/core/geometry.hpp"
+#include "strata/kernels/dp4a.hpp"
 #include "strata/kernels/kv_q8.hpp"
 
 #include <cuda_fp16.h>
@@ -42,6 +55,8 @@ static_assert(HD == strata::core::kCompiledGeometry.head_dim &&
 constexpr int CHUNK = 64;         // selected cells per pass
 constexpr int THREADS = 256;      // 8 warps: scores warp-per-cell, values thread-per-dimension
 constexpr int WARPS = THREADS / 32;
+constexpr int QG = 32;            // query quantization group for STRATA_QSA_INT8_SCORES (ggml's Q8_0 block)
+constexpr int NG = HD / QG;       // 8 groups per head
 
 __device__ __forceinline__ float warp_sum(float v) {
 #pragma unroll
@@ -115,7 +130,8 @@ __device__ __forceinline__ float load_v(const QsaAttnPools& p, long long row, in
 }
 
 // grid (n_q, n_kv_heads): blockIdx.x = query, blockIdx.y = KV head; the block's 12 query heads share its KV cells.
-template <int KV_MODE>
+// SCORES8: the query tile is int8 codes + per-32 scales and the score phase runs on dp4a (int8 KV only).
+template <int KV_MODE, int SCORES8>
 __global__ void __launch_bounds__(THREADS) prompt_attn_kernel(const float* __restrict__ q, QsaAttnPools p,
                                                              const int32_t* __restrict__ ids,
                                                              const int32_t* __restrict__ step, int64_t cap,
@@ -128,13 +144,39 @@ __global__ void __launch_bounds__(THREADS) prompt_attn_kernel(const float* __res
     const size_t row_stride = (size_t) (n_kv_heads * G) * HD;
     const int32_t* my_ids = ids + (size_t) blockIdx.x * (size_t) cap;
     const float* my_q = q + (size_t) blockIdx.x * row_stride + (size_t) kvh * G * HD;
-    __shared__ __align__(16) float sq[G][HD];   // 12 KB: this KV head's 12 query heads, swizzled as the decode kernel does
+    __shared__ __align__(16) unsigned char sqbuf[(size_t) G * HD * sizeof(float)];   // 12 KB: the fp32 tile, or the int8 codes
+    __shared__ float sqsc[G][NG];      // per-32 query scales when SCORES8 (the fp32 path leaves them alone)
     __shared__ float sp[G][CHUNK];              // scores, then this pass's probabilities
     __shared__ long long srow[CHUNK];           // pool row of each selected cell (-1: masked / not resident)
     __shared__ float sm[G], sl[G], sc[G];       // running maximum, running sum, this pass's rescale, per head
-    for (int i = t; i < G * HD; i += THREADS) {
-        const int d = i % HD;
-        sq[i / HD][d ^ ((d >> 3) & 4)] = my_q[i];
+    float (*sq)[HD] = reinterpret_cast<float (*)[HD]>(sqbuf);   // swizzled as the decode kernel does
+    int8_t (*sq8)[HD] = reinterpret_cast<int8_t (*)[HD]>(sqbuf);
+    if constexpr (SCORES8) {
+        // quantize this KV head's 12 query heads per 32-dim group (Q8_0 rounding: d = amax / 127, q = rint(x / d)),
+        // written through the same swizzle the fp32 tile uses, so the score phase addresses both the same way
+        for (int i = t; i < G * NG; i += THREADS) {
+            const int h = i / NG, g = i % NG;
+            const float* qh = my_q + (size_t) h * HD + (size_t) g * QG;
+            float amax = 0.0f;
+#pragma unroll
+            for (int j = 0; j < QG; ++j) amax = fmaxf(amax, fabsf(qh[j]));
+            const float qscale = amax > 0.0f ? amax / 127.0f : 0.0f;
+            const float inv = qscale > 0.0f ? 1.0f / qscale : 0.0f;
+            sqsc[h][g] = qscale;
+#pragma unroll
+            for (int j = 0; j < QG; ++j) {
+                int v = (int) rintf(qh[j] * inv);
+                v = v > 127 ? 127 : (v < -127 ? -127 : v);
+                const int d = g * QG + j;
+                sq8[h][d ^ ((d >> 3) & 4)] = (int8_t) v;
+            }
+        }
+    } else {
+        (void) sq8; (void) sqsc;
+        for (int i = t; i < G * HD; i += THREADS) {
+            const int d = i % HD;
+            sq[i / HD][d ^ ((d >> 3) & 4)] = my_q[i];
+        }
     }
     if (t < G) { sm[t] = -FLT_MAX; sl[t] = 0.0f; sc[t] = 1.0f; }
     float acc[G];
@@ -166,16 +208,35 @@ __global__ void __launch_bounds__(THREADS) prompt_attn_kernel(const float* __res
                 if (lane < G) sp[lane][c] = -FLT_MAX;
                 continue;
             }
-            float k8[8];
-            load_k8<KV_MODE>(p, srow[c], lane * 8, k8);
             float part[16];
             const int qflip = lane & 4;
+            static_assert(SCORES8 == 0 || KV_MODE == 1, "the dp4a score phase needs int8 K codes");
+            if constexpr (SCORES8) {
+                // 8 int8 K codes and this lane's 8 query codes as two words each: the query tile is stored as
+                // (dims d0+qflip ..) then (dims d0+(qflip^4) ..), and each lane's 8 dims sit in ONE 32-dim query group
+                // and ONE 64-dim K group, so one scale product per head is exact
+                const uint2 kc = *reinterpret_cast<const uint2*>(p.k_q + srow[c] * HD + lane * 8);
+                const float ksc = __half2float(__ushort_as_half(
+                    p.k_scale[srow[c] * (HD / KV_Q8_GROUP) + (lane * 8) / KV_Q8_GROUP]));
+                const uint32_t k0 = qflip ? kc.y : kc.x;
+                const uint32_t k1 = qflip ? kc.x : kc.y;
 #pragma unroll
-            for (int h = 0; h < G; ++h) {
-                const float4 qa = *reinterpret_cast<const float4*>(&sq[h][lane * 8 + qflip]);
-                const float4 qb = *reinterpret_cast<const float4*>(&sq[h][lane * 8 + (qflip ^ 4)]);
-                part[h] = k8[0] * qa.x + k8[1] * qa.y + k8[2] * qa.z + k8[3] * qa.w +
-                          k8[4] * qb.x + k8[5] * qb.y + k8[6] * qb.z + k8[7] * qb.w;
+                for (int h = 0; h < G; ++h) {
+                    const uint32_t* qw = reinterpret_cast<const uint32_t*>(&sq8[h][lane * 8]);
+                    const int d = STRATA_DP4A((int) qw[0], (int) k0, STRATA_DP4A((int) qw[1], (int) k1, 0));
+                    part[h] = (float) d * (sqsc[h][(lane * 8) / QG] * ksc);
+                }
+            } else {
+                float k8[8];
+                load_k8<KV_MODE>(p, srow[c], lane * 8, k8);
+                (void) sq8; (void) sqsc;
+#pragma unroll
+                for (int h = 0; h < G; ++h) {
+                    const float4 qa = *reinterpret_cast<const float4*>(&sq[h][lane * 8 + qflip]);
+                    const float4 qb = *reinterpret_cast<const float4*>(&sq[h][lane * 8 + (qflip ^ 4)]);
+                    part[h] = k8[0] * qa.x + k8[1] * qa.y + k8[2] * qa.z + k8[3] * qa.w +
+                              k8[4] * qb.x + k8[5] * qb.y + k8[6] * qb.z + k8[7] * qb.w;
+                }
             }
 #pragma unroll
             for (int h = G; h < 16; ++h) part[h] = 0.0f;
@@ -240,6 +301,16 @@ bool prompt_attn_enabled() {
     return on;
 }
 
+// STRATA_QSA_INT8_SCORES=1 (opt-in): the dp4a score phase above.  It needs int8 K codes (the deployment's KV=int8);
+// the fp16 pool keeps the FP32 phase, and Q4_0 KV never reaches this kernel.
+bool score_int8_enabled() {
+    static const bool on = [] {
+        const char* v = std::getenv("STRATA_QSA_INT8_SCORES");
+        return v != nullptr && v[0] == '1';
+    }();
+    return on;
+}
+
 }  // namespace
 
 bool qsa_prompt_attn_gfx906_batch(const float* q, const QsaAttnPools& pools, const int32_t* ids,
@@ -252,12 +323,15 @@ bool qsa_prompt_attn_gfx906_batch(const float* q, const QsaAttnPools& pools, con
     const dim3 grid((unsigned) n_q, (unsigned) s.n_head_kv);
     const float scale = 1.0f / sqrtf((float) HD);
     hipStream_t st = reinterpret_cast<hipStream_t>(stream);
-    if (mode == 1)
-        prompt_attn_kernel<1><<<grid, THREADS, 0, st>>>(q, pools, ids, steps, cap, (int) s.n_head_kv,
-                                                        (int) s.page_size, scale, attn);
+    if (mode == 1 && score_int8_enabled())
+        prompt_attn_kernel<1, 1><<<grid, THREADS, 0, st>>>(q, pools, ids, steps, cap, (int) s.n_head_kv,
+                                                           (int) s.page_size, scale, attn);
+    else if (mode == 1)
+        prompt_attn_kernel<1, 0><<<grid, THREADS, 0, st>>>(q, pools, ids, steps, cap, (int) s.n_head_kv,
+                                                           (int) s.page_size, scale, attn);
     else
-        prompt_attn_kernel<0><<<grid, THREADS, 0, st>>>(q, pools, ids, steps, cap, (int) s.n_head_kv,
-                                                        (int) s.page_size, scale, attn);
+        prompt_attn_kernel<0, 0><<<grid, THREADS, 0, st>>>(q, pools, ids, steps, cap, (int) s.n_head_kv,
+                                                           (int) s.page_size, scale, attn);
     return true;
 }
 

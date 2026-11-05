@@ -1,0 +1,3 @@
+reference: /data/gate-i8/ref
+fp32                                     prompts  20  top-1 100.00%  KL mean 0.01112  median 0.00062  max 0.05995
+int8                                     prompts  20  top-1 100.00%  KL mean 0.01403  median 0.00078  max 0.09617

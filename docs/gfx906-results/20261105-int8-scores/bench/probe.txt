@@ -1,0 +1,20 @@
+=== fp32 ctx=32768 ===
+device=AMD Radeon Graphics arch=gfx906:sramecc-:xnack- nq=2048 ctx=32768 cap=2051 batch=32 reps=20
+STRATA_PROMPT_ATTN_GFX906=1 masked_pages=0
+accuracy vs the decode kernel: max_abs=5.960e-06 max_rel=1.389e+00 rms=9.477e-08 bitwise=515839/12582912
+time: decode 64.7439 ms | prompt 40.0180 ms | 1.618x | us/query 31.613 -> 19.540
+=== int8 ctx=32768 ===
+device=AMD Radeon Graphics arch=gfx906:sramecc-:xnack- nq=2048 ctx=32768 cap=2051 batch=32 reps=20
+STRATA_PROMPT_ATTN_GFX906=1 masked_pages=0
+accuracy vs the decode kernel: max_abs=2.185e-02 max_rel=2.353e+04 rms=6.930e-04 bitwise=53/12582912
+time: decode 64.7776 ms | prompt 36.2751 ms | 1.786x | us/query 31.630 -> 17.712
+=== fp32 ctx=4096 ===
+device=AMD Radeon Graphics arch=gfx906:sramecc-:xnack- nq=2048 ctx=4096 cap=2051 batch=32 reps=20
+STRATA_PROMPT_ATTN_GFX906=1 masked_pages=0
+accuracy vs the decode kernel: max_abs=4.888e-06 max_rel=2.657e+00 rms=9.341e-08 bitwise=513785/12582912
+time: decode 64.4528 ms | prompt 39.6387 ms | 1.626x | us/query 31.471 -> 19.355
+=== int8 ctx=4096 ===
+device=AMD Radeon Graphics arch=gfx906:sramecc-:xnack- nq=2048 ctx=4096 cap=2051 batch=32 reps=20
+STRATA_PROMPT_ATTN_GFX906=1 masked_pages=0
+accuracy vs the decode kernel: max_abs=2.180e-02 max_rel=3.275e+04 rms=6.965e-04 bitwise=60/12582912
+time: decode 64.4401 ms | prompt 35.7349 ms | 1.803x | us/query 31.465 -> 17.449
