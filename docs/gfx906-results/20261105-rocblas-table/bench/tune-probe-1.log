@@ -1,0 +1,12 @@
+meta device_arch=gfx906 rocblas_version=5.5.0.cd957402309 shapes=1 min_gain=1.050
+case T=2048 N=10240 K=2560 ldy=10240 default_ms=7.3467 default_padding_writes=0
+  solution=-605557558 ms=7.4401 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=7.2686 gain=1.01 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=7.2500 gain=1.01 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=7.6985 gain=0.95 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=7.7021 gain=0.95 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=7.5788 gain=0.97 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=7.6178 gain=0.96 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557635 ms=7.9732 gain=0.92 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=2048 N=10240 K=2560 ldy=10240 (164 solutions; best 7.2500 ms vs default 7.3467)
+wrote 1 rows (0 with a solution) to /tmp/p.txt

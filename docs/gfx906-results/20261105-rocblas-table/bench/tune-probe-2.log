@@ -1,0 +1,42 @@
+meta device_arch=gfx906 rocblas_version=5.5.0.cd957402309 shapes=4 min_gain=1.050
+case T=2048 N=2560 K=2560 ldy=2560 default_ms=1.6169 default_padding_writes=0
+  solution=-605557558 ms=2.0132 gain=0.80 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557632 ms=1.6425 gain=0.98 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557634 ms=1.6462 gain=0.98 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557631 ms=1.6387 gain=0.99 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557637 ms=1.7531 gain=0.92 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557633 ms=1.6739 gain=0.97 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557559 ms=1.7749 gain=0.91 relative_l2=0 max_abs=0 padding_writes=0 ok
+  solution=-605557635 ms=1.7869 gain=0.90 relative_l2=0 max_abs=0 padding_writes=0 ok
+keep_default T=2048 N=2560 K=2560 ldy=2560 (164 solutions; best 1.6387 ms vs default 1.6169)
+case T=2048 N=6144 K=2560 ldy=6144 default_ms=7.6654 default_padding_writes=0
+  solution=-605557632 ms=4.4293 gain=1.73 relative_l2=2.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557631 ms=4.1693 gain=1.84 relative_l2=2.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557558 ms=4.1542 gain=1.85 relative_l2=2.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557633 ms=4.2747 gain=1.79 relative_l2=2.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557559 ms=4.3866 gain=1.75 relative_l2=2.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557634 ms=4.2592 gain=1.80 relative_l2=2.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557637 ms=4.3885 gain=1.75 relative_l2=2.35e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557635 ms=4.5174 gain=1.70 relative_l2=2.35e-05 max_abs=0.0625 padding_writes=0 ok
+best T=2048 N=6144 K=2560 ldy=6144 solution=-605557558 ms=4.1542 default_ms=7.6654 gain=1.85
+case T=2048 N=2560 K=6144 ldy=2560 default_ms=8.4584 default_padding_writes=0
+  solution=-605557633 ms=5.1049 gain=1.66 relative_l2=2.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557634 ms=4.9418 gain=1.71 relative_l2=2.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557559 ms=5.0081 gain=1.69 relative_l2=2.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557636 ms=5.0736 gain=1.67 relative_l2=2.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557637 ms=5.0351 gain=1.68 relative_l2=2.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557635 ms=5.0426 gain=1.68 relative_l2=2.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557632 ms=5.3882 gain=1.57 relative_l2=2.97e-05 max_abs=0.0625 padding_writes=0 ok
+  solution=-605557558 ms=5.4843 gain=1.54 relative_l2=2.97e-05 max_abs=0.0625 padding_writes=0 ok
+best T=2048 N=2560 K=6144 ldy=2560 solution=-605557634 ms=4.9418 default_ms=8.4584 gain=1.71
+case T=2048 N=128 K=2560 ldy=128 default_ms=0.2945 default_padding_writes=0
+  solution=-605557550 ms=0.1727 gain=1.71 relative_l2=2.5e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557540 ms=0.1902 gain=1.55 relative_l2=2.5e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557546 ms=0.1888 gain=1.56 relative_l2=2.5e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557544 ms=0.2018 gain=1.46 relative_l2=2.5e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557545 ms=0.2019 gain=1.46 relative_l2=2.5e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557542 ms=0.2315 gain=1.27 relative_l2=2.5e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557541 ms=0.2239 gain=1.32 relative_l2=2.5e-05 max_abs=0.0312 padding_writes=0 ok
+  solution=-605557543 ms=0.2248 gain=1.31 relative_l2=2.5e-05 max_abs=0.0312 padding_writes=0 ok
+best T=2048 N=128 K=2560 ldy=128 solution=-605557550 ms=0.1727 default_ms=0.2945 gain=1.71
+wrote 4 rows (3 with a solution) to /tmp/p2.txt
