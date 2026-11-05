@@ -23,6 +23,11 @@ LABEL="$1"; MODE="${2:-RP}"
 
 OUT=${OUT:-/data/rp}
 PACK=${PACK:-/data/packs/iq3_s}
+# PACK= arrives from the image's entrypoint, which exports the deployment's default pack name
+# (docker-gfx906/entrypoint.sh: PACK=iq2_xs) before it runs the command it was given; a session that
+# picked that up would benchmark the previous quant and fail on a CPU that has no AVX-512.  An
+# inherited value that is not an absolute path is ignored (2026-11-05, split-overlap record).
+case "$PACK" in /*) ;; *) PACK=/data/packs/iq3_s ;; esac
 GGUF=${GGUF:-/data/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf}
 PLE=${PLE:-/data/models/IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00002-of-00002.gguf}
 MTP=${MTP:-/data/mtp/rt}

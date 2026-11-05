@@ -1,0 +1,2 @@
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 44357 ms (732.7 tok/s), 125 generated in 3790 ms (33.0 tok/s), drafts accepted 0 of 17, 1 checkpoints
+hand-off: OVERLAPPED (the flag took)

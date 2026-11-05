@@ -1,0 +1,37 @@
+04:17:46 === arm base1 at 32768 [the layer-3 stack only] start ===
+label=base1 ntokens=32500 gen=128 prefill=2048 split=24 env=[]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 46342 ms (701.3 tok/s), 125 generated in 3829 ms (32.6 tok/s), drafts accepted 0 of 17, 1 checkpoints
+hand-off: serial order (off)
+04:20:13 === arm base1 done ===
+04:20:13 === arm ovl1 at 32768 [STRATA_SPLIT_OVERLAP=1] start ===
+label=ovl1 ntokens=32500 gen=128 prefill=2048 split=24 env=[STRATA_SPLIT_OVERLAP=1]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 45683 ms (711.4 tok/s), 125 generated in 3784 ms (33.0 tok/s), drafts accepted 0 of 17, 1 checkpoints
+hand-off: OVERLAPPED (the flag took)
+04:22:34 === arm ovl1 done ===
+04:22:34 === arm base2 at 32768 [the layer-3 stack only] start ===
+label=base2 ntokens=32500 gen=128 prefill=2048 split=24 env=[]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 42212 ms (769.9 tok/s), 125 generated in 3835 ms (32.6 tok/s), drafts accepted 0 of 17, 1 checkpoints
+hand-off: serial order (off)
+04:25:00 === arm base2 done ===
+04:25:00 === arm ovl2 at 32768 [STRATA_SPLIT_OVERLAP=1] start ===
+label=ovl2 ntokens=32500 gen=128 prefill=2048 split=24 env=[STRATA_SPLIT_OVERLAP=1]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 44357 ms (732.7 tok/s), 125 generated in 3790 ms (33.0 tok/s), drafts accepted 0 of 17, 1 checkpoints
+hand-off: OVERLAPPED (the flag took)
+04:27:21 === arm ovl2 done ===
+04:27:21 === arm base3 at 32768 [the layer-3 stack only] start ===
+label=base3 ntokens=32500 gen=128 prefill=2048 split=24 env=[]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 42635 ms (762.3 tok/s), 125 generated in 4013 ms (31.1 tok/s), drafts accepted 0 of 17, 1 checkpoints
+hand-off: serial order (off)
+04:29:42 === arm base3 done ===
+04:29:42 === arm ovl3 at 32768 [STRATA_SPLIT_OVERLAP=1] start ===
+label=ovl3 ntokens=32500 gen=128 prefill=2048 split=24 env=[STRATA_SPLIT_OVERLAP=1]
+EXIT rc=0
+strata serve: prompt 32500 tokens = 0 reused + 32500 read in 49814 ms (652.4 tok/s), 125 generated in 3848 ms (32.5 tok/s), drafts accepted 0 of 17, 1 checkpoints
+hand-off: OVERLAPPED (the flag took)
+04:32:08 === arm ovl3 done ===
+04:32:08 session done
