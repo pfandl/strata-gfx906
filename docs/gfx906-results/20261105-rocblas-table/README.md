@@ -164,3 +164,24 @@ which is what section 4's caveat (2) said to expect, and why the bracket was the
    14-shape default list already covers them.
 
 
+
+## 7. Status after the fork-branch sync (2026-11-06)
+
+The branch was cut from `048effa1`; it now also carries the fork's v0.2.11-3 sync (1816 upstream
+commits, merged in `3f22a974`/`b581a6b0`; the conflict table and the build check are in the
+[2026-11-06 section of docs/GFX906.md](../../GFX906.md)).
+
+- **The mechanism is re-verified on the merged tree.** The un-gate survived the sync - upstream's
+  `if(STRATA_ENABLE_HIP AND STRATA_ROCBLAS_AVAILABLE)` is replaced by `find_package(rocblas QUIET)` inside the
+  `STRATA_HIP_GFX906` block plus a define/link site gated only on `STRATA_ROCBLAS_AVAILABLE` - and
+  `gfx906_prefill_rocblas_gemm` passes against the shipped file:
+  `prefill gemm: rocBLAS tuning enabled (80 rows, 67 with a solution, gfx906, rocBLAS 5.5.0.cd957402309)`,
+  4/4 cases PASS (relative_l2 2.1e-4, outputs within FP16 rounding of `hipBLASEx`). It needs
+  `STRATA_HIP_PROMPT_F16=1` in the environment, because the table serves that route only.
+- **The 5.5 % is not re-measured yet.** Sections 1-6 were taken on the `048effa1` tree; the merged tree is
+  engine `0.1.57` with upstream's prompt path restructured (`prefill.cpp` +2691/-77) and its FP16 weight
+  cache newly compiled into the gfx906 build (off by default: `w16_auto_default_()` starts false and
+  `STRATA_PF_W16_CACHE_MIB` is unset). The bracket needs the cards, which the running service holds
+  (1.7 / 0.3 GiB free on 2026-11-06); it is owed for the first window with the deployment stopped, and the
+  numbers above stay attached to the engine they were measured on until then.
+
